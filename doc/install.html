@@ -1,0 +1,47 @@
+<h1>Splash installation guide</h1>
+
+<h2>Dependencies</h2>
+
+<p>Splash requires the "Mouf" framework to run. The first step is therefore to <a href="http://www.mouf-php.com/">install Mouf</a>.</p>
+
+<p>Once Mouf is installed, you can process to the Splash installation.</p>
+
+<h2>Requirements</h2>
+
+<p>For Splash to work, you will need an Apache sesrver, with the <b>"rewrite_module"</b> enabled.</p>
+
+<h2>Enable the Splash plugin</h2>
+<p>As explained above, Splash is a package of the Mouf framework. Mouf allows you (amoung other things) to visualy "build" your project's dependencies and instances.
+To use Splash in a Mouf project, just Download the Splash plugin in the "Download packages" section of the Mouf UI:<br/>
+<img src="images/activate_splash.png" alt="splash activation" name="splash activation"/>
+</p>
+
+<p>The Splash install process will:</p>
+<ul>
+	<li>Create a "splash" instance of the "Splash" class. The "splash" instance contains the global configuration for Splash.</li>
+	<li>Create an Apache .htaccess file that will route the requests to Splash</li>
+	<li>Create a default RootController class to handle the requests to the root of your web application</li>
+	<li>Create a default HTML view for the RootController</li>
+</ul>
+
+<h2>Configuring Splash</h2>
+
+<p>You can configure Splash using the "splash" instance. The Splash class requires 2 properties to be filled:</p>
+<ul>
+  <li><b>defaultTemplate</b>: This is the default HTML template that Splash will use to display error messages.</li>
+  <li><b>log</b>: This is the logger used by Splash.</li>
+</ul>
+
+<p>Hopefully, Splash provides a template (named SplashTemplate) and a logger (named ErrorLogLogger). The ErrorLogLogger writes logs to the default php_error.log file
+(using the error_log PHP function).</p>
+
+<p>The install process binds by default the SplashTemplate and the ErrorLogLogger to Splash. If you want to change the default template,
+you can just bind another template (or write your own). The default template is used on all HTTP 404 and 500 pages.</p>
+
+<img src="images/configure_splash.jpg" alt="" />
+
+<h2>Configure apache redirection</h2>
+<p>Once splash has been enabled, a Splash section should be visible in the left side menu of the Mouf UI:<br/>
+<img src="images/splash_menu_section.png" alt="splash_menu_link" name="splash_menu_link"/><br/>
+This feature can be used to rewrite the .htaccess file. You can configure this file to manage the caching of static files and the
+files to include or exclude from Splash URL redirection.</p>

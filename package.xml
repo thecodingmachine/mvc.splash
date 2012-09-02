@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+	<displayName>Splash</displayName>
+	<shortDescription>An MVC framework deeply integrated with Mouf</shortDescription>
+	<docUrl>http://www.thecodingmachine.com/ext/splash</docUrl>
+	<doc>
+		<page title="Introduction to Splash" url="index.html" />
+		<page title="Installing Splash" url="install.html" />
+		<page title="Writing controllers" url="writing_controllers.html" />
+		<page title="Managing URL parameters" url="url_parameters.html" />
+		<page title="Writing your own filters" url="filters.html" />
+	</doc>
+	<logo>icons/logo.png</logo>
+	<dependencies>
+		<dependency>
+			<group>mvc</group>
+			<name>splash-common</name>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
+			<group>html/template</group>
+			<name>SplashTemplate</name>
+			<version>&gt;=1.0</version>
+		</dependency>
+		<dependency>
+			<group>utils/cache</group>
+			<name>apc-cache</name>
+			<version>&gt;=1.1</version>
+		</dependency>
+		<dependency>
+			<group>utils/cache</group>
+			<name>file-cache</name>
+			<version>&gt;=1.1</version>
+		</dependency>
+		<dependency>
+			<group>utils/common</group>
+			<name>mouf_helpers</name>
+			<version>&gt;=1.0</version>
+		</dependency>
+	</dependencies>
+	<requires>
+		<require>models/Splash.php</require>
+		<require>models/SplashAction.php</require>
+		<require>models/store/SplashUrlNode.php</require>
+		<require>controllers/WebServiceInterface.php</require>
+		<require>controllers/WebService.php</require>
+	</requires>
+	<externalComponentRequires>
+		<require>SplashExternalComponent.php</require>
+	</externalComponentRequires>	
+	<adminRequires>
+		<require>SplashAdmin.php</require>
+		<require>models/SplashGenerateService.php</require>
+		<require>controllers/admin/SplashAdminApacheConfigureController.php</require>
+		<require>controllers/admin/SplashPurgeCacheController.php</require>
+		<require>controllers/admin/SplashInstallController.php</require>
+	</adminRequires>
+	<install>
+		<url>mouf/splashinstall/</url>
+	</install>
+</package>
