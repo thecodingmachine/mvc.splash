@@ -1,9 +1,15 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Services\SplashUtils;
+
+use Mouf\Mvc\Splash\Services\SplashRequestContext;
+
+use Mouf\Mvc\Splash\Store\SplashUrlNode;
 use Mouf\Log\LogInterface;
 use Mouf\Html\Template\TemplateInterface;
-
+use Mouf\Html\HtmlElement\HtmlBlock;
+use Mouf\MoufManager;
 
 /**
  * The Splash component is the root of the Splash framework.<br/>
@@ -44,6 +50,15 @@ class Splash {
 	 * @var TemplateInterface
 	 */
 	public $defaultTemplate;
+	
+	/**
+	 * The default content zone used by Splash (for displaying error pages, etc...)
+	 *
+	 * @Property
+	 * @Compulsory
+	 * @var HtmlBlock
+	 */
+	public $content;
 
 	/**
 	 * Splash uses the cache service to store the URL mapping (the mapping between a URL and its controller/action)
@@ -116,7 +131,7 @@ class Splash {
 
 		$pos = strpos($redirect_uri, $splashUrlPrefix);
 		if ($pos === FALSE) {
-			throw new Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your MoufUniversalParameters.php file at the root of your project.');
+			throw new \Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your config.php file at the root of your project. It should have the same value as the RewriteBase parameter in your .htaccess file.');
 		}
 
 		$tailing_url = substr($redirect_uri, $pos+strlen($splashUrlPrefix));
@@ -176,7 +191,7 @@ class Splash {
 					$filter->afterAction();
 				}
 			}
-			catch (Exception $e) {
+			catch (\Exception $e) {
 				return $this->handleException($e);
 			}
 			
@@ -292,10 +307,10 @@ class Splash {
 	
 	
 		header("HTTP/1.0 404 Not Found");
-		if ($this->defaultTemplate != null) {
-			$this->defaultTemplate->addContentFunction("FourOFour",$text)
-			->setTitle("404 - Not Found");
-			$this->defaultTemplate->draw();
+		if ($this->defaultTemplate != null && $this->content != null) {
+			$this->content->addFunction("FourOFour",$text);
+			$this->defaultTemplate->setTitle("404 - Not Found");
+			$this->defaultTemplate->toHtml();
 		} else {
 			FourOFour($text);
 		}
