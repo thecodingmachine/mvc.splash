@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
+
 use Mouf\Mvc\Splash\Services\SplashUtils;
 
 use Mouf\Mvc\Splash\Services\SplashRequestContext;
@@ -50,6 +52,15 @@ class Splash {
 	 * @var TemplateInterface
 	 */
 	public $defaultTemplate;
+
+	/**
+	 * The instance in charge of displaying 404 errors.
+	 * 
+	 * @Property
+	 * @var Http404HandlerInterface
+	 */
+	public $http404Handler;
+	// TODOOOOO: un controller pour les 404 et un pour les 500 avec une interface particulière pour chaque.
 	
 	/**
 	 * The default content zone used by Splash (for displaying error pages, etc...)
@@ -307,13 +318,14 @@ class Splash {
 	
 	
 		header("HTTP/1.0 404 Not Found");
-		if ($this->defaultTemplate != null && $this->content != null) {
+		$this->http404Handler->pageNotFound();
+		/*if ($this->defaultTemplate != null && $this->content != null) {
 			$this->content->addFunction("FourOFour",$text);
 			$this->defaultTemplate->setTitle("404 - Not Found");
 			$this->defaultTemplate->toHtml();
 		} else {
 			FourOFour($text);
-		}
+		}*/
 	
 	}
 	
