@@ -1,6 +1,10 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Log\LogInterface;
+use Mouf\Html\Template\TemplateInterface;
+
+
 /**
  * The Splash component is the root of the Splash framework.<br/>
  * It is in charge of binding an Url to a Controller.<br/>
