@@ -1,8 +1,10 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
-use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
+use Mouf\Mvc\Splash\Controllers\Controller;
 
+use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
+use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 use Mouf\Mvc\Splash\Services\SplashUtils;
 
 use Mouf\Mvc\Splash\Services\SplashRequestContext;
@@ -54,13 +56,20 @@ class Splash {
 	public $defaultTemplate;
 
 	/**
-	 * The instance in charge of displaying 404 errors.
+	 * The instance in charge of displaying HTTP 404 errors.
 	 * 
 	 * @Property
 	 * @var Http404HandlerInterface
 	 */
 	public $http404Handler;
-	// TODOOOOO: un controller pour les 404 et un pour les 500 avec une interface particulière pour chaque.
+	
+	/**
+	 * The instance in charge of displaying HTTP 500 errors.
+	 *
+	 * @Property
+	 * @var Http500HandlerInterface
+	 */
+	public $http500Handler;
 	
 	/**
 	 * The default content zone used by Splash (for displaying error pages, etc...)
@@ -153,8 +162,8 @@ class Splash {
 		
 		if ($splashRoute == null) {
 			// Let's go for the 404
-			$this->print404(SplashUtils::translate("404.page.not.found"));
-			exit();
+			$this->http404Handler->pageNotFound(null);
+			return;
 		}
 		$controller = MoufManager::getMoufManager()->getInstance($splashRoute->controllerInstanceName);
 		$action = $splashRoute->methodName;
@@ -180,7 +189,7 @@ class Splash {
 						throw $e;
 					}
 				}
-					
+
 				// Handle action__GET or action__POST method (for legacy code).
 				if(method_exists($controller, $action.'__'.$_SERVER['REQUEST_METHOD'])) {
 					$action = $action.'__'.$_SERVER['REQUEST_METHOD'];
@@ -241,7 +250,7 @@ class Splash {
 	 */
 	private function getSplashActionsList() {
 		$moufManager = MoufManager::getMoufManager();
-		$instanceNames = $moufManager->findInstances("UrlProviderInterface");
+		$instanceNames = $moufManager->findInstances("Mouf\\Mvc\\Splash\\Services\\UrlProviderInterface");
 		
 		$urls = array();
 		
@@ -271,7 +280,7 @@ class Splash {
 		return $urlNode;
 	}
 	
-	private function handleException (Exception $e) {
+	private function handleException(\Exception $e) {
 		$logger = $this->log;
 		if ($logger != null) {
 			$logger->error($e);
@@ -281,24 +290,10 @@ class Splash {
 	
 		
 		if (!headers_sent() && !ob_get_contents()) {
-			$template = $this->defaultTemplate;
-			if($e instanceof ApplicationException ) {
-				if ($template != null) {
-					$template->addContentFunction("FiveOO",$e,$debug);
-				} else {
-					FiveOO($e,$debug);
-				}
-			}else {
-				if ($template != null) {
-					$template->addContentFunction("UnhandledException",$e,$debug);
-				} else {
-					UnhandledException($e, $debug);
-				}
-			}
-			if ($template != null) {
-				$template->draw();
-			}
+			$this->http500Handler->serverError($e);
+			return;
 		} else {
+			// FIXME: manage errors when output started
 			UnhandledException($e,$debug);
 		}
 	
@@ -318,7 +313,7 @@ class Splash {
 	
 	
 		header("HTTP/1.0 404 Not Found");
-		$this->http404Handler->pageNotFound();
+		$this->http404Handler->pageNotFound($message);
 		/*if ($this->defaultTemplate != null && $this->content != null) {
 			$this->content->addFunction("FourOFour",$text);
 			$this->defaultTemplate->setTitle("404 - Not Found");

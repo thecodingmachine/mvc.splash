@@ -7,6 +7,8 @@ namespace Mouf\Mvc\Splash\Store;
  * 
  * @author David Negrier
  */
+use Mouf\Mvc\Splash\Services\SplashRoute;
+
 class SplashUrlNode {
 	/**
 	 * An array of subnodes
