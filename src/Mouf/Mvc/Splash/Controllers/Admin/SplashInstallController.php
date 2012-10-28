@@ -1,6 +1,12 @@
 <?php
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\Html\Template\TemplateInterface;
+use Mouf\Mvc\Splash\SplashGenerateService;
+use Mouf\MoufManager;
+use Mouf\Mvc\Splash\Controllers\Controller;
+
+
 /**
  * The controller used in the Splash install process.
  * 

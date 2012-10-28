@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Utils\ExceptionUtils;
+
 use Mouf\Mvc\Splash\Controllers\Controller;
 
 use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
@@ -293,8 +295,12 @@ class Splash {
 			$this->http500Handler->serverError($e);
 			return;
 		} else {
-			// FIXME: manage errors when output started
-			UnhandledException($e,$debug);
+			//UnhandledException($e,$debug);
+			
+			echo "<div>".nl2br($e->getMessage())."</div>";
+			
+			echo "<div>".ExceptionUtils::getHtmlForException($e)."</div>";
+				
 		}
 	
 	}

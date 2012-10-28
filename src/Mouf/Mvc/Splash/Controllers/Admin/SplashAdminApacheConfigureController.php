@@ -1,6 +1,11 @@
 <?php 
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\Mvc\Splash\SplashGenerateService;
+use Mouf\Html\Template\TemplateInterface;
+use Mouf\Mvc\Splash\Controllers\Controller;
+
+
 /**
  * The controller that will write the .htaccess file.
  *
