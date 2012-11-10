@@ -50,6 +50,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @see Mouf\Mvc\Splash\Controllers.Http404HandlerInterface::pageNotFound()
 	 */
 	public function pageNotFound($message) {
+		header("HTTP/1.0 404 Not Found");
 		$this->message = $message;
 		$this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
 		$this->template->toHtml();
@@ -60,6 +61,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @see Mouf\Mvc\Splash\Controllers.Http500HandlerInterface::serverError()
 	 */
 	public function serverError(\Exception $exception) {
+		header("HTTP/1.0 500 Server error");
 		$this->exception = $exception;
 		$this->contentBlock->addFile(__DIR__."/../../../../views/500.php", $this);
 		$this->template->toHtml();

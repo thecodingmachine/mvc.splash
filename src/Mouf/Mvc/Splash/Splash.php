@@ -318,7 +318,6 @@ class Splash {
 		}
 	
 	
-		header("HTTP/1.0 404 Not Found");
 		$this->http404Handler->pageNotFound($message);
 		/*if ($this->defaultTemplate != null && $this->content != null) {
 			$this->content->addFunction("FourOFour",$text);
