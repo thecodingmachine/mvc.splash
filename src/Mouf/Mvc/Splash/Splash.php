@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Utils\Cache\CacheInterface;
+
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
 
 use Mouf\Mvc\Splash\Utils\ExceptionUtils;
@@ -14,10 +16,11 @@ use Mouf\Mvc\Splash\Services\SplashUtils;
 use Mouf\Mvc\Splash\Services\SplashRequestContext;
 
 use Mouf\Mvc\Splash\Store\SplashUrlNode;
-use Mouf\Log\LogInterface;
+use Mouf\Utils\Log\LogInterface;
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\MoufManager;
+
 
 /**
  * The Splash component is the root of the Splash framework.<br/>
