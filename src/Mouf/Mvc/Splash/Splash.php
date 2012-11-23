@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
+
 use Mouf\Mvc\Splash\Utils\ExceptionUtils;
 
 use Mouf\Mvc\Splash\Controllers\Controller;
