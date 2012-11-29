@@ -1,5 +1,7 @@
 <?php
 
+use Mouf\MoufUtils;
+
 use Mouf\MoufManager;
 
 $moufManager = MoufManager::getMoufManager();
