@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\Html\HtmlElement\HtmlBlock;
+
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
@@ -43,6 +45,12 @@ class SplashInstallController extends Controller {
 	public $template;
 	
 	/**
+	 *
+	 * @var HtmlBlock
+	 */
+	public $content;
+	
+	/**
 	 * Displays the first install screen.
 	 * 
 	 * @Action
@@ -58,8 +66,8 @@ class SplashInstallController extends Controller {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
 				
-		$this->template->addContentFile(dirname(__FILE__)."/../../views/admin/installStep1.php", $this);
-		$this->template->draw();
+		$this->content->addFile(__DIR__."/../../../../views/admin/installStep1.php", $this);
+		$this->template->toHtml();
 	}
 
 	/**

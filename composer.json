@@ -3,7 +3,7 @@
     "description": "An MVC framework deeply integrated with Mouf.",
     "keywords": ["mvc", "framework", "mouf", "splash"],
     "homepage": "https://github.com/thecodingmachine/mvc.splash",
-    "type": "library",
+    "type": "mouf-library",
     "license": "MIT",
     "authors": [
         {
@@ -17,10 +17,22 @@
         "mouf/mvc.splash-common": "4.0.*" ,
         "mouf/html.template.bootstrap": "2.1.*"
     },
-    
     "autoload": {
         "psr-0": {
             "Mouf": "src/"
         }
+    },
+    "extra": {
+	     "mouf": {
+			"install": [
+			{
+				"type": "url",
+	    		"url": "splashinstall/"
+			}
+			],
+			"require-admin": [
+    			"src/SplashAdmin.php"
+    		]
+		}
     }
 }
