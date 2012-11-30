@@ -188,7 +188,7 @@ class SplashInstallController extends Controller {
 			$uri = "/";
 		}
 		
-		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("plugins", "mouf"));
+		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
 		
 		if (!$this->moufManager->instanceExists("rootController")) {
 			$this->splashGenerateService->generateRootController($controllerdirectory, $viewdirectory);
