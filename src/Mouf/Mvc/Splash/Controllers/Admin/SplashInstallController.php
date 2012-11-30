@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\Actions\InstallUtils;
+
 use Mouf\MoufUtils;
 
 use Mouf\Html\HtmlElement\HtmlBlock;
