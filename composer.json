@@ -35,6 +35,7 @@
 			],
 			"require-admin": [
     			"src/SplashAdmin.php",
+    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
