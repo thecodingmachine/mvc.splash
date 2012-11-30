@@ -9,9 +9,9 @@ Finally, it will create a "RootController" controller class that will be in char
 
 <form action="configure">
 	<input type="hidden" name="selfedit" value="<?php echo $this->selfedit ?>" />
-	<button>Configure Splash</button>
+	<button class="btn btn-danger">Configure Splash</button>
 </form>
 <form action="skip">
 	<input type="hidden" name="selfedit" value="<?php echo $this->selfedit ?>" />
-	<button>Skip</button>
+	<button class="btn">Skip</button>
 </form>

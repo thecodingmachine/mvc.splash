@@ -3,7 +3,7 @@
     "description": "An MVC framework deeply integrated with Mouf.",
     "keywords": ["mvc", "framework", "mouf", "splash"],
     "homepage": "https://github.com/thecodingmachine/mvc.splash",
-    "type": "library",
+    "type": "mouf-library",
     "license": "MIT",
     "authors": [
         {
@@ -14,13 +14,32 @@
     ],
     "require": {
     	"php": ">=5.3.0",
-        "mouf/mvc.splash-common": "4.0.*" ,
+        "mouf/mvc.splash-common": "4.0.*",
+        "mouf/utils.cache.apc-cache": "2.0.*",
+        "mouf/utils.cache.file-cache": "2.0.*",
+        "mouf/utils.cache.no-cache": "2.0.*",
         "mouf/html.template.bootstrap": "2.1.*"
     },
-    
     "autoload": {
         "psr-0": {
             "Mouf": "src/"
         }
+    },
+    "extra": {
+	     "mouf": {
+			"install": [
+			{
+				"type": "url",
+	    		"url": "splashinstall/"
+			}
+			],
+			"require-admin": [
+    			"src/SplashAdmin.php",
+    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
+    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
+    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
+    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
+    		]
+		}
     }
 }

@@ -1,6 +1,10 @@
 <?php
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\MoufUtils;
+
+use Mouf\Html\HtmlElement\HtmlBlock;
+
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
@@ -43,6 +47,12 @@ class SplashInstallController extends Controller {
 	public $template;
 	
 	/**
+	 *
+	 * @var HtmlBlock
+	 */
+	public $content;
+	
+	/**
 	 * Displays the first install screen.
 	 * 
 	 * @Action
@@ -58,8 +68,8 @@ class SplashInstallController extends Controller {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
 				
-		$this->template->addContentFile(dirname(__FILE__)."/../../views/admin/installStep1.php", $this);
-		$this->template->draw();
+		$this->content->addFile(__DIR__."/../../../../../views/admin/installStep1.php", $this);
+		$this->template->toHtml();
 	}
 
 	/**
@@ -73,7 +83,8 @@ class SplashInstallController extends Controller {
 		InstallUtils::continueInstall($selfedit == "true");
 	}
 
-	protected $controllerDirectory;
+	protected $sourceDirectory;
+	protected $controllerNamespace;
 	protected $viewDirectory;
 	
 	/**
@@ -91,28 +102,38 @@ class SplashInstallController extends Controller {
 		} else {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
-				
-		$this->controllerDirectory = $this->moufManager->getVariable("splashDefaultControllersDirectory");
-		if ($this->controllerDirectory == null) {
-			$this->controllerDirectory = "controllers";
+		
+		$autoloadNamespaces = MoufUtils::getAutoloadNamespaces();
+		if ($autoloadNamespaces) {
+			$rootNamespace = $autoloadNamespaces[0]['namespace'].'\\';
+			$this->sourceDirectory = $autoloadNamespaces[0]['directory'];
+		} else {
+			$rootNamespace = '';
+		}
+		
+		$this->controllerNamespace = $this->moufManager->getVariable("splashDefaultControllersNamespace");
+		if ($this->controllerNamespace == null) {
+			$this->controllerNamespace = $rootNamespace."Controllers";
 		}
 		$this->viewDirectory = $this->moufManager->getVariable("splashDefaultViewsDirectory");
 		if ($this->viewDirectory == null) {
-			$this->viewDirectory = "views";
+			$this->viewDirectory = "views/";
 		}
 		
-		$this->template->addContentFile(dirname(__FILE__)."/../../views/admin/installStep2.php", $this);
-		$this->template->draw();
+		$this->content->addFile(__DIR__."/../../../../../views/admin/installStep2.php", $this);
+		$this->template->toHtml();
 	}
 	
 	/**
 	 * This action generates the TDBM instance, then the DAOs and Beans. 
 	 * 
 	 * @Action
-	 * @param string $name
+	 * @param string $sourcedirectory
+	 * @param string $controllernamespace
+	 * @param string $viewdirectory
 	 * @param string $selfedit
 	 */
-	public function generate($controllerdirectory, $viewdirectory, $selfedit="false") {
+	public function generate($sourcedirectory, $controllernamespace, $viewdirectory, $selfedit="false") {
 		$this->selfedit = $selfedit;		
 		
 		if ($selfedit == "true") {
@@ -121,25 +142,28 @@ class SplashInstallController extends Controller {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
 		
-		$controllerdirectory = trim($controllerdirectory, "/\\");
-		$controllerdirectory .= "/";
+		$sourcedirectory = trim($sourcedirectory, "/\\");
+		$sourcedirectory .= "/";
+		$controllernamespace = trim($controllernamespace, "/\\");
+		$controllernamespace .= "\\";
 		$viewdirectory = trim($viewdirectory, "/\\");
 		$viewdirectory .= "/";
 		
-		$this->moufManager->setVariable("splashDefaultControllersDirectory", $controllerdirectory);
+		$this->moufManager->setVariable("splashDefaultSourceDirectory", $sourcedirectory);
+		$this->moufManager->setVariable("splashDefaultControllersNamespace", $controllernamespace);
 		$this->moufManager->setVariable("splashDefaultViewsDirectory", $viewdirectory);
 		
 		
 		// Let's start by performing basic checks about the instances we assume to exist.
-		if (!$this->moufManager->instanceExists("splashTemplate")) {
-			$this->displayErrorMsg("The Splash install process assumes there is a template whose instance name is 'splashTemplate'. Could not find the 'splashTemplate' instance.");
+		if (!$this->moufManager->instanceExists("bootstrapTemplate")) {
+			$this->displayErrorMsg("The install process assumes there is a template whose instance name is 'bootstrapTemplate'. Could not find the 'bootstrapTemplate' instance.");
 			return;
 		}
 		
 		if (!$this->moufManager->instanceExists("splash")) {
-			$splashInstance = $this->moufManager->createInstance("Splash");
+			$splashInstance = $this->moufManager->createInstance("Mouf\\Mvc\\Splash\\Splash");
 			$splashInstance->setName("splash");
-			$splashInstance->getProperty("defaultTemplate")->setValue($this->moufManager->getInstanceDescriptor("splashTemplate"));
+			$splashInstance->getProperty("defaultTemplate")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
 			
 			$configManager = $this->moufManager->getConfigManager();
 			$constants = $configManager->getMergedConstants();
@@ -159,11 +183,11 @@ class SplashInstallController extends Controller {
 		
 		if ($splashInstance->getProperty("cacheService")->getValue() == null) {
 			if (!$this->moufManager->instanceExists("splashCacheApc")) {
-				$splashCacheApc = $this->moufManager->createInstance("ApcCache");
+				$splashCacheApc = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\ApcCache");
 				$splashCacheApc->setName("splashCacheApc");
 
 				if (!$this->moufManager->instanceExists("splashCacheFile")) {
-					$splashCacheFile = $this->moufManager->createInstance("FileCache");
+					$splashCacheFile = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\FileCache");
 					$splashCacheFile->setName("splashCacheFile");
 					$splashCacheFile->getProperty("cacheDirectory")->setValue("splashCache");					
 				} else {
@@ -191,12 +215,11 @@ class SplashInstallController extends Controller {
 		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
 		
 		if (!$this->moufManager->instanceExists("rootController")) {
-			$this->splashGenerateService->generateRootController($controllerdirectory, $viewdirectory);
+			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);
 
-			$this->moufManager->declareComponent("rootController", "RootController");
-			$this->moufManager->bindComponent("rootController", "template", "splashTemplate");
+			$this->moufManager->declareComponent("rootController", $controllernamespace."RootController");
+			$this->moufManager->bindComponent("rootController", "template", "bootstrapTemplate");
 			
-			$this->moufManager->registerComponent($controllerdirectory."RootController.php");
 			// TODO: bind au ErrorLogLogger?
 		}
 		
@@ -210,7 +233,7 @@ class SplashInstallController extends Controller {
 	
 	private function displayErrorMsg($msg) {
 		$this->errorMsg = $msg;
-		$this->template->addContentFile(dirname(__FILE__)."/../../views/admin/installError.php", $this);
-		$this->template->draw();
+		$this->content->addFile(dirname(__FILE__)."/../../../../../views/admin/installError.php", $this);
+		$this->template->toHtml();
 	}
 }

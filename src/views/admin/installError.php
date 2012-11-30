@@ -7,5 +7,5 @@ echo $this->errorMsg;
 
 <form action="skip">
 	<input type="hidden" name="selfedit" value="<?php echo $this->selfedit ?>" />
-	<button>Skip install and continue</button>
+	<button class="btn btn-danger">Skip install and continue</button>
 </form>
