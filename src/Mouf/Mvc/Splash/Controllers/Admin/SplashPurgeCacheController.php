@@ -1,6 +1,8 @@
 <?php 
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\InstanceProxy;
+
 use Mouf\MoufManager;
 
 use Mouf\Html\HtmlElement\HtmlBlock;
@@ -43,7 +45,8 @@ class SplashPurgeCacheController extends Controller {
 		}
 		
 		// TODO: call the proxy for this method
-		MoufProxy::getInstance('splash', $selfedit == "true")->purgeUrlsCache();
+		$splashProxy = new InstanceProxy('splash', $selfedit == "true");
+		$splashProxy->purgeUrlsCache();
 		
 		$this->content->addFile(__DIR__."/../../../../views/admin/purgedCache.php", $this);
 		$this->template->toHtml();

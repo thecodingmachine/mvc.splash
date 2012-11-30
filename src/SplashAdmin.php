@@ -10,14 +10,17 @@ $moufManager->declareComponent('splashGenerateService', 'Mouf\\Mvc\\Splash\\Spla
 
 $moufManager->declareComponent('splashApacheConfig', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashAdminApacheConfigureController', true);
 $moufManager->bindComponent('splashApacheConfig', 'template', 'moufTemplate');
+$moufManager->bindComponents('splashApacheConfig', 'content', 'block.content');
 $moufManager->bindComponent('splashApacheConfig', 'splashGenerateService', 'splashGenerateService');
 
 $moufManager->declareComponent('splashinstall', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashInstallController', true);
-$moufManager->bindComponent('splashinstall', 'template', 'installTemplate');
+$moufManager->bindComponent('splashinstall', 'template', 'moufInstallTemplate');
+$moufManager->bindComponents('splashinstall', 'content', 'block.content');
 $moufManager->bindComponent('splashinstall', 'splashGenerateService', 'splashGenerateService');
 
 $moufManager->declareComponent('splashpurgecache', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashPurgeCacheController', true);
 $moufManager->bindComponent('splashpurgecache', 'template', 'moufTemplate');
+$moufManager->bindComponents('splashpurgecache', 'content', 'block.content');
 
 $moufManager->declareComponent('splashHtaccessValidator', 'Mouf\\Validator\\MoufBasicValidationProvider', true);
 $moufManager->setParameter('splashHtaccessValidator', 'name', 'Splash validator');
