@@ -172,12 +172,12 @@ class SplashInstallController extends Controller {
 			
 			if (!isset($constants['DEBUG_MODE'])) {
 				$configManager->registerConstant("DEBUG_MODE", "bool", true, "When the application is in debug mode, stacktraces are outputed directly to the user. Otherwise, they are hidden.");
-				$definedConstants = $configManager->getDefinedConstants();
-				if (!isset($definedConstants['DEBUG_MODE'])) {
-					$definedConstants['DEBUG_MODE'] = true;
-				}
-				$configManager->setDefinedConstants($definedConstants);
 			}
+			$definedConstants = $configManager->getDefinedConstants();
+			if (!isset($definedConstants['DEBUG_MODE'])) {
+				$definedConstants['DEBUG_MODE'] = true;
+			}
+			$configManager->setDefinedConstants($definedConstants);
 
 			// TODO: gérer les ORIGIN
 			$splashInstance->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
