@@ -85,7 +85,7 @@ class SplashAdminApacheConfigureController extends Controller {
 		$moufManager->setVariable("splashexludefolders", $exludeFolders);
 		$moufManager->rewriteMouf();
 		
-		$installPos = strpos($uri, "/splashApacheConfig/write");
+		$installPos = strpos($uri, "/vendor/mouf/mouf/splashApacheConfig/write");
 		if ($installPos !== FALSE) {
 			$uri = substr($uri, 0, $installPos);
 		}
@@ -95,7 +95,7 @@ class SplashAdminApacheConfigureController extends Controller {
 		
 		$this->splashGenerateService->writeHtAccess($uri, $exludeExtentions, $exludeFolders);
 		
-		header("Location: ".ROOT_URL."mouf/?selfedit=".$selfedit);
+		header("Location: ".MOUF_URL."?selfedit=".$selfedit);
 	}
 	
 	

@@ -211,7 +211,7 @@ class SplashInstallController extends Controller {
 		
 		$uri = $_SERVER["REQUEST_URI"];
 		
-		$installPos = strpos($uri, "/splashinstall/generate");
+		$installPos = strpos($uri, "/vendor/mouf/mouf/splashinstall/generate");
 		if ($installPos !== FALSE) {
 			$uri = substr($uri, 0, $installPos);
 		}
