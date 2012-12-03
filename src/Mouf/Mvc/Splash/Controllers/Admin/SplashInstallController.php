@@ -226,7 +226,8 @@ class SplashInstallController extends Controller {
 
 			$this->moufManager->declareComponent("rootController", $controllernamespace."RootController");
 			$this->moufManager->bindComponent("rootController", "template", "bootstrapTemplate");
-			
+			$this->moufManager->bindComponent("rootController", "content", "block.content");
+				
 			// TODO: bind au ErrorLogLogger?
 		}
 		
