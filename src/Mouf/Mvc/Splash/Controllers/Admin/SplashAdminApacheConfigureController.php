@@ -85,7 +85,7 @@ class SplashAdminApacheConfigureController extends Controller {
 		$moufManager->setVariable("splashexludefolders", $exludeFolders);
 		$moufManager->rewriteMouf();
 		
-		$installPos = strpos($uri, "/mouf/splashApacheConfig/write");
+		$installPos = strpos($uri, "/splashApacheConfig/write");
 		if ($installPos !== FALSE) {
 			$uri = substr($uri, 0, $installPos);
 		}

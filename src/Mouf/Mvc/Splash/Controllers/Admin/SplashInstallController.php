@@ -172,6 +172,11 @@ class SplashInstallController extends Controller {
 			
 			if (!isset($constants['DEBUG_MODE'])) {
 				$configManager->registerConstant("DEBUG_MODE", "bool", true, "When the application is in debug mode, stacktraces are outputed directly to the user. Otherwise, they are hidden.");
+				$definedConstants = $configManager->getDefinedConstants();
+				if (!isset($definedConstants['DEBUG_MODE'])) {
+					$definedConstants['DEBUG_MODE'] = true;
+				}
+				$configManager->setDefinedConstants($definedConstants);
 			}
 
 			// TODO: gérer les ORIGIN
@@ -206,7 +211,7 @@ class SplashInstallController extends Controller {
 		
 		$uri = $_SERVER["REQUEST_URI"];
 		
-		$installPos = strpos($uri, "/mouf/splashinstall/generate");
+		$installPos = strpos($uri, "/splashinstall/generate");
 		if ($installPos !== FALSE) {
 			$uri = substr($uri, 0, $installPos);
 		}
