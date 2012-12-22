@@ -1,18 +1,19 @@
 <?php
+use Mouf\MoufManager;
+
+use Mouf\MoufUtils;
+
 // This file validates that a "splash" instance exists.
 // If not, an alert is raised.
 if (!isset($_REQUEST["selfedit"]) || $_REQUEST["selfedit"]!="true") {
-	require_once '../../../../../Mouf.php';
+	require_once '../../../../../mouf/Mouf.php';
 } else {
-	require_once '../../../../../mouf/MoufManager.php';
-	MoufManager::initMoufManager();
-	require_once '../../../../../MoufUniversalParameters.php';
-	require_once '../../../../../mouf/MoufAdmin.php';
+	require_once '../../mouf/Mouf.php';
 }
 
 // Note: checking rights is done after loading the required files because we need to open the session
 // and only after can we check if it was not loaded before loading it ourselves...
-require_once '../../../../../mouf/direct/utils/check_rights.php';
+MoufUtils::checkRights();
 
 $jsonObj = array();
 
