@@ -48,7 +48,7 @@ class SplashPurgeCacheController extends Controller {
 		$splashProxy = new InstanceProxy('splash', $selfedit == "true");
 		$splashProxy->purgeUrlsCache();
 		
-		$this->content->addFile(__DIR__."/../../../../views/admin/purgedCache.php", $this);
+		$this->content->addFile(__DIR__."/../../../../../views/admin/purgedCache.php", $this);
 		$this->template->toHtml();
 	}
 }
