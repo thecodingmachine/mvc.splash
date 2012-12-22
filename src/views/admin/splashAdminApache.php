@@ -6,7 +6,7 @@
 By default, some file extetions are excluded by the rewrite rule : "js", "ico", "gif", "jpg", "png", "css". The "mouf" and "plugins" folders are also excluded. However, you are free to configure those exclusions as you want: just write each extention or folder name that you want to exclude in the textareas below (one line for each extention/folder):
 </p>
 <br/>
-<div class="warn"><u>WARNING</u> : .HTACESS file is handling all the redirections on your site, so please be ver carefull when editing this file!</div>
+<div class="warn"><strong>WARNING</strong> : .HTACESS file is handling all the redirections on your site, so please be very carefull when editing this file!</div>
 <br/>
 <form action="write" method="post">
 <div>
@@ -24,5 +24,5 @@ Folders rewrite exclusions
 
 </div>
 <input type="hidden" name="selfedit" value="<?php echo plainstring_to_htmlprotected(isset($_REQUEST["selfedit"])?$_REQUEST["selfedit"]:"false") ?>" />
-<button>Write file</button>
+<button class="btn btn-danger">Write file</button>
 </form>

@@ -1,6 +1,8 @@
 <?php 
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
+use Mouf\MoufManager;
+
 use Mouf\Html\HtmlElement\HtmlBlock;
 
 use Mouf\Mvc\Splash\SplashGenerateService;
@@ -60,7 +62,7 @@ class SplashAdminApacheConfigureController extends Controller {
 		if (empty($this->exludeFolders)){
 			$this->exludeFolders = array("plugins", "mouf");
 		}
-		$this->content->addFile(__DIR__."/../../../../views/admin/splashAdminApache.php", $this);
+		$this->content->addFile(__DIR__."/../../../../../views/admin/splashAdminApache.php", $this);
 		$this->template->toHtml();
 	}
 	
