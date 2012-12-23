@@ -60,7 +60,7 @@ class SplashAdminApacheConfigureController extends Controller {
 			$this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css");
 		}
 		if (empty($this->exludeFolders)){
-			$this->exludeFolders = array("plugins", "mouf");
+			$this->exludeFolders = array("vendor");
 		}
 		$this->content->addFile(__DIR__."/../../../../../views/admin/splashAdminApache.php", $this);
 		$this->template->toHtml();
