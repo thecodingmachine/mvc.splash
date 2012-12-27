@@ -208,17 +208,7 @@ class SplashInstallController extends Controller {
 		
 			$splashInstance->getProperty("cacheService")->setValue($splashCacheApc);
 		}
-		
-		$uri = $_SERVER["REQUEST_URI"];
-		
-		$installPos = strpos($uri, "/vendor/mouf/mouf/splashinstall/generate");
-		if ($installPos !== FALSE) {
-			$uri = substr($uri, 0, $installPos);
-		}
-		if (empty($uri)) {
-			$uri = "/";
-		}
-		
+				
 		if (!$this->moufManager->instanceExists("rootController")) {
 			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);
 
@@ -242,6 +232,16 @@ class SplashInstallController extends Controller {
 	 * @param string $selfedit
 	 */
 	public function writeHtAccess($selfedit="false") {
+		$uri = $_SERVER["REQUEST_URI"];
+		
+		$installPos = strpos($uri, "/vendor/mouf/mouf/splashinstall/writeHtAccess");
+		if ($installPos !== FALSE) {
+			$uri = substr($uri, 0, $installPos);
+		}
+		if (empty($uri)) {
+			$uri = "/";
+		}
+		
 		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
 		
 		InstallUtils::continueInstall($selfedit == "true");
