@@ -219,8 +219,6 @@ class SplashInstallController extends Controller {
 			$uri = "/";
 		}
 		
-		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
-		
 		if (!$this->moufManager->instanceExists("rootController")) {
 			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);
 
@@ -234,6 +232,18 @@ class SplashInstallController extends Controller {
 		
 		$this->moufManager->rewriteMouf();
 				
+		InstallUtils::continueInstall($selfedit == "true");
+	}
+	
+	/**
+	 * Write .htaccess
+	 *
+	 * @Action
+	 * @param string $selfedit
+	 */
+	public function writeHtAccess($selfedit="false") {
+		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
+		
 		InstallUtils::continueInstall($selfedit == "true");
 	}
 	

@@ -30,7 +30,15 @@
 			"install": [
 			{
 				"type": "url",
-	    		"url": "splashinstall/"
+	    		"url": "splashinstall/",
+	    		"scope": "global",
+	    		"description": "Create RootController and root view."
+			},
+			{
+				"type": "url",
+	    		"url": "splashinstall/writeHtAccess",
+	    		"scope": "local",
+	    		"description": "Write .htaccess file."
 			}
 			],
 			"require-admin": [
