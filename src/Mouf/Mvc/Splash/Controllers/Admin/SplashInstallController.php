@@ -242,7 +242,22 @@ class SplashInstallController extends Controller {
 			$uri = "/";
 		}
 		
-		$this->splashGenerateService->writeHtAccess($uri, array("js", "ico", "gif", "jpg", "png", "css"), array("vendor"));
+		if ($selfedit == "true") {
+			$moufManager = MoufManager::getMoufManager();
+		} else {
+			$moufManager = MoufManager::getMoufManagerHiddenInstance();
+		}
+		
+		$this->exludeExtentions = $moufManager->getVariable("splashexludeextentions");
+		$this->exludeFolders = $moufManager->getVariable("splashexludefolders");
+		if (empty($this->exludeExtentions)){
+			$this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css");
+		}
+		if (empty($this->exludeFolders)){
+			$this->exludeFolders = array("vendor");
+		}
+		
+		$this->splashGenerateService->writeHtAccess($uri, $this->exludeExtentions, $this->exludeFolders);
 		
 		InstallUtils::continueInstall($selfedit == "true");
 	}
