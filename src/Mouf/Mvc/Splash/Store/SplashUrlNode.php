@@ -32,6 +32,15 @@ class SplashUrlNode {
 	 */
 	private $callbacks = array();
 	
+	/**
+	 * A list of callbacks (assicated to there HTTP method) finishing with "*"
+	 *
+	 * @var array<string, SplashRoute>
+	 */
+	private $wildcardCallbacks = array();
+	
+	
+	
 	public function registerCallback(SplashRoute $callback) {
 		$this->addUrl(explode("/", $callback->url), $callback);
 	}
@@ -46,7 +55,28 @@ class SplashUrlNode {
 		if (!empty($urlParts)) {
 			$key = array_shift($urlParts);
 			
-			if (strpos($key, "{") === 0 && strpos($key, "}") === strlen($key)-1) {
+			if ($key=='*') {
+				// Wildcard URL
+				if (!empty($urlParts)) {
+					throw new SplashException("Sorry, the URL pattern /foo/*/bar is not supported. The wildcard (*) must be at the end of an URL");
+				}
+				
+				if (empty($callback->httpMethods)) {
+					if (isset($this->wildcardCallbacks[""])) {
+						throw new SplashException("An error occured while looking at the list URL managed in Splash. The URL '".$callback->url."' is associated "
+								."to 2 methods: \$".$callback->controllerInstanceName."->".$callback->methodName." and \$".$this->wildcardCallbacks[""]->controllerInstanceName."->".$this->wildcardCallbacks[""]->methodName);
+					}
+					$this->wildcardCallbacks[""] = $callback;
+				} else {
+					foreach ($callback->httpMethods as $httpMethod) {
+						if (isset($this->wildcardCallbacks[$httpMethod])) {
+							throw new SplashException("An error occured while looking at the list URL managed in Splash. The URL '".$callback->url."' for HTTP method '".$httpMethod."' is associated "
+									."to 2 methods: \$".$callback->controllerInstanceName."->".$callback->methodName." and \$".$this->wildcardCallbacks[$httpMethod]->controllerInstanceName."->".$this->wildcardCallbacks[$httpMethod]->methodName);
+						}
+						$this->wildcardCallbacks[$httpMethod] = $callback;
+					}
+				}
+			} elseif (strpos($key, "{") === 0 && strpos($key, "}") === strlen($key)-1) {
 				// Parameterized URL element
 				$varName = substr($key, 1, strlen($key)-2);
 				
@@ -98,16 +128,25 @@ class SplashUrlNode {
 	 * 
 	 * @param array $urlParts
 	 * @param string $httpMethod
-	 * @param SplashRequestContext $context
 	 * @param array $parameters
+	 * @param SplashRoute $closestWildcardRoute The last wildcard (*) route encountered while navigating the tree.
+	 * @throws SplashException
 	 * @return SplashRoute
 	 */
-	private function walkArray(array $urlParts, $httpMethod, array $parameters) {
+	private function walkArray(array $urlParts, $httpMethod, array $parameters, $closestWildcardRoute = null) {
+		
+		if (isset($this->wildcardCallbacks[$httpMethod])) {
+			$closestWildcardRoute = $this->wildcardCallbacks[$httpMethod];
+			$closestWildcardRoute->filledParameters = $parameters;
+		} elseif (isset($this->wildcardCallbacks[""])) {
+			$closestWildcardRoute = $this->wildcardCallbacks[""];
+			$closestWildcardRoute->filledParameters = $parameters;
+		}
 		
 		if (!empty($urlParts)) {
 			$key = array_shift($urlParts);
 			if (isset($this->children[$key])) {
-				return $this->children[$key]->walkArray($urlParts, $httpMethod, $parameters);
+				return $this->children[$key]->walkArray($urlParts, $httpMethod, $parameters,$closestWildcardRoute);
 			} else {
 				foreach ($this->parameterizedChildren as $varName=>$splashUrlNode) {
 					if (isset($parameters[$varName])) {
@@ -115,13 +154,13 @@ class SplashUrlNode {
 					}
 					$newParams = $parameters;
 					$newParams[$varName] = $key;
-					$result = $this->parameterizedChildren[$varName]->walkArray($urlParts, $httpMethod, $newParams);
+					$result = $this->parameterizedChildren[$varName]->walkArray($urlParts, $httpMethod, $newParams, $closestWildcardRoute);
 					if ($result != null) {
 						return $result;
 					}
 				}
 				// If we arrive here, there was no parameterized URL matching our objective
-				return null;
+				return $closestWildcardRoute;
 			}
 		} else {
 			if (isset($this->callbacks[$httpMethod])) {
@@ -133,7 +172,7 @@ class SplashUrlNode {
 				$route->filledParameters = $parameters;
 				return $route;
 			} else {
-				return null;
+				return $closestWildcardRoute;
 			}
 		}
 		

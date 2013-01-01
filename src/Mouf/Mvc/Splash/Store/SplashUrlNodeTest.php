@@ -129,5 +129,31 @@ class SplashUrlNode extends atoum\test {
     	$this->assert->string($result->methodName)->isEqualTo('myMethodOk');
     	$this->assert->isTrue($result->parameters[0])->isEqualTo(12);    
     }
+
+    /**
+     *
+     */
+    public function testWildcardUrls()
+    {
+    
+    	$splashUrlNode = new \SplashUrlNode();
+    	$callback = new \SplashRoute("/toto/*", "myController", "myMethod", "myTitle", "myComment", "fullComment", array());
+    	$splashUrlNode->registerCallback($callback);
+    
+    	$result = $splashUrlNode->walk("/toto/tata/titi", "POST");
+    	/* @var $result SplashRoute */
+    	$this->assert->object($result)->isInstanceOf("SplashRoute");
+    	$this->assert->string($result->controllerInstanceName)->isEqualTo('myControllerOk');
+    	$this->assert->string($result->methodName)->isEqualTo('myMethodOk');
+    	$this->assert->isTrue($result->parameters[0])->isEqualTo(12);
+    	
+    	$result = $splashUrlNode->walk("/toto/", "POST");
+    	/* @var $result SplashRoute */
+    	$this->assert->object($result)->isInstanceOf("SplashRoute");
+    	$this->assert->string($result->controllerInstanceName)->isEqualTo('myControllerOk');
+    	$this->assert->string($result->methodName)->isEqualTo('myMethodOk');
+    	$this->assert->isTrue($result->parameters[0])->isEqualTo(12);
+    	 
+    }
     
 }
