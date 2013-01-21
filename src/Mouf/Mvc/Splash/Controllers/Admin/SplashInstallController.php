@@ -231,7 +231,7 @@ class SplashInstallController extends Controller {
 				if (!$this->moufManager->instanceExists("splashCacheFile")) {
 					$splashCacheFile = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\FileCache");
 					$splashCacheFile->setName("splashCacheFile");
-					$splashCacheFile->getProperty("cacheDirectory")->setValue("splashCache");					
+					$splashCacheFile->getProperty("cacheDirectory")->setValue("splashCache/");					
 				} else {
 					$splashCacheFile = $this->moufManager->getInstanceDescriptor("splashCacheApc");
 				}
