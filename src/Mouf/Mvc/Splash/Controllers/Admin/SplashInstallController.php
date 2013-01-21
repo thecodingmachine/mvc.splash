@@ -179,13 +179,48 @@ class SplashInstallController extends Controller {
 			}
 			$configManager->setDefinedConstants($definedConstants);
 
-			// TODO: gérer les ORIGIN
 			$splashInstance->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
 				
 			//
 			// TODOOOOOOOOOOOOOOOOOOOOO: bind au ErrorLogLogger
 		} else {
 			$splashInstance = $this->moufManager->getInstanceDescriptor("splash");
+		}
+		
+		if ($splashInstance->getProperty("defaultTemplate")->getValue() == null) {
+			if ($this->moufManager->instanceExists("bootstrapTemplate")) {
+				$splashInstance->getProperty("defaultTemplate")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
+			}
+		}
+		
+		// Let's create the errors controller.
+		$httpErrorsController = InstallUtils::getOrCreateInstance("httpErrorsController", "Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController", $this->moufManager);
+		if ($httpErrorsController->getProperty("template")->getValue() == null) {
+			if ($this->moufManager->instanceExists("bootstrapTemplate")) {
+				$httpErrorsController->getProperty("template")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
+			}
+		}
+		if ($httpErrorsController->getProperty("contentBlock")->getValue() == null) {
+			if ($this->moufManager->instanceExists("block.content")) {
+				$httpErrorsController->getProperty("contentBlock")->setValue($this->moufManager->getInstanceDescriptor("block.content"));
+			}
+		}
+		if ($httpErrorsController->getProperty("debugMode")->getValue() == null) {
+			$httpErrorsController->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
+		}
+		
+		if ($splashInstance->getProperty("http404Handler")->getValue() == null) {
+			$splashInstance->getProperty("http404Handler")->setValue($httpErrorsController);
+		}
+		
+		if ($splashInstance->getProperty("http500Handler")->getValue() == null) {
+			$splashInstance->getProperty("http500Handler")->setValue($httpErrorsController);
+		}
+		
+		if ($splashInstance->getProperty("content")->getValue() == null) {
+			if ($this->moufManager->instanceExists("block.content")) {
+				$splashInstance->getProperty("content")->setValue($this->moufManager->getInstanceDescriptor("block.content"));
+			}
 		}
 		
 		if ($splashInstance->getProperty("cacheService")->getValue() == null) {
