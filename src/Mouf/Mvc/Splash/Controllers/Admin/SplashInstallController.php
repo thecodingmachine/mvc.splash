@@ -165,7 +165,6 @@ class SplashInstallController extends Controller {
 		if (!$this->moufManager->instanceExists("splash")) {
 			$splashInstance = $this->moufManager->createInstance("Mouf\\Mvc\\Splash\\Splash");
 			$splashInstance->setName("splash");
-			$splashInstance->getProperty("defaultTemplate")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
 			
 			$configManager = $this->moufManager->getConfigManager();
 			$constants = $configManager->getMergedConstants();
@@ -215,12 +214,6 @@ class SplashInstallController extends Controller {
 		
 		if ($splashInstance->getProperty("http500Handler")->getValue() == null) {
 			$splashInstance->getProperty("http500Handler")->setValue($httpErrorsController);
-		}
-		
-		if ($splashInstance->getProperty("content")->getValue() == null) {
-			if ($this->moufManager->instanceExists("block.content")) {
-				$splashInstance->getProperty("content")->setValue($this->moufManager->getInstanceDescriptor("block.content"));
-			}
 		}
 		
 		if ($splashInstance->getProperty("cacheService")->getValue() == null) {

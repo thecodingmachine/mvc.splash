@@ -29,17 +29,10 @@ use Mouf\MoufManager;
  * The name of the instance MUST be "splash".<br/>
  * <br/>
  * The Splash component has several ways to bind an URL to a Controller.<br/>
- * It can do so:<br/>
- * <ul><li>using the instance name of a controller that has been instanciated with Mouf.<br/>
- * For instance, if a controller has an instance name that is "myController", then
- * the http://[myserver]/[mywebapp]/myController URL will lead to the default action
- * of that controller.<br/>
- * The http://[myserver]/[mywebapp]/myController/myAction URL will lead to the myAction action
- * of that controller.</br>
- * </li></ul>
- * Others methods are remaining to be done.
+ * It can do so based on the @URL annotation, or based on the @Action annotation.<br/>
+ * Check out the Splash documentation here: 
+ * <a href="https://github.com/thecodingmachine/mvc.splash/">https://github.com/thecodingmachine/mvc.splash/</a>
  *
- * @Component
  * @RequiredInstance "splash"
  */
 class Splash {
@@ -52,15 +45,6 @@ class Splash {
 	 * @var LogInterface
 	 */
 	public $log;
-
-	/**
-	 * The default template used by Splash (for displaying error pages, etc...)
-	 *
-	 * @Property
-	 * @Compulsory
-	 * @var TemplateInterface
-	 */
-	public $defaultTemplate;
 
 	/**
 	 * The instance in charge of displaying HTTP 404 errors.
@@ -78,15 +62,6 @@ class Splash {
 	 */
 	public $http500Handler;
 	
-	/**
-	 * The default content zone used by Splash (for displaying error pages, etc...)
-	 *
-	 * @Property
-	 * @Compulsory
-	 * @var HtmlBlock
-	 */
-	public $content;
-
 	/**
 	 * Splash uses the cache service to store the URL mapping (the mapping between a URL and its controller/action)
 	 *

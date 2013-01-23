@@ -34,8 +34,7 @@ public function my_action($var1, $var2 = 42) { ... }
 In this sample, if the user does not pass the "var2" parameter in the URL, it will be equal to 42.
 The URL might be: <code>http://[server-url]/[webapp-path]/test?var1=param1</code>
 
-Advanced behaviour
-------------------
+
 <!--
 <h3>Parameters' origin</h3>
 <p>In an action, you can pass additional annotations in order to modify the default mapping of parameters.</p>
@@ -66,13 +65,14 @@ Map argument "$userId" in the action to request parameter user_id, and must be a
 to fetch the parameter from the session.</p>
 -->
 
-###Parameters' type
+Parameters' type
+----------------
 
 In classic PHP behaviour, you the <code>@param [type] $var</code> annotation only informs the user of the expected type of the parameter.
-Using Splash, this annotation means a lot more because Splash will throw an Excpetion if the variable as an unexepted type.
-For example, if you use the annotation @param int $userId, and the variable is in fact a string ('toto' for instance).
+Using Splash, this annotation means a lot more because Splash will throw an Excpetion if the variable has an unexpected type.
+For example, if you use the annotation <code>@param int $userId</code>, and the variable is in fact a string ('toto' for instance), an exception will be raised and an HTTP 500 page displayed.
 
-Possible types can be one of:
+Allowed parameter types are:
  - string
  - int
  - float
