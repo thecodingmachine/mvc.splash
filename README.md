@@ -16,7 +16,7 @@ Getting started
 ---------------
 
 The first thing you should learn when using Splash is how to write a controller.
-Read the [writing controllers guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/writing_controllers.html).
+Read the [writing controllers guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/writing_controllers.md).
 
 Advanced topics
 ---------------
