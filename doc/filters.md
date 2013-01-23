@@ -1,43 +1,52 @@
-<h1>Filters</h1>
+Filters
+=======
 
-<h2>Using filters</h2>
+Using filters
+-------------
 
-<p>Splash supports the notion of <em>"Filter"</em>. A filter is a piece of code that can be run before or after an action.</p>
-<p>There could be many reason why you want to run a filter:</p>
-<ul>
-  <li>Check a user is logged before starting an action</li>
-  <li>Check the action is run on an SSL channel</li>
-  <li>Initialize some frameworks, ...</li>
-</ul>
+Splash supports the notion of _"Filter"_. A filter is a piece of code that can run before or after an action.
+There could be many reason why you want to run a filter:
+ - Check that a user is logged before starting an action
+ - Check that the action is performed on an SSL channel
+ - Initialize some frameworks, ...
 
-<p>Below is a sample filter:</p>
-<pre>
+Below are sample filters:
+```php
 /**
- * @Action
+ * @URL /test
  * @Logged
  * @RequireHttps("yes")
  */
 function deleteUser($password) { ... }
-</pre>
+```
 
-<p>This sample provides 2 filters:</p>
+This sample provides 2 filters:
+ - *@Logged* is used by Splash to check that the user is logged. If not, the user is sent to the login page.
+ - *@RequireHttps* is used by Splash to make sure the action is run on an HTTPS channel. If not, an error message is displayed.
+
+Note: the *@Logged* filter is not part of the base distribution of Splash. Indeed, Splash is in no way an authentication framework.
+However, if you are using the _mouf/security.userservice_ package, you might want to add the _mouf/security.userservice-splash_ package
+that provides this usefull *@Logged* annotation.
+
+Please note the <b>@RequireHttps</b> annotation accepts one parameter. This parameter can be:
 <ul>
-  <li><b>@Logged</b> is used by Splash to check that the user is logged. If not, the user is sent to the login page.</li>
-  <li><b>@RequireHttps</b> is used by Splash to make sure the action is run on an HTTPS channel. If not, an error message is displayed.</li>
+ <li>By passing @RequireHttps("yes"), an Exception is thrown if the action is called in HTTP.
+ <li>By passing @RequireHttps("no"), no test is performed.
+ <li>By passing @RequireHttps("redirect"), the call is redirected to HTTPS. This does only work with GET requests.
 </ul>
 
-<p>Please note the <b>@RequireHttps</b> annotation accepts one parameter. This parameter can be:</p>
-<ul>
- <li>By passing @RequireHttps("yes"), an Exception is thrown if the action is called in HTTP.</li>
- <li>By passing @RequireHttps("no"), no test is performed.</li>
- <li>By passing @RequireHttps("redirect"), the call is redirected to HTTPS. This does only work with GET requests.</li>
-</ul>
+There is a third default filter worth mentionning:
+The *@RedirectToHttp* filter will bring the user back to HTTP if the user is in HTTPS. The port can be specified in parameter if needed. The filter
+works only with GET requests. If another type of request is performed (POST), an exception will be thrown.
 
-<p>There is a third default filter worth mentionning:</p>
-<p>The <b>@RedirectToHttp</b> filter will bring the user back to HTTP if the user is in HTTPS. The port can be specified in parameter if needed. The filter
-works only with GET requests. If another type of request is performed (POST), an exception will be thrown.</p>
+Developing your own filters
+---------------------------
 
-<h2>Developing your own filters</h2>
+You can of course develop your own filters.
+Each filter is represented by a class.
 
-<p>You can of course develop your own filters. Your filters should extend the AbstractFilter class, and you should register your filters using the command:</p>
-<pre>FilterUtils::registerFilter("MyFilterClassName");</pre>
+To create a filter:
+ - The filters must extends the Mouf\Mvc\Splash\Filters\AbstractFilter class
+ - The namespace of the filter must be Mouf\Annotations
+ - The name of the class is the name of the annotations + "Annotation". For instance, a @Profile filter would be implemented using the Mouf\Annotations\ProfileAnnotation class.
+ 

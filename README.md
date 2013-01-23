@@ -22,4 +22,6 @@ Advanced topics
 ---------------
 
 The [managing URL parameters page](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/url_parameters.md) explains how to map parameters from the request to parameters of the action.
-The [filters guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/filters.html) explains how to use and write filters in your actions.
+The [settings and error handling guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/settings_and_error_handling.md) explains how to customize Splash behaviour and HTTP 404/500 error messages.
+The [filters guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/filters.md) explains how to use and write filters in your actions.
+The [views section](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/views.md) explains how Splash does (not) handle the views.

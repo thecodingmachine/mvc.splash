@@ -1,15 +1,17 @@
-Configuring Splash
-------------------
+Settings and error handling 
+---------------------------
 
-You can configure Splash using the "splash" instance. The Splash class requires 2 properties to be filled:
- - *defaultTemplate*: This is the default HTML template that Splash will use to display error messages.
+You can configure Splash using the "splash" instance. Here is what the "splash" instance looks by default:
+![Splash instance](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/splash_instance.png)
+
+The Splash class requires 2 properties to be filled:
  - *log*: This is the logger used by Splash.
-TODO: change this
+ - *http404Handler*: The class in charge of rendering HTTP 404 errors. Bind to your own class to override default behaviour.
+ - *http500Handler*: The class in charge of rendering HTTP 500 errors. Bind to your own class to override default behaviour.
+ - *cacheService*: The cache service used to store the routes.
+ - *supportsHttps*: Whether your server should support HTTPS or not.
+ 
+Note: the DEBUG_MODE config constant is used to decide whether stack traces should be displayed or not in case an exception is thrown.
 
-Hopefully, Splash comes with a template (the BootstrapTemplate, based on Twitter Bootstrap) and a logger (named ErrorLogLogger). The ErrorLogLogger writes logs to the default php_error.log file
-(using the error_log PHP function).
-
-<p>The install process binds by default the SplashTemplate and the ErrorLogLogger to Splash. If you want to change the default template,
-you can just bind another template (or write your own). The default template is used on all HTTP 404 and 500 pages.</p>
-
-<img src="images/configure_splash.jpg" alt="" />
+If you take a look at the *http404Handler* and *http500Handler*, you will notice they use a template, based on Bootstrap.
+You can of course change this template to your own template or a special template in order to provide a consistant user experience.
