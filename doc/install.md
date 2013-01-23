@@ -64,7 +64,7 @@ Configure apache redirection
 
 When Splash is installed, a MVC menu appears in Mouf.<br/>
 
-<img src="images/splash_menu.png" alt="Splash Menu" /><br/>
+![Splash menu](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/splash_menu.png)
 
 The *Configure Apache redirection" menu helps you configuring what files should be handled by Splash and what files should be ignored.
 By default, resource files (images, js, css...) are ignored. 

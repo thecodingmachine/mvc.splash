@@ -12,7 +12,8 @@ There are several ways to declare a method to be an action. The most common ways
  - The *@Action* annotation</li>
 
 
-###The @URL annotation
+The @URL annotation
+-------------------
 
 This is the preferred way of declaring an action:
 
@@ -62,7 +63,7 @@ First, click the green *Purge code cache* button in Mouf's menu. This will make 
 directory and find our new "MyController" class.
 Now, click the *Instances / Create a new instance* menu item, and fill the instance details.
 
-<img src="images/create_instance.png" alt="" />
+![Create an instance](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/create_instance.png)
 
 In this sample, we are creating a "myController" instance whose class is "MyController".
 
@@ -95,7 +96,6 @@ use Mouf\Mvc\Splash\Controllers\Controller;
 /**
  * This is a sample user controller.
  *
- * @Component
  */
 class UserController extends Controller {
 	
@@ -116,6 +116,8 @@ class UserController extends Controller {
 	 * @URL /user
 	 * @Post
 	 * @param string $id
+	 * @param string $name
+	 * @param string $email
 	 */
 	public function editUser($id, $name, $email) {
 		 echo "Here, we might put the code to change the user object.";
@@ -124,19 +126,19 @@ class UserController extends Controller {
 }
 ```
 
-<p>In the exemple above (a sample controller to view/modify users), the "/user" URL is bound to 2 different methods
-based in the HTTP method used to access this URL.</p>
+In the exemple above (a sample controller to view/modify users), the "/user" URL is bound to 2 different methods
+based in the HTTP method used to access this URL.
 
-<h3>Parameterized URLs</h3>
+Parameterized URLs
+------------------
 
-<p>You can put parameters in the URLs and fetch them very easily:</p>
+You can put parameters in the URLs and fetch them very easily:
 
-<pre class="brush: php">
+``php
 &lt;?php
 /**
  * This is a sample user controller.
  *
- * @Component
  */
 class UserController extends Controller {
 	
@@ -152,25 +154,26 @@ class UserController extends Controller {
 	}
 }
 ?&gt;
-</pre>
+```
 
-<p>Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.</p>
-<p>So for instance, if you access http://[server]/[appname]/user/42/view, the $id parameter will be filled with "42".</p> 
+Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.
+So for instance, if you access http://[server]/[appname]/user/42/view, the $id parameter will be filled with "42". 
 
-<h3>The @Action annotation</h3>
+The @Action annotation
+----------------------
 
-<p>The @Action parameter can replace the @URL parameter.</p>
-<p>You simply put a @Action annotation in your method. The URLs to access a @Action method are always:</p>
-<code>http://[server-url]/[webapp-path]/[mouf-controller-instance-name]/[action-name]?[action-parameters]</code>
+The @Action parameter can replace the @URL parameter.
+You simply put a @Action annotation in your method. The URLs to access a @Action method are always:
 
-<p>Here is a sample:</p>
+	http://[server-url]/[webapp-path]/[mouf-controller-instance-name]/[action-name]?[action-parameters]
 
-<pre class="brush: php">
+Here is a sample:
+
+```php
 &lt;?php
 /**
  * This is my test controller.
  *
- * @Component
  */
 class MyController extends Controller {
 	
@@ -189,20 +192,20 @@ class MyController extends Controller {
 	}
 }
 ?&gt;
-</pre>
+```
 
-<p>The <em>my_action</em> method is a Splash action. You know this because there is a @Action annotation in the PHPDoc comment of the method.</p>
+The *my_action* method is a Splash action. You know this because there is a @Action annotation in the PHPDoc comment of the method.
 
-<p>Now, we can access the example page using this URL:<br/>
-<code>http://[server-url]/[webapp-path]/my_controller/my_action?var1=42&var2=toto</code>
-</p>
+Now, we can access the example page using this URL:
+	http://[server-url]/[webapp-path]/my_controller/my_action?var1=42&var2=toto
 
-<h2>Default actions</h2>
+Default actions
+---------------
 
-<p>Sometimes, when using @Action annotations, we might want to have a URL that is a bit shorter than /my_webapp/my_controller/my_action.</p>
-<p>Splash supports a special method called "index". If no action is provided in the URL, the index method will be called instead.</p>
+Sometimes, when using @Action annotations, we might want to have a URL that is a bit shorter than /my_webapp/my_controller/my_action.
+Splash supports a special method called "index". If no action is provided in the URL, the index method will be called instead.
 
-<pre class="brush: php">
+```php
 &lt;?php
 /**
  * This is my test controller.
@@ -221,7 +224,8 @@ class MyController extends Controller {
 	}
 }
 ?&gt;
-</pre>
+```
 
-<p>The test page can be accessed using the URL: <code>http://[server-url]/[webapp-path]/my_controller/</code>.</p>
+The test page can be accessed using the URL:
+	http://[server-url]/[webapp-path]/my_controller/.
 
