@@ -24,11 +24,11 @@ $moufManager->bindComponents('splashpurgecache', 'content', 'block.content');
 
 $moufManager->declareComponent('splashHtaccessValidator', 'Mouf\\Validator\\MoufBasicValidationProvider', true);
 $moufManager->setParameter('splashHtaccessValidator', 'name', 'Splash validator');
-$moufManager->setParameter('splashHtaccessValidator', 'url', "vendor/mouf/mvc.splash/src/direct/splash_htaccess_validator.php");
+$moufManager->setParameter('splashHtaccessValidator', 'url', MoufUtils::getUrlPathFromFilePath(__DIR__.'/direct/splash_htaccess_validator.php', true));
 $moufManager->setParameter('splashHtaccessValidator', 'propagatedUrlParameters', array('selfedit'));
 $moufManager->getInstance("validatorService")->validators[] = $moufManager->getInstance("splashHtaccessValidator");
 
-MoufAdmin::getValidatorService()->registerBasicValidator('Splash validator', 'vendor/mouf/mvc.splash/src/direct/splash_instance_validator.php');
+MoufAdmin::getValidatorService()->registerBasicValidator('Splash validator', MoufUtils::getUrlPathFromFilePath(__DIR__.'/direct/splash_instance_validator.php', true));
 
 MoufUtils::registerMainMenu('mvcMainMenu', 'MVC', null, 'mainMenu', 100);
 MoufUtils::registerMenuItem('mvcSplashSubMenu', 'Splash MVC', null, 'mvcMainMenu', 45);
