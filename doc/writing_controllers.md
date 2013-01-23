@@ -1,26 +1,29 @@
-<h1>Writing controllers</h1>
+Writing controllers
+===================
 
-<h2>What is a controller?</h2>
+What is a controller?
+---------------------
 
-<p>In Splash, a controller is a <a href="http://www.thecodingmachine.com/ext/mouf/doc/components.html">Mouf component</a>, that contains a number of <em>Actions</em>.</p>
-<p><em>Actions</em> are methods that can be directly accessed from the browser.</p>
+In Splash, a controller is a class that contains a number of _Actions_.
+_Actions_ are methods that can be directly accessed from the browser.
 
-<p>There are several ways to declare a method to be an action. The most common are:</p>
-<ul>
-	<li>The <strong>@URL</strong> annotation</li>
-	<li>The <strong>@Action</strong> annotation</li>
-</ul>
+There are several ways to declare a method to be an action. The most common ways are:
+ - The *@URL* annotation</li>
+ - The *@Action* annotation</li>
 
-<h3>The @URL annotation</h3>
 
-<p>This is the preferred way of declaring an action:</p>
+###The @URL annotation
 
-<pre class="brush: php">
-&lt;?php
+This is the preferred way of declaring an action:
+
+```php
+<?php
+namespace Test\Controllers;
+
+use Mouf\Mvc\Splash\Controllers\Controller;
+
 /**
  * This is my test controller.
- *
- * @Component
  */
 class MyController extends Controller {
 	
@@ -38,30 +41,56 @@ class MyController extends Controller {
 		 echo "&lt;/body&gt;";
 	}
 }
-?&gt;
-</pre>
+?>
+```
 
-<p>First thing you can see: the MyController class extends the "Controller" class provided by Splash. Also, it is a Mouf component, since we can read the "@Component"
-annotation in the PHPDoc comment of the class.</p>
-<p>The <strong>@URL</strong> annotation points to the web path the action is bound to.</p>
+Note: this class must respect the PSR-0 in ordre to be reachable by composer's autoload mechnism.
+Therefore, if you defined the "Test" namespace to be reachable from the directory "src", 
+the filename for this class has to be "src/Test/Controllers/MyController.php".
 
-<p>The action takes 2 parameters: var1 and var2. This means that the page needs both parameters passed either in GET or POST.</p>
+First thing you can see: the MyController class extends the *Controller* class provided by Splash.
 
-<p>In order to test this, we must first create an instance of the controller in Mouf.</p>
-<p>We will do this using the Mouf User Interface.</p>
-<p>We will start by including the MyController.php file, using the Mouf "Load components" menu.</p>
+The *@URL* annotation points to the web path the action is bound to.
 
-<img src="images/register_controller_file.jpg" alt="" />
+The action takes 2 parameters: var1 and var2. This means that the page needs both parameters passed 
+either in GET or POST.
 
-<p>Once this is registered, we can go in the "create a new instance" menu and create the "my_controller".</p>
-<img src="images/create_instance.jpg" alt="" />
+In order to test this, we must first create an instance of the controller in Mouf.
+We will do this using the Mouf User Interface.
 
-<h3>The @Get / @Post annotations</h3>
+First, click the green *Purge code cache* button in Mouf's menu. This will make sure Mouf will scan the source code
+directory and find our new "MyController" class.
+Now, click the *Instances / Create a new instance* menu item, and fill the instance details.
 
-<p>We might want to decide that an action should always be called via GET, or via POST (or PUT or DELETE if you want to provide REST services).</p>
-<p>Splash makes that very easy to handle. You can just add a @Get or @Post annotation (or @Put or @Delete). Here is a sample:</p>
+<img src="images/create_instance.png" alt="" />
 
-<pre class="brush: php">
+In this sample, we are creating a "myController" instance whose class is "MyController".
+
+*Troubleshooting:* For a number of reasons, the MyController class might not appear in the list of classes.
+Here is a list of actions you can take to understand where the problem comes from:
+ 1- Be sure you purged the code cache, and refresh the page.
+ 2- If the class does not appear, it is likely there is a problem. In the Mouf's "Project" menu, select *Analyze classes*. Try to find your class in the list. Mouf will notify you if it sees an error in your class. 
+ 3- If your class does not appear at all in the *Analyze classes* page, it is likely that the Composer autoloader cannot find your class. Double check the namespace, the file name, the directory name and your autoload settings in *composer.json*. Also, run the "php composer dumpautoload" to be sure Composer regenerates its autoloader.
+
+We just created a new controller, that contains a new route to an action. Each time a route is created in Splash,
+it is whise to purge the cache. So just press the big red "Purge cache" button.  
+
+Now, let's test our code.
+By browsing to http://localhost/{my_app}/path/to/my/action?var1=42&var2=24, we should see the message displayed!
+
+Done? Then let's move on! 
+ 
+The @Get / @Post annotations
+----------------------------
+
+We might decide that an action should always be called via GET, or via POST (or PUT or DELETE if you want to provide REST services).
+Splash makes that very easy to handle. You can just add a @Get or @Post annotation (or @Put or @Delete). Here is a sample:
+
+```php
+namespace Test\Controllers;
+
+use Mouf\Mvc\Splash\Controllers\Controller;
+
 &lt;?php
 /**
  * This is a sample user controller.
@@ -93,8 +122,7 @@ class UserController extends Controller {
 	}
 
 }
-?&gt;
-</pre>
+```
 
 <p>In the exemple above (a sample controller to view/modify users), the "/user" URL is bound to 2 different methods
 based in the HTTP method used to access this URL.</p>
