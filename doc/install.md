@@ -46,8 +46,8 @@ If you do not understand what "namespace" or "PSR-0" means, *stop right now*, an
 At this point, the Splash packages should be downloaded and installed (and Mouf should be set up). Start the Mouf admin interface at http://localhost/{yourproject}/vendor/mouf/mouf
 There is an install process to run, so just run it.
 
-![Splash install screenshot](images/install_splash.png)
-![Splash install screenshot](images/install_splash_2.png)
+![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash.png)
+![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash_2.png)
 
 The Splash install process will:
  - Create a "splash" instance of the "Splash" class. The "splash" instance contains the global configuration for Splash (default error handler for 404/500 errors, etc...).
@@ -56,7 +56,7 @@ The Splash install process will:
  - Create a default HTML view for the RootController
 
 The install process does its best to use your namespace for the RootController, and it asks you where the files should go:
-![Splash install screenshot](images/install_splash_3.png)
+![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash_3.png)
 
 
 Configure apache redirection

@@ -10,10 +10,10 @@ You might want to use Splash in order to seperate cleanly the controllers (that 
 Installation
 ------------
 
-[See Installation instructions](doc/install.md)
+[See Installation instructions](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/install.md)
 
-Writing a controller
---------------------
+Getting started
+---------------
 
 The first thing you should learn when using Splash is how to write a controller.
 Read the [writing controllers guide](writing_controllers.html).
@@ -21,5 +21,5 @@ Read the [writing controllers guide](writing_controllers.html).
 Advanced topics
 ---------------
 
-The [managing URL parameters page](doc/url_parameters.md) explains how to map parameters from the request to parameters of the action.
-The [filters guide](doc/filters.html) explains how to use and write filters in your actions.
+The [managing URL parameters page](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/url_parameters.md) explains how to map parameters from the request to parameters of the action.
+The [filters guide](https://github.com/thecodingmachine/mvc.splash/blob/4.0/doc/filters.html) explains how to use and write filters in your actions.
