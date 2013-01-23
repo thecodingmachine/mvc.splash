@@ -47,7 +47,30 @@
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
     			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
-    		]
+    		],
+			"doc": [
+	    		{
+	    			"title": "Installing Splash",
+	    			"url": "doc/install.md"
+	    		},
+	    		{
+	    			"title": "Writing controllers",
+	    			"url": "doc/writing_controllers.md"
+	    		},
+	    		{
+	    			"title": "Managing URL parameters",
+	    			"url": "doc/url_parameters.md"
+	    		},
+	    		{
+	    			"title": "Writing your own filters",
+	    			"url": "doc/filters.md"
+	    		}
+	    		,
+	    		{
+	    			"title": "Settings and error handling",
+	    			"url": "doc/settings_and_error_handling.md"
+	    		}
+	    	]
 		}
     }
 }
