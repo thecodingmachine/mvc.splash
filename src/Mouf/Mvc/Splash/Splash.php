@@ -95,7 +95,7 @@ class Splash {
 	 * @Property
 	 * @var array<string,SplashAction>
 	 */
-	public $routeMap;
+	//public $routeMap;
 
 	/**
 	 * 
