@@ -36,10 +36,10 @@ class MyController extends Controller {
 	 * @param string $var2
 	 */
 	public function my_url($var1, $var2) {
-		 echo "&lt;html&gt;&lt;head&gt;&lt;/head&gt;";
-		 echo "&lt;body&gt;";
+		 echo "<html><head></head>";
+		 echo "<body>";
 		 echo "var1 value is ".htmlentities($var1)." and var2 value is ".htmlentities($var2);
-		 echo "&lt;/body&gt;";
+		 echo "</body>";
 	}
 }
 ?>
@@ -92,7 +92,7 @@ namespace Test\Controllers;
 
 use Mouf\Mvc\Splash\Controllers\Controller;
 
-&lt;?php
+<?php
 /**
  * This is a sample user controller.
  *
@@ -134,8 +134,8 @@ Parameterized URLs
 
 You can put parameters in the URLs and fetch them very easily:
 
-``php
-&lt;?php
+```php
+<?php
 /**
  * This is a sample user controller.
  *
@@ -153,7 +153,7 @@ class UserController extends Controller {
 		 echo "Here, we might put the form for user ".htmlentities($id);
 	}
 }
-?&gt;
+?>
 ```
 
 Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.
@@ -170,7 +170,7 @@ You simply put a @Action annotation in your method. The URLs to access a @Action
 Here is a sample:
 
 ```php
-&lt;?php
+<?php
 /**
  * This is my test controller.
  *
@@ -185,13 +185,13 @@ class MyController extends Controller {
 	 * @param string $var2
 	 */
 	public function my_action($var1, $var2) {
-		 echo "&lt;html&gt;&lt;head&gt;&lt;/head&gt;";
-		 echo "&lt;body&gt;";
+		 echo "<html><head></head>";
+		 echo "<body>";
 		 echo "var1 value is ".htmlentities($var1)." and var2 value is ".htmlentities($var2);
-		 echo "&lt;/body&gt;";
+		 echo "</body>";
 	}
 }
-?&gt;
+?>
 ```
 
 The *my_action* method is a Splash action. You know this because there is a @Action annotation in the PHPDoc comment of the method.
@@ -206,7 +206,7 @@ Sometimes, when using @Action annotations, we might want to have a URL that is a
 Splash supports a special method called "index". If no action is provided in the URL, the index method will be called instead.
 
 ```php
-&lt;?php
+<?php
 /**
  * This is my test controller.
  *
@@ -223,7 +223,7 @@ class MyController extends Controller {
 		 echo "This is the index";
 	}
 }
-?&gt;
+?>
 ```
 
 The test page can be accessed using the URL:
