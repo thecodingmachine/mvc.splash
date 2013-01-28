@@ -186,12 +186,6 @@ class SplashInstallController extends Controller {
 			$splashInstance = $this->moufManager->getInstanceDescriptor("splash");
 		}
 		
-		if ($splashInstance->getProperty("defaultTemplate")->getValue() == null) {
-			if ($this->moufManager->instanceExists("bootstrapTemplate")) {
-				$splashInstance->getProperty("defaultTemplate")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
-			}
-		}
-		
 		// Let's create the errors controller.
 		$httpErrorsController = InstallUtils::getOrCreateInstance("httpErrorsController", "Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController", $this->moufManager);
 		if ($httpErrorsController->getProperty("template")->getValue() == null) {
