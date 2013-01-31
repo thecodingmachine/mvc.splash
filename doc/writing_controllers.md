@@ -88,11 +88,11 @@ We might decide that an action should always be called via GET, or via POST (or 
 Splash makes that very easy to handle. You can just add a @Get or @Post annotation (or @Put or @Delete). Here is a sample:
 
 ```php
+<?php
 namespace Test\Controllers;
 
 use Mouf\Mvc\Splash\Controllers\Controller;
 
-<?php
 /**
  * This is a sample user controller.
  *
