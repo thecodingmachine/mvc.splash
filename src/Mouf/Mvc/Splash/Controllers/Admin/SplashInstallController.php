@@ -226,6 +226,10 @@ class SplashInstallController extends Controller {
 					$splashCacheFile = $this->moufManager->getInstanceDescriptor("splashCacheApc");
 				}
 				
+				if (isset($constants['ROOT_URL'])) {
+					$splashCacheFile->getProperty('prefix')->setValue('ROOT_URL')->setOrigin('config');
+				}
+				
 				$splashCacheApc->getProperty("fallback")->setValue($splashCacheFile);
 			
 			} else {
