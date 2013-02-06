@@ -29,11 +29,11 @@ However, if you are using the _mouf/security.userservice_ package, you might wan
 that provides this usefull *@Logged* annotation.
 
 Please note the <b>@RequireHttps</b> annotation accepts one parameter. This parameter can be:
-<ul>
- <li>By passing @RequireHttps("yes"), an Exception is thrown if the action is called in HTTP.
- <li>By passing @RequireHttps("no"), no test is performed.
- <li>By passing @RequireHttps("redirect"), the call is redirected to HTTPS. This does only work with GET requests.
-</ul>
+
+- By passing @RequireHttps("yes"), an Exception is thrown if the action is called in HTTP.
+- By passing @RequireHttps("no"), no test is performed.
+- By passing @RequireHttps("redirect"), the call is redirected to HTTPS. This does only work with GET requests.
+
 
 There is a third default filter worth mentionning:
 The *@RedirectToHttp* filter will bring the user back to HTTP if the user is in HTTPS. The port can be specified in parameter if needed. The filter
