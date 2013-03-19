@@ -31,26 +31,26 @@
     "extra": {
 	     "mouf": {
 			"install": [
-			{
+				{
 				"type": "url",
-	    		"url": "splashinstall/",
-	    		"scope": "global",
-	    		"description": "Create RootController and root view."
-			},
-			{
-				"type": "url",
-	    		"url": "splashinstall/writeHtAccess",
-	    		"scope": "local",
-	    		"description": "Write .htaccess file."
-			}
-			],
+		    		"url": "splashinstall/",
+		    		"scope": "global",
+		    		"description": "Create RootController and root view."
+				},
+				{
+					"type": "url",
+		    		"url": "splashinstall/writeHtAccess",
+		    		"scope": "local",
+		    		"description": "Write .htaccess file."
+				}
+				],
 			"require-admin": [
-    			"src/SplashAdmin.php",
-    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
-    		],
+	    			"src/SplashAdmin.php",
+	    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
+	    		],
 			"doc": [
 	    		{
 	    			"title": "Installing Splash",
@@ -73,7 +73,8 @@
 	    			"title": "Settings and error handling",
 	    			"url": "doc/settings_and_error_handling.md"
 	    		}
-	    	]
+	    		],
+			"logo": "logo.png"
 		}
     }
 }
