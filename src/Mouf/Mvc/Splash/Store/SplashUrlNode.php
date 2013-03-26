@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash\Store;
 
+use Mouf\Mvc\Splash\Utils\SplashException;
+
 /**
  * A SplashUrlNode is a datastructure optimised to navigate all possible URLs known to the application. 
  * A SplashUrlNode represents all possible routes starting at the current position (just after a / in a URL)
