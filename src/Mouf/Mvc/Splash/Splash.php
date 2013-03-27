@@ -322,13 +322,6 @@ class Splash implements MoufStaticValidatorInterface {
 	}
 	
 	/**
-	 *
-	 */
-	public static function getStaticValidatorTitle() {
-		return "Validating 'splash' instance availability";
-	}
-	
-	/**
 	 * @return \Mouf\Validator\MoufValidatorResult
 	 */
 	public static function validateClass() {

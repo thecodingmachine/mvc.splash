@@ -7,12 +7,6 @@ use Mouf\Validator\MoufValidatorResult;
 use Mouf\Validator\MoufStaticValidatorInterface;
 
 class SplashHtaccessValidator implements MoufStaticValidatorInterface {
-	/**
-	 * 
-	 */
-	public static function getStaticValidatorTitle() {
-		return "Validating .htaccess file availability";
-	}
 	
 	/**
 	 * @return \Mouf\Validator\MoufValidatorResult
