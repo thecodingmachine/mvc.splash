@@ -1,6 +1,10 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Validator\MoufValidatorResult;
+
+use Mouf\Validator\MoufStaticValidatorInterface;
+
 use Mouf\Utils\Cache\CacheInterface;
 
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
@@ -35,7 +39,7 @@ use Mouf\MoufManager;
  *
  * @RequiredInstance "splash"
  */
-class Splash {
+class Splash implements MoufStaticValidatorInterface {
 
 	/**
 	 * The logger used by Splash
@@ -315,6 +319,27 @@ class Splash {
 	 */
 	public function purgeUrlsCache() {
 		$this->cacheService->purge("splashUrlNodes");
+	}
+	
+	/**
+	 *
+	 */
+	public static function getStaticValidatorTitle() {
+		return "Validating 'splash' instance availability";
+	}
+	
+	/**
+	 * @return \Mouf\Validator\MoufValidatorResult
+	 */
+	public static function validateClass() {
+	
+		$instanceExists = MoufManager::getMoufManager()->instanceExists('splash');
+		
+		if ($instanceExists) {
+			return new MoufValidatorResult(MoufValidatorResult::SUCCESS, "'splash' instance found");
+		} else {
+			return new MoufValidatorResult(MoufValidatorResult::WARN, "Unable to find the 'splash' instance. Click here to <a href='".ROOT_URL."mouf/mouf/newInstance?instanceName=splash&instanceClass=Splash'>create an instance of the Splash class named 'splash'</a>.");
+		}
 	}
 }
 
