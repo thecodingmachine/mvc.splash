@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Utils\SplashException;
+
 use Mouf\Validator\MoufValidatorResult;
 
 use Mouf\Validator\MoufStaticValidatorInterface;
@@ -109,6 +111,12 @@ class Splash implements MoufStaticValidatorInterface {
 	private $splashUrlPrefix;
 
 	/**
+	 * Count number of element in POST GET or REQUEST
+	 * @var int
+	 */
+	private $count;
+	
+	/**
 	 * Route the user to the right controller according to the URL.
 	 * 
 	 * @param string $splashUrlPrefix The beginning of the URL before Splash is activated. This is basically the webapp directory name.
@@ -116,54 +124,89 @@ class Splash implements MoufStaticValidatorInterface {
 	 */
 	public function route($splashUrlPrefix) {
 
-		if ($this->cacheService == null) {
-			// Retrieve the split parts
-			$urlsList = $this->getSplashActionsList();
-			$urlNodes = $this->generateUrlNode($urlsList);
-		} else {
-			$urlNodes = $this->cacheService->get("splashUrlNodes");
-			if ($urlNodes == null) {
-				// No value in cache, let's get the URL nodes
+		try {
+			if ($this->cacheService == null) {
+				// Retrieve the split parts
 				$urlsList = $this->getSplashActionsList();
 				$urlNodes = $this->generateUrlNode($urlsList);
-				$this->cacheService->set("splashUrlNodes", $urlNodes);
+			} else {
+				$urlNodes = $this->cacheService->get("splashUrlNodes");
+				if ($urlNodes == null) {
+					// No value in cache, let's get the URL nodes
+					$urlsList = $this->getSplashActionsList();
+					$urlNodes = $this->generateUrlNode($urlsList);
+					$this->cacheService->set("splashUrlNodes", $urlNodes);
+				}
 			}
-		}
-		
-		// TODO: add support for %instance% for injecting the instancename of the controller
-		
-		$redirect_uri = $_SERVER['REDIRECT_URL'];
-		$httpMethod = $_SERVER['REQUEST_METHOD'];
-
-		$pos = strpos($redirect_uri, $splashUrlPrefix);
-		if ($pos === FALSE) {
-			throw new \Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your config.php file at the root of your project. It should have the same value as the RewriteBase parameter in your .htaccess file.');
-		}
-
-		$tailing_url = substr($redirect_uri, $pos+strlen($splashUrlPrefix));
-
-		$context = new SplashRequestContext();
-		$splashRoute = $urlNodes->walk($tailing_url, $httpMethod);
-
-		
-		if ($splashRoute == null) {
-			// Let's go for the 404
-			$this->http404Handler->pageNotFound(null);
-			return;
-		}
-		$controller = MoufManager::getMoufManager()->getInstance($splashRoute->controllerInstanceName);
-		$action = $splashRoute->methodName;
-		
-		$context->setUrlParameters($splashRoute->filledParameters);
-		
-
-		if ($this->log != null) {
-			$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
-		}
-
-		if ($controller instanceof Controller) {
-			// Let's pass everything to the controller:
-			try {
+			
+			// TODO: add support for %instance% for injecting the instancename of the controller
+			
+			$redirect_uri = $_SERVER['REDIRECT_URL'];
+			$httpMethod = $_SERVER['REQUEST_METHOD'];
+	
+			$pos = strpos($redirect_uri, $splashUrlPrefix);
+			if ($pos === FALSE) {
+				throw new \Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your config.php file at the root of your project. It should have the same value as the RewriteBase parameter in your .htaccess file.');
+			}
+	
+			$tailing_url = substr($redirect_uri, $pos+strlen($splashUrlPrefix));
+	
+			$context = new SplashRequestContext();
+			$splashRoute = $urlNodes->walk($tailing_url, $httpMethod);
+	
+			
+			if ($splashRoute == null) {
+				// Let's go for the 404
+				$this->http404Handler->pageNotFound(null);
+				return;
+			}
+	
+			// Check if there is a limit of input number in php
+			// Throw exception if the limit is reached
+			if(ini_get('max_input_vars') || ini_get('suhosin.get.max_vars')) {
+				$maxGet = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.get.max_vars'));
+				if($maxGet !== null) {
+					$this->count = 0;
+					array_walk_recursive($_GET, array($this, 'countRecursive'));
+					if($this->count == $maxGet) {
+						throw new SplashException('Max input vars reaches for get parameters ('.$maxGet.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.get.max_vars.');
+					}
+				}
+			}
+			if(ini_get('max_input_vars') || ini_get('suhosin.post.max_vars')) {
+				$maxPost = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.post.max_vars'));
+				if($maxPost !== null) {
+					$this->count = 0;
+					array_walk_recursive($_GET, array($this, 'countRecursive'));
+					if($this->count == $maxPost) {
+						throw new SplashException('Max input vars reaches for post parameters ('.$maxPost.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.post.max_vars.');
+					}
+				}
+			}
+			if(ini_get('max_input_vars') || ini_get('suhosin.request.max_vars')) {
+				$maxRequest = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.request.max_vars'));
+				if($maxRequest !== null) {
+					$this->count = 0;
+					array_walk_recursive($_GET, array($this, 'countRecursive'));
+					if($this->count == $maxRequest) {
+						throw new SplashException('Max input vars reaches for request parameters ('.$maxRequest.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.request.max_vars.');
+					}
+				}
+			}
+			
+			
+			$controller = MoufManager::getMoufManager()->getInstance($splashRoute->controllerInstanceName);
+			$action = $splashRoute->methodName;
+			
+			$context->setUrlParameters($splashRoute->filledParameters);
+			
+	
+			if ($this->log != null) {
+				$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
+			}
+	
+			if ($controller instanceof Controller) {
+				// Let's pass everything to the controller:
 				$args = array();
 				foreach ($splashRoute->parameters as $paramFetcher) {
 					/* @var $param SplashParameterFetcherInterface */
@@ -196,20 +239,18 @@ class Splash implements MoufStaticValidatorInterface {
 				foreach ($filters as $filter) {
 					$filter->afterAction();
 				}
+				
+			} elseif ($controller instanceof WebServiceInterface) {
+				// FIXME: handle correctly webservices
+				$this->handleWebservice($controller);
+			} else {
+				// "Invalid class";
+				$this->print404("The class ".get_class($controller)." should extend the Controller class or the WebServiceInterface class.");
+				exit();
 			}
-			catch (\Exception $e) {
-				return $this->handleException($e);
-			}
-			
-			
-			
-		} elseif ($controller instanceof WebServiceInterface) {
-			// FIXME: handle correctly webservices
-			$this->handleWebservice($controller);
-		} else {
-			// "Invalid class";
-			$this->print404("The class ".get_class($controller)." should extend the Controller class or the WebServiceInterface class.");
-			exit();
+		}
+		catch (\Exception $e) {
+			return $this->handleException($e);
 		}
 
 
@@ -333,6 +374,31 @@ class Splash implements MoufStaticValidatorInterface {
 		} else {
 			return new MoufValidatorResult(MoufValidatorResult::WARN, "Unable to find the 'splash' instance. Click here to <a href='".ROOT_URL."mouf/mouf/newInstance?instanceName=splash&instanceClass=Splash'>create an instance of the Splash class named 'splash'</a>.");
 		}
+	}
+	
+	/**
+	 * Get the min in 2 values if there exist
+	 * @param int $val1
+	 * @param int $val2
+	 * @return int|NULL
+	 */
+	private function getMinInConfiguration($val1, $val2) {
+		if($val1 && $val2)
+			return min(array($val1, $val2));
+		if($val1)
+			return $val1;
+		if($val2)
+			return $val2;
+		return null;
+	}
+	
+	/**
+	 * Count number of element in array
+	 * @param mixed $item
+	 * @param mixed $key
+	 */
+	private function countRecursive($item, $key) {
+		$this->count ++;
 	}
 }
 
