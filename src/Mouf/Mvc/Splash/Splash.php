@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
+use Mouf\Mvc\Splash\Utils\SplashException;
+
 use Mouf\Utils\Cache\CacheInterface;
 
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
@@ -128,15 +130,22 @@ class Splash {
 		
 		// TODO: add support for %instance% for injecting the instancename of the controller
 		
-		$redirect_uri = $_SERVER['REDIRECT_URL'];
+		$request_array = parse_url($_SERVER['REQUEST_URI']);
+		
+		if ($request_array === false) {
+			throw new SplashException("Malformed URL: ".$_SERVER['REQUEST_URI']);
+		}
+		
+		$request_path = $request_array['path']; 
+		
 		$httpMethod = $_SERVER['REQUEST_METHOD'];
 
-		$pos = strpos($redirect_uri, $splashUrlPrefix);
+		$pos = strpos($request_path, $splashUrlPrefix);
 		if ($pos === FALSE) {
 			throw new \Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your config.php file at the root of your project. It should have the same value as the RewriteBase parameter in your .htaccess file.');
 		}
 
-		$tailing_url = substr($redirect_uri, $pos+strlen($splashUrlPrefix));
+		$tailing_url = substr($request_path, $pos+strlen($splashUrlPrefix));
 
 		$context = new SplashRequestContext();
 		$splashRoute = $urlNodes->walk($tailing_url, $httpMethod);
