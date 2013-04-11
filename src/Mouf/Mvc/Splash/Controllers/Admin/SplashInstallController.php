@@ -110,6 +110,12 @@ class SplashInstallController extends Controller {
 			$rootNamespace = $autoloadNamespaces[0]['namespace'].'\\';
 			$this->sourceDirectory = $autoloadNamespaces[0]['directory'];
 		} else {
+                        set_user_message('<strong>Warning</strong> : Mouf could not find a PSR 0 autoloader configured in your composer.json file. Therefore, unless you are using your own autoloader, it is likely that mouf will be unable to find the Splash Controllers. 
+                            <br/>You should : <ol>
+                            <li><a href="http://getcomposer.org/doc/04-schema.md#psr-0" target="_blank">Configure PSR 0 in your composer.json</a></li>
+                            <li>Regenerate your composer autoloader : <pre>php composer.phar dumpautoload</pre></li>
+                            <li>Refresh this page</li>
+</ol>');
 			$rootNamespace = '';
 		}
 		

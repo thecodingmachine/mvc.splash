@@ -17,11 +17,12 @@
     ],
     "require": {
     	"php": ">=5.3.0",
+    	"mouf/mouf-validators-interface": "~2.0",
         "mouf/mvc.splash-common": "4.0.*",
         "mouf/utils.cache.apc-cache": "~2.1",
         "mouf/utils.cache.file-cache": "~2.1",
         "mouf/utils.cache.no-cache": "2.0.*",
-        "mouf/html.template.bootstrap": "2.1.*"
+        "mouf/html.template.bootstrap": "~2.1"
     },
     "autoload": {
         "psr-0": {
@@ -31,26 +32,26 @@
     "extra": {
 	     "mouf": {
 			"install": [
-			{
+				{
 				"type": "url",
-	    		"url": "splashinstall/",
-	    		"scope": "global",
-	    		"description": "Create RootController and root view."
-			},
-			{
-				"type": "url",
-	    		"url": "splashinstall/writeHtAccess",
-	    		"scope": "local",
-	    		"description": "Write .htaccess file."
-			}
-			],
+		    		"url": "splashinstall/",
+		    		"scope": "global",
+		    		"description": "Create RootController and root view."
+				},
+				{
+					"type": "url",
+		    		"url": "splashinstall/writeHtAccess",
+		    		"scope": "local",
+		    		"description": "Write .htaccess file."
+				}
+				],
 			"require-admin": [
-    			"src/SplashAdmin.php",
-    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
-    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
-    		],
+	    			"src/SplashAdmin.php",
+	    			"src/Mouf/Mvc/Splash/SplashGenerateService.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashPurgeCacheController.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
+	    			"src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
+	    		],
 			"doc": [
 	    		{
 	    			"title": "Installing Splash",
@@ -73,7 +74,8 @@
 	    			"title": "Settings and error handling",
 	    			"url": "doc/settings_and_error_handling.md"
 	    		}
-	    	]
+	    		],
+			"logo": "logo.png"
 		}
     }
 }
