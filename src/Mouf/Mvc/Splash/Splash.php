@@ -147,14 +147,15 @@ class Splash implements MoufStaticValidatorInterface {
 				throw new SplashException("Malformed URL: ".$_SERVER['REQUEST_URI']);
 			}
 			
+			$request_path = $request_array['path'];
 			$httpMethod = $_SERVER['REQUEST_METHOD'];
 	
-			$pos = strpos($request_array, $splashUrlPrefix);
+			$pos = strpos($request_path, $splashUrlPrefix);
 			if ($pos === FALSE) {
 				throw new \Exception('Error: the prefix of the web application "'.$splashUrlPrefix.'" was not found in the URL. The application must be misconfigured. Check the ROOT_URL parameter in your config.php file at the root of your project. It should have the same value as the RewriteBase parameter in your .htaccess file.');
 			}
 	
-			$tailing_url = substr($request_array, $pos+strlen($splashUrlPrefix));
+			$tailing_url = substr($request_path, $pos+strlen($splashUrlPrefix));
 	
 			$context = new SplashRequestContext();
 			$splashRoute = $urlNodes->walk($tailing_url, $httpMethod);
