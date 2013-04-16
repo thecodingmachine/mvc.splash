@@ -183,7 +183,7 @@ class Splash implements MoufStaticValidatorInterface {
 				$maxPost = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.post.max_vars'));
 				if($maxPost !== null) {
 					$this->count = 0;
-					array_walk_recursive($_GET, array($this, 'countRecursive'));
+					array_walk_recursive($_POST, array($this, 'countRecursive'));
 					if($this->count == $maxPost) {
 						throw new SplashException('Max input vars reaches for post parameters ('.$maxPost.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.post.max_vars.');
 					}
@@ -193,7 +193,7 @@ class Splash implements MoufStaticValidatorInterface {
 				$maxRequest = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.request.max_vars'));
 				if($maxRequest !== null) {
 					$this->count = 0;
-					array_walk_recursive($_GET, array($this, 'countRecursive'));
+					array_walk_recursive($_REQUEST, array($this, 'countRecursive'));
 					if($this->count == $maxRequest) {
 						throw new SplashException('Max input vars reaches for request parameters ('.$maxRequest.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.request.max_vars.');
 					}
