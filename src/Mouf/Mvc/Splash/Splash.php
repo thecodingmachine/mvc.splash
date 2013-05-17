@@ -211,8 +211,12 @@ class Splash implements MoufStaticValidatorInterface {
 				$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
 			}
 	
-			if ($controller instanceof Controller) {
-				// Let's pass everything to the controller:
+			if ($controller instanceof WebServiceInterface) {
+				// FIXME: handle correctly webservices (or remove this exception and handle
+				// webservice the way we handle controllers
+				$this->handleWebservice($controller);
+			} else {
+			// Let's pass everything to the controller:
 				$args = array();
 				foreach ($splashRoute->parameters as $paramFetcher) {
 					/* @var $param SplashParameterFetcherInterface */
@@ -245,14 +249,6 @@ class Splash implements MoufStaticValidatorInterface {
 				foreach ($filters as $filter) {
 					$filter->afterAction();
 				}
-				
-			} elseif ($controller instanceof WebServiceInterface) {
-				// FIXME: handle correctly webservices
-				$this->handleWebservice($controller);
-			} else {
-				// "Invalid class";
-				$this->print404("The class ".get_class($controller)." should extend the Controller class or the WebServiceInterface class.");
-				exit();
 			}
 		}
 		catch (\Exception $e) {
