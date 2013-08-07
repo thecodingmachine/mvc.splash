@@ -27,7 +27,7 @@ class SplashGenerateService {
 		$strExtentions = implode('|', $exludeExtentions);
 		$strFolders = '^' . implode('|^', $exludeFolders);
 		
-		$str = "Options FollowSymLinks
+		$str = "Options +FollowSymLinks
 		RewriteEngine on
 		RewriteBase $rootUri
 		
