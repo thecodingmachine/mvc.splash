@@ -23,6 +23,7 @@ use Mouf\Mvc\Splash\Services\SplashRequestContext;
 
 use Mouf\Mvc\Splash\Store\SplashUrlNode;
 use Mouf\Utils\Log\LogInterface;
+use Psr\Log\LoggerInterface;
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\MoufManager;
@@ -46,9 +47,11 @@ class Splash implements MoufStaticValidatorInterface {
 	/**
 	 * The logger used by Splash
 	 *
+	 * Note: accepts both old and new PSR-3 compatible logger
+	 *
 	 * @Property
 	 * @Compulsory
-	 * @var LogInterface
+	 * @var LogInterface|LoggerInterface
 	 */
 	public $log;
 
@@ -208,7 +211,15 @@ class Splash implements MoufStaticValidatorInterface {
 			
 	
 			if ($this->log != null) {
-				$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
+				if ($this->log instanceof LogInterface) {
+					$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
+				} else {
+					$this->log->info("Routing user with URL {url} to controller {controller} and action {action}", array(
+						'url' => $_SERVER['REDIRECT_URL'],
+						'controller' => get_class($controller),
+						'action' => $action
+					));
+				}
 			}
 	
 			if ($controller instanceof WebServiceInterface) {
@@ -310,9 +321,17 @@ class Splash implements MoufStaticValidatorInterface {
 	}
 	
 	private function handleException(\Exception $e) {
-		$logger = $this->log;
-		if ($logger != null) {
-			$logger->error($e);
+		if ($this->log != null) {
+			if ($this->log instanceof LogInterface) {
+				$this->log->error($e);
+			} else {
+				$this->log->error("Exception throw inside a controller.", array(
+						'exception' => $e
+				));
+			}
+				
+			
+			
 		}
 	
 		$debug = $this->debugMode;
