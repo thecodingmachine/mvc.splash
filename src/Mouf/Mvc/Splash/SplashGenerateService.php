@@ -37,6 +37,7 @@ class SplashGenerateService {
 		RewriteRule !((\.($strExtentions)$)|$strFolders) vendor/mouf/mvc.splash/src/splash.php";
 		
 		file_put_contents(ROOT_PATH."../../../.htaccess", $str);
+		chmod(ROOT_PATH."../../../.htaccess", 0664);
 	}
 	
 	/**
