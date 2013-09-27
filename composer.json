@@ -22,7 +22,7 @@
 		"mouf/utils.cache.apc-cache" : "~2.1",
 		"mouf/utils.cache.file-cache" : "~2.1",
 		"php" : ">=5.3.0",
-		"mouf/html.template.bootstrap" : "~2.1",
+		"mouf/html.template.bootstrap" : ">=2.1, <4.0",
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/utils.cache.no-cache" : "2.0.*",
 		"mouf/mvc.splash-common" : "4.1.*",
