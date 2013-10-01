@@ -58,6 +58,9 @@
 					"title" : "Writing controllers",
 					"url" : "doc/writing_controllers.md"
 				}, {
+					"title" : "Writing controllers, manually",
+					"url" : "doc/writing_controllers_manually.md"
+				}, {
 					"title" : "Managing URL parameters",
 					"url" : "doc/url_parameters.md"
 				}, {

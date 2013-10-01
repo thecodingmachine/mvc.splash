@@ -15,6 +15,8 @@ Installation
 Getting started
 ---------------
 
+##[Check out the video tutorial!](doc/writing_controllers.md)
+
 The first thing you should learn when using Splash is how to write a controller.
 Read the [writing controllers guide](doc/writing_controllers.md).
 

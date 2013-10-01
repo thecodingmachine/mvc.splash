@@ -6,81 +6,67 @@ What is a controller?
 
 In Splash, a controller is a class that contains a number of _Actions_.
 _Actions_ are methods that can be directly accessed from the browser.
+What binds a URL to an action is called a _route_.
 
-There are several ways to declare a method to be an action. The most common ways are:
- - The *@URL* annotation</li>
- - The *@Action* annotation</li>
+Controllers can be created very easily, using Splash user interface. Check it out!
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/Jnsu1rpgD7g" frameborder="0" allowfullscreen></iframe>
+
+Creating a controller using Splash's wizard
+-------------------------------------------
+
+For your application to print some HTML when you call a URL, you need 4 things:
+
+- A **controller** class: this is the class that will contain the actions declaration
+- **Actions** methods: these are the methods that will be called when a URL is called
+- A controller **instance**, declared in Mouf: you must create one instance of your class in Mouf (usually, only one instance)
+- **Views**: these are files that contain the HTML to be outputed. We keep the HTML out of the controller to make the code 
+  more readable and to separate concerns between the controller (in charge of the logic) and the view (in charge of the rendering)
+
+The Splash create-a-controller wizard will create those 4 things for you.
+
+Let's start. Go in the **MVC** > **Splash** > **Create a new controller** menu.
+
+![Create a controller menu](images/wizard_menu.png)
+
+You will be displayed a page you can use to create your controller.
+
+![Create a controller menu](images/wizard.png)
+
+Use this page to configure your controller! You can add as many actions as you want, you can even
+decide what parameters must be passed to those actions.
+You shall also decide what instances should be injected by default in your controller (you can of
+course later change the class code and add more properties to the controller).
+
+By default, you can inject in your controller:
+
+- a logger
+- an HTML template
+- the content block of the HTML template
+- the [TDBM DAO factory](http://mouf-php.com/packages/mouf/database.tdbm/index.md) (if you are using TDBM)
 
 
 The @URL annotation
 -------------------
 
-This is the preferred way of declaring an action:
+Have a look at the actions that have been declared:
 
 ```php
 <?php
-namespace Test\Controllers;
-
-use Mouf\Mvc\Splash\Controllers\Controller;
-
-/**
- * This is my test controller.
- */
-class MyController extends Controller {
-	
 	/**
-	 * My first action.
-	 *
-	 * @URL /path/to/my/action
-	 * @param string $var1
-	 * @param string $var2
+	 * @URL test/action	 
+	 * @param int $var1
+	 * @param int $var2
 	 */
-	public function my_url($var1, $var2) {
-		 echo "<html><head></head>";
-		 echo "<body>";
-		 echo "var1 value is ".htmlentities($var1)." and var2 value is ".htmlentities($var2);
-		 echo "</body>";
-	}
-}
+	public function index($var1 = 0, $var2 = 0) { ... }
 ?>
 ```
-
-Note: this class must respect the PSR-0 in ordre to be reachable by composer's autoload mechnism.
-Therefore, if you defined the "Test" namespace to be reachable from the directory "src", 
-the filename for this class has to be "src/Test/Controllers/MyController.php".
-
-First thing you can see: the MyController class extends the *Controller* class provided by Splash.
 
 The *@URL* annotation points to the web path the action is bound to.
 
 The action takes 2 parameters: var1 and var2. This means that the page needs both parameters passed 
 either in GET or POST.
 
-In order to test this, we must first create an instance of the controller in Mouf.
-We will do this using the Mouf User Interface.
-
-First, click the green *Purge code cache* button in Mouf's menu. This will make sure Mouf will scan the source code
-directory and find our new "MyController" class.
-Now, click the *Instances / Create a new instance* menu item, and fill the instance details.
-
-![Create an instance](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/create_instance.png)
-
-In this sample, we are creating a "myController" instance whose class is "MyController".
-
-*Troubleshooting:* For a number of reasons, the MyController class might not appear in the list of classes.
-Here is a list of actions you can take to understand where the problem comes from:
- 1- Be sure you purged the code cache, and refresh the page.
- 2- If the class does not appear, it is likely there is a problem. In the Mouf's "Project" menu, select *Analyze classes*. Try to find your class in the list. Mouf will notify you if it sees an error in your class. 
- 3- If your class does not appear at all in the *Analyze classes* page, it is likely that the Composer autoloader cannot find your class. Double check the namespace, the file name, the directory name and your autoload settings in *composer.json*. Also, run the "php composer dumpautoload" to be sure Composer regenerates its autoloader.
-
-We just created a new controller, that contains a new route to an action. Each time a route is created in Splash,
-it is whise to purge the cache. So just press the big red "Purge cache" button.  
-
-Now, let's test our code.
-By browsing to http://localhost/{my_app}/path/to/my/action?var1=42&var2=24, we should see the message displayed!
-
-Done? Then let's move on! 
- 
 The @Get / @Post annotations
 ----------------------------
 
@@ -159,73 +145,4 @@ class UserController extends Controller {
 Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.
 So for instance, if you access http://[server]/[appname]/user/42/view, the $id parameter will be filled with "42". 
 
-The @Action annotation
-----------------------
-
-The @Action parameter can replace the @URL parameter.
-You simply put a @Action annotation in your method. The URLs to access a @Action method are always:
-
-	http://[server-url]/[webapp-path]/[mouf-controller-instance-name]/[action-name]?[action-parameters]
-
-Here is a sample:
-
-```php
-<?php
-/**
- * This is my test controller.
- *
- */
-class MyController extends Controller {
-	
-	/**
-	 * My first action.
-	 *
-	 * @Action
-	 * @param string $var1
-	 * @param string $var2
-	 */
-	public function my_action($var1, $var2) {
-		 echo "<html><head></head>";
-		 echo "<body>";
-		 echo "var1 value is ".htmlentities($var1)." and var2 value is ".htmlentities($var2);
-		 echo "</body>";
-	}
-}
-?>
-```
-
-The *my_action* method is a Splash action. You know this because there is a @Action annotation in the PHPDoc comment of the method.
-
-Now, we can access the example page using this URL:
-	http://[server-url]/[webapp-path]/my_controller/my_action?var1=42&var2=toto
-
-Default actions
----------------
-
-Sometimes, when using @Action annotations, we might want to have a URL that is a bit shorter than /my_webapp/my_controller/my_action.
-Splash supports a special method called "index". If no action is provided in the URL, the index method will be called instead.
-
-```php
-<?php
-/**
- * This is my test controller.
- *
- * @Component
- */
-class MyController extends Controller {
-	
-	/**
-	 * The action called if no action is provided in the URL.
-	 *
-	 * @Action
-	 */
-	public function index() {
-		 echo "This is the index";
-	}
-}
-?>
-```
-
-The test page can be accessed using the URL:
-	http://[server-url]/[webapp-path]/my_controller/.
-
+[Wanna learn more? Have a look at the advanced tutorial](writing_controllers_manually.md)
