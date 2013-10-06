@@ -7,6 +7,10 @@ if (!MoufManager::hasHiddenInstance()) {
 }*/
 use Mouf\MoufManager;
 
+if (function_exists('apache_getenv')) {
+	define('ROOT_URL', apache_getenv("BASE")."/");
+}
+
 //require_once __DIR__.'/../../../autoload.php';
 require_once __DIR__.'/../../../../mouf/Mouf.php';
 

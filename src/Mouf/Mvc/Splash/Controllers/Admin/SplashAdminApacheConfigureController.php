@@ -72,7 +72,7 @@ class SplashAdminApacheConfigureController extends Controller {
 	 * @Action
 	 */
 	public function write($selfedit, $textExtentions, $textFolders) {
-		$uri = $_SERVER["REQUEST_URI"];
+		//$uri = $_SERVER["REQUEST_URI"];
 		
 		$exludeExtentions = explode("\r\n", $textExtentions);
 		$exludeFolders = explode("\r\n", $textFolders);
@@ -87,15 +87,15 @@ class SplashAdminApacheConfigureController extends Controller {
 		$moufManager->setVariable("splashexludefolders", $exludeFolders);
 		$moufManager->rewriteMouf();
 		
-		$installPos = strpos($uri, "/vendor/mouf/mouf/splashApacheConfig/write");
+		/*$installPos = strpos($uri, "/vendor/mouf/mouf/splashApacheConfig/write");
 		if ($installPos !== FALSE) {
 			$uri = substr($uri, 0, $installPos);
 		}
 		if (empty($uri)) {
 			$uri = "/";
-		}
+		}*/
 		
-		$this->splashGenerateService->writeHtAccess($uri, $exludeExtentions, $exludeFolders);
+		$this->splashGenerateService->writeHtAccess(/*$uri,*/ $exludeExtentions, $exludeFolders);
 		
 		header("Location: ".MOUF_URL."?selfedit=".$selfedit);
 	}

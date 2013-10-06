@@ -272,7 +272,7 @@ class SplashInstallController extends Controller {
 	 * @param string $selfedit
 	 */
 	public function writeHtAccess($selfedit="false") {
-		$uri = $_SERVER["REQUEST_URI"];
+		/*$uri = $_SERVER["REQUEST_URI"];
 		
 		$installPos = strpos($uri, "/vendor/mouf/mouf/splashinstall/writeHtAccess");
 		if ($installPos !== FALSE) {
@@ -280,7 +280,7 @@ class SplashInstallController extends Controller {
 		}
 		if (empty($uri)) {
 			$uri = "/";
-		}
+		}*/
 		
 		if ($selfedit == "true") {
 			$moufManager = MoufManager::getMoufManager();
@@ -297,7 +297,7 @@ class SplashInstallController extends Controller {
 			$this->exludeFolders = array("vendor");
 		}
 		
-		$this->splashGenerateService->writeHtAccess($uri, $this->exludeExtentions, $this->exludeFolders);
+		$this->splashGenerateService->writeHtAccess($this->exludeExtentions, $this->exludeFolders);
 		
 		InstallUtils::continueInstall($selfedit == "true");
 	}
