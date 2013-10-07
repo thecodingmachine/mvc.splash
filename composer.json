@@ -44,7 +44,7 @@
 					"type" : "url",
 					"url" : "splashinstall/"
 				}, {
-					"scope" : "local",
+					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
 					"url" : "splashinstall/writeHtAccess"

@@ -393,7 +393,7 @@ class Splash implements MoufStaticValidatorInterface {
 		if ($instanceExists) {
 			return new MoufValidatorResult(MoufValidatorResult::SUCCESS, "'splash' instance found");
 		} else {
-			return new MoufValidatorResult(MoufValidatorResult::WARN, "Unable to find the 'splash' instance. Click here to <a href='".ROOT_URL."mouf/mouf/newInstance?instanceName=splash&instanceClass=Splash'>create an instance of the Splash class named 'splash'</a>.");
+			return new MoufValidatorResult(MoufValidatorResult::WARN, "Unable to find the 'splash' instance. Click here to <a href='".MOUF_URL."mouf/newInstance2?instanceName=splash&instanceClass=Mouf\\Mvc\\Splash\\Splash'>create an instance of the Splash class named 'splash'</a>.");
 		}
 	}
 	
