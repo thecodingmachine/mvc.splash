@@ -25,12 +25,13 @@ class SplashGenerateService {
 		$strExtentions = implode('|', $exludeExtentions);
 		$strFolders = '^' . implode('|^', $exludeFolders);
 		
-		$str = "# Use an error page as index file. It makes sure a proper error is displayed if
-# mod_rewrite is not available. Additionally, this reduces the matching process for the
-# start page (path \"/\") because otherwise Apache will apply the rewriting rules
-# to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
-DirectoryIndex vendor/mouf/mvc.splash/src/rewrite_missing.php
-
+		$str = "<IfModule !mod_rewrite.c>
+	# Use an error page as index file. It makes sure a proper error is displayed if
+	# mod_rewrite is not available. Additionally, this reduces the matching process for the
+	# start page (path \"/\") because otherwise Apache will apply the rewriting rules
+	# to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
+	DirectoryIndex vendor/mouf/mvc.splash/src/rewrite_missing.php
+</IfModule>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
