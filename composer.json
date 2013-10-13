@@ -26,6 +26,7 @@
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/utils.cache.no-cache" : "2.0.*",
 		"mouf/mvc.splash-common" : "4.1.*",
+		"mouf/utils.constants.secret" : "~1.0",
 		"psr/log" : "~1.0"
 	},
 	"autoload" : {

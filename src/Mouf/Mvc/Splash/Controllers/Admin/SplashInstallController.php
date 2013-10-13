@@ -232,10 +232,9 @@ class SplashInstallController extends Controller {
 					$splashCacheFile = $this->moufManager->getInstanceDescriptor("splashCacheApc");
 				}
 				
-				/*if (isset($constants['ROOT_URL'])) {
-					$splashCacheFile->getProperty('prefix')->setValue('ROOT_URL')->setOrigin('config');
-				}*/
-				$splashCacheFile->getProperty('prefix')->setValue("SP".rand(0, 1000000));
+				if (isset($constants['SECRET'])) {
+					$splashCacheFile->getProperty('prefix')->setValue('SECRET')->setOrigin('config');
+				}
 				
 				$splashCacheApc->getProperty("fallback")->setValue($splashCacheFile);
 			
@@ -243,11 +242,9 @@ class SplashInstallController extends Controller {
 				$splashCacheApc = $this->moufManager->getInstanceDescriptor("splashCacheApc");
 			}
 			
-			/*if (isset($constants['ROOT_URL'])) {
-				$splashCacheApc->getProperty('prefix')->setValue('ROOT_URL')->setOrigin('config');
-			}*/
-			// FIXME: find a valid way to prefix the cache with a unique value.
-			$splashCacheApc->getProperty('prefix')->setValue("SP".rand(0, 1000000));
+			if (isset($constants['SECRET'])) {
+				$splashCacheApc->getProperty('prefix')->setValue('SECRET')->setOrigin('config');
+			}
 		
 			$splashInstance->getProperty("cacheService")->setValue($splashCacheApc);
 		}
