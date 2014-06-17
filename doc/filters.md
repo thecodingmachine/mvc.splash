@@ -46,6 +46,7 @@ You can of course develop your own filters.
 Each filter is represented by a class.
 
 To create a filter:
+
  - The filters must extends the Mouf\Mvc\Splash\Filters\AbstractFilter class
  - The namespace of the filter must be Mouf\Annotations
  - The name of the class is the name of the annotations + "Annotation". For instance, a @Profile filter would be implemented using the Mouf\Annotations\ProfileAnnotation class.
