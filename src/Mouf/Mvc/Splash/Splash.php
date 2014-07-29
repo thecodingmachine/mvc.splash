@@ -325,13 +325,13 @@ class Splash implements MoufStaticValidatorInterface {
 			if ($this->log instanceof LogInterface) {
 				$this->log->error($e);
 			} else {
-				$this->log->error("Exception throw inside a controller.", array(
+				$this->log->error("Exception thrown inside a controller.", array(
 						'exception' => $e
 				));
 			}
-				
-			
-			
+		} else {
+			// If no logger is set, let's log in PHP error_log
+			error_log($e->getMessage()." - ".$e->getTraceAsString());
 		}
 	
 		$debug = $this->debugMode;
