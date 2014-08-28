@@ -202,7 +202,17 @@ class Splash implements MoufStaticValidatorInterface {
 					}
 				}
 			}
-			
+            if(isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post' && empty($_POST) && empty($_FILES)){
+                $maxPostSize = self::iniGetBytes('post_max_size');
+                if ($_SERVER['CONTENT_LENGTH'] > $maxPostSize) {
+                    throw new SplashException(
+                        sprintf('Max post size exceeded! Got %s bytes, but limit is %s bytes. Edit post_max_size setting in your php.ini.',
+                            $_SERVER['CONTENT_LENGTH'],
+                            $maxPostSize
+                        )
+                    );
+                }
+            }
 			
 			$controller = MoufManager::getMoufManager()->getInstance($splashRoute->controllerInstanceName);
 			$action = $splashRoute->methodName;
@@ -421,6 +431,35 @@ class Splash implements MoufStaticValidatorInterface {
 	private function countRecursive($item, $key) {
 		$this->count ++;
 	}
+
+    /**
+     * Returns the number of bytes from php.ini parameter
+     *
+     * @param $val
+     * @return int|string
+     */
+    private static function iniGetBytes($val)
+    {
+        $val = trim(ini_get($val));
+        if ($val != '') {
+            $last = strtolower(
+                $val{strlen($val) - 1}
+            );
+        } else {
+            $last = '';
+        }
+        switch ($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
 }
 
 ?>
