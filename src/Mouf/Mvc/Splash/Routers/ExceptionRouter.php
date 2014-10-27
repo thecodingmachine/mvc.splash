@@ -3,6 +3,7 @@ namespace Mouf\Mvc\Splash\Routers;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
+use Symfony\Component\BrowserKit\Response;
 
 class ExceptionRouter implements HttpKernelInterface {
 	
@@ -56,12 +57,12 @@ class ExceptionRouter implements HttpKernelInterface {
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true){
 		if ($catch){
 			try {
-				$this->router->handle($request, $type, false);
+				return $this->router->handle($request, $type, false);
 			} catch (\Exception $e) {
 				$this->handleException($e);
 			}		
 		}else{
-			$this->router->handle($request, $type);
+			return $this->router->handle($request, $type);
 		}
 	}
 	
@@ -80,20 +81,12 @@ class ExceptionRouter implements HttpKernelInterface {
 		}
 	
 		$debug = $this->debugMode;
-	
-	
-		if (!headers_sent() && !ob_get_contents()) {
-			$this->http500Handler->serverError($e);
-			return;
-		} else {
-			//UnhandledException($e,$debug);
-	
-			echo "<div>".nl2br($e->getMessage())."</div>";
-	
-			echo "<div>".ExceptionUtils::getHtmlForException($e)."</div>";
-	
-		}
-	
+		
+		ob_start();
+		$this->errorController->serverError($e);
+		$html = ob_get_clean();
+		return new Response($html, 500);
+		
 	}
 	
 	/**

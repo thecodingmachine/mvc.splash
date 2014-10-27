@@ -27,7 +27,8 @@ use Psr\Log\LoggerInterface;
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\MoufManager;
-
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The Splash component is the root of the Splash framework.<br/>
@@ -86,13 +87,20 @@ class Splash implements MoufStaticValidatorInterface {
 	private $count;
 	
 	/**
+	 * The first router that will handle the request
+	 * @var HttpKernelInterface
+	 */
+	private $router;
+	
+	/**
 	 * Route the user to the right controller according to the URL.
 	 * 
 	 * @param string $splashUrlPrefix The beginning of the URL before Splash is activated. This is basically the webapp directory name.
 	 * @throws Exception
 	 */
 	public function route($splashUrlPrefix) {
-		
+		$request = Request::createFromGlobals();
+		$this->router->handle($request);
 	}
 	
 	public function print404($message) {

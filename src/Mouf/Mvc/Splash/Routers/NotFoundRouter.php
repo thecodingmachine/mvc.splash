@@ -5,6 +5,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
 use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Value\ValueUtils;
+use Symfony\Component\BrowserKit\Response;
 
 class NotFoundRouter implements HttpKernelInterface {
 	
@@ -51,7 +52,10 @@ class NotFoundRouter implements HttpKernelInterface {
 	 */
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true){
 		$message = ValueUtils::val($this->message); 
+		ob_start();
 		$this->pageNotFoundController->pageNotFound($message);
+		$html = ob_get_clean();
+		return new Response($html);
 	}
 	
 	private function handleException(\Exception $e) {
