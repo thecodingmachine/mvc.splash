@@ -46,51 +46,14 @@ use Symfony\Component\HttpFoundation\Request;
 class Splash implements MoufStaticValidatorInterface {
 
 	/**
-	 * The logger used by Splash
-	 *
-	 * Note: accepts both old and new PSR-3 compatible logger
-	 *
-	 * @Property
-	 * @Compulsory
-	 * @var LogInterface|LoggerInterface
-	 */
-	private $log;
-
-	/**
-	 * If Splash debug mode is enabled, stack traces on error messages will be displayed.
-	 *
-	 * @Property
-	 * @var bool
-	 */
-	public $debugMode;
-
-	/**
-	 * Set to "true" if the server supports HTTPS.
-	 * This can be used by various plugins (especially the RequiresHttps annotation).
-	 *
-	 * @Property
-	 * @var boolean
-	 */
-	public $supportsHttps;
-
-	/**
-	 * 
-	 *
-	 * @var string
-	 */
-	private $splashUrlPrefix;
-
-	/**
-	 * Count number of element in POST GET or REQUEST
-	 * @var int
-	 */
-	private $count;
-	
-	/**
 	 * The first router that will handle the request
 	 * @var HttpKernelInterface
 	 */
 	private $router;
+	
+	public function __construct(HttpKernelInterface $router) {
+		$this->router = $router;
+	}
 	
 	/**
 	 * Route the user to the right controller according to the URL.
@@ -101,22 +64,6 @@ class Splash implements MoufStaticValidatorInterface {
 	public function route($splashUrlPrefix) {
 		$request = Request::createFromGlobals();
 		$this->router->handle($request);
-	}
-	
-	public function print404($message) {
-	
-		$text = "The page you request is not available. Please use <a href='".ROOT_URL."'>this link</a> to return to the home page.";
-	
-		if ($this->debugMode) {
-			$text .= "<div class='info'>".$message.'</div>';
-		}
-	
-		if ($this->log != null) {
-			$this->log->info("HTTP 404 : ".$message);
-		}
-	
-	
-		$this->http404Handler->pageNotFound($message);
 	}
 	
 	/**
@@ -131,9 +78,7 @@ class Splash implements MoufStaticValidatorInterface {
 		} else {
 			return new MoufValidatorResult(MoufValidatorResult::WARN, "Unable to find the 'splash' instance. Click here to <a href='".MOUF_URL."mouf/newInstance2?instanceName=splash&instanceClass=Mouf\\Mvc\\Splash\\Splash'>create an instance of the Splash class named 'splash'</a>.");
 		}
-	}
-
-		
+	}		
 }
 
 ?>

@@ -208,18 +208,18 @@ class SplashInstallController extends Controller {
 			$httpErrorsController->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
 		}
 		
-		if ($splashInstance->getProperty("http404Handler")->getValue() == null) {
+		/*if ($splashInstance->getProperty("http404Handler")->getValue() == null) {
 			$splashInstance->getProperty("http404Handler")->setValue($httpErrorsController);
 		}
 		
 		if ($splashInstance->getProperty("http500Handler")->getValue() == null) {
 			$splashInstance->getProperty("http500Handler")->setValue($httpErrorsController);
-		}
+		}*/
 		
 		$configManager = $this->moufManager->getConfigManager();
 		$constants = $configManager->getMergedConstants();
 		
-		if ($splashInstance->getProperty("cacheService")->getValue() == null) {
+		/*if ($splashInstance->getProperty("cacheService")->getValue() == null) {*/
 			if (!$this->moufManager->instanceExists("splashCacheApc")) {
 				$splashCacheApc = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\ApcCache");
 				$splashCacheApc->setName("splashCacheApc");
@@ -246,8 +246,8 @@ class SplashInstallController extends Controller {
 				$splashCacheApc->getProperty('prefix')->setValue('SECRET')->setOrigin('config');
 			}
 		
-			$splashInstance->getProperty("cacheService")->setValue($splashCacheApc);
-		}
+		/*	$splashInstance->getProperty("cacheService")->setValue($splashCacheApc);
+		}*/
 				
 		if (!$this->moufManager->instanceExists("rootController")) {
 			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);

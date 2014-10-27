@@ -4,6 +4,7 @@ namespace Mouf\Mvc\Splash\Routers;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This router returns transforms exceptions into HTTP 500 pages, based on the configured error controller.
@@ -38,8 +39,14 @@ class ExceptionRouter implements HttpKernelInterface {
 	 */
 	private $message = "Page not found";
 	
-	public function __construct(HttpKernelInterface $router, LoggerInterface $log = null){
+	/**
+	 * @Important
+	 * @param HttpKernelInterface $router The default router (the router we will catch exceptions from).
+	 * @param LoggerInterface $log Logger to log errors.
+	 */
+	public function __construct(HttpKernelInterface $router, Http500HandlerInterface $errorController, LoggerInterface $log = null){
 		$this->router = $router;
+		$this->errorController = $errorController;
 		$this->log = $log;
 	}
 	
@@ -64,7 +71,7 @@ class ExceptionRouter implements HttpKernelInterface {
 				return $this->router->handle($request, $type, false);
 			} catch (\Exception $e) {
 				$this->handleException($e);
-			}		
+			}
 		}else{
 			return $this->router->handle($request, $type);
 		}

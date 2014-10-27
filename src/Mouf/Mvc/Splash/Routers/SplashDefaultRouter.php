@@ -4,13 +4,12 @@ namespace Mouf\Mvc\Splash\Routers;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Mouf\Utils\Cache\CacheInterface;
 
 class SplashDefaultRouter implements HttpKernelInterface {
 	
 	/**
 	 * The logger used by Splash
-	 *
-	 * Note: accepts both old and new PSR-3 compatible logger
 	 *
 	 * @var LoggerInterface
 	 */
@@ -28,7 +27,12 @@ class SplashDefaultRouter implements HttpKernelInterface {
 	 */
 	private $fallBackRouter;
 	
-	
+	/**
+	 * @Important
+	 * @param HttpKernelInterface $fallBackRouter Router used if no page is found for this controller.
+	 * @param CacheInterface $cacheService Splash uses the cache service to store the URL mapping (the mapping between a URL and its controller/action)
+	 * @param LoggerInterface $log The logger used by Splash
+	 */
 	public function __construct(HttpKernelInterface $fallBackRouter, CacheInterface $cacheService = null, LoggerInterface $log = null){
 		$this->fallBackRouter = $fallBackRouter;
 		$this->cacheService = $cacheService;
