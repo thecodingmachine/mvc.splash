@@ -5,14 +5,20 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
 use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Value\ValueUtils;
-use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * This router always returns a 404 page, based on the configured page not found controller.
+ * 
+ * @author Kevin Nguyen
+ * @author David Négrier
+ */
 class NotFoundRouter implements HttpKernelInterface {
 	
 	/**
-	 * The logger used by Splash
-	 *
-	 * Note: accepts both old and new PSR-3 compatible logger
+	 * The logger
 	 *
 	 * @var LoggerInterface
 	 */
@@ -50,45 +56,17 @@ class NotFoundRouter implements HttpKernelInterface {
 	 *
 	 * @throws \Exception When an Exception occurs during processing
 	 */
-	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true){
+	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
+		if ($this->log) {
+			$this->log->info("4040 - Page not found on URL: ".$request->getRequestUri());
+		}
 		$message = ValueUtils::val($this->message); 
 		ob_start();
 		$this->pageNotFoundController->pageNotFound($message);
 		$html = ob_get_clean();
 		return new Response($html);
 	}
-	
-	private function handleException(\Exception $e) {
-		if ($this->log != null) {
-			if ($this->log instanceof LogInterface) {
-				$this->log->error($e);
-			} else {
-				$this->log->error("Exception thrown inside a controller.", array(
-						'exception' => $e
-				));
-			}
-		} else {
-			// If no logger is set, let's log in PHP error_log
-			error_log($e->getMessage()." - ".$e->getTraceAsString());
-		}
-	
-		$debug = $this->debugMode;
-	
-	
-		if (!headers_sent() && !ob_get_contents()) {
-			$this->http500Handler->serverError($e);
-			return;
-		} else {
-			//UnhandledException($e,$debug);
-	
-			echo "<div>".nl2br($e->getMessage())."</div>";
-	
-			echo "<div>".ExceptionUtils::getHtmlForException($e)."</div>";
-	
-		}
-	
-	}
-	
+		
 	/**
 	 * The "404" message
 	 * @param string|ValueInterface $message
