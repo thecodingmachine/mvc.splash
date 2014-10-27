@@ -5,6 +5,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Mouf\Utils\Cache\CacheInterface;
+use Mouf\MoufManager;
+use Mouf\Mvc\Splash\Store\SplashUrlNode;
 
 class SplashDefaultRouter implements HttpKernelInterface {
 	
@@ -55,6 +57,9 @@ class SplashDefaultRouter implements HttpKernelInterface {
 	 * @throws \Exception When an Exception occurs during processing
 	 */
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true){
+		// FIXME: find a better way?
+		$splashUrlPrefix = ROOT_URL; 
+		
 		if ($this->cacheService == null) {
 			// Retrieve the split parts
 			$urlsList = $this->getSplashActionsList();
