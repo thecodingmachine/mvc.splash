@@ -5,6 +5,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * This router returns transforms exceptions into HTTP 500 pages, based on the configured error controller.

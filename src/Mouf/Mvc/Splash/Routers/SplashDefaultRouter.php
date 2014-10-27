@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Mouf\Utils\Cache\CacheInterface;
 use Mouf\MoufManager;
 use Mouf\Mvc\Splash\Store\SplashUrlNode;
+use Psr\Log\LoggerInterface;
+use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
 
 class SplashDefaultRouter implements HttpKernelInterface {
 	

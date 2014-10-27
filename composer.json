@@ -15,9 +15,7 @@
 		"splash"
 	],
 	"homepage" : "http://mouf-php.com/packages/mouf/mvc.splash/",
-	"license" : [
-		"MIT"
-	],
+	"license" : "MIT",
 	"require" : {
 		"mouf/utils.cache.apc-cache" : "~2.1",
 		"mouf/utils.cache.file-cache" : "~2.1",
@@ -27,12 +25,13 @@
 		"mouf/utils.cache.no-cache" : "2.0.*",
 		"mouf/mvc.splash-common" : "4.3.*",
 		"mouf/utils.constants.secret" : "~1.0",
+		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
-        "symfony/http-kernel": "~2.0"
+		"symfony/http-kernel" : "~2.0"
 	},
-    "provide": {
-        "mouf/mvc.splash-implementation": "4.3.*"
-    },
+	"provide" : {
+		"mouf/mvc.splash-implementation" : "4.3.*"
+	},
 	"autoload" : {
 		"psr-0" : {
 			"Mouf\\Mvc\\Splash" : "src/"
