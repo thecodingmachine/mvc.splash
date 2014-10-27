@@ -4,12 +4,16 @@ namespace Mouf\Mvc\Splash\Routers;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 
+/**
+ * This router returns transforms exceptions into HTTP 500 pages, based on the configured error controller.
+ *
+ * @author Kevin Nguyen
+ * @author David Négrier
+ */
 class ExceptionRouter implements HttpKernelInterface {
 	
 	/**
-	 * The logger used by Splash
-	 *
-	 * Note: accepts both old and new PSR-3 compatible logger
+	 * The logger
 	 *
 	 * @var LoggerInterface
 	 */
