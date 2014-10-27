@@ -33,7 +33,6 @@ class ExceptionRouter implements HttpKernelInterface {
 	 */
 	private $errorController;
 	
-
 	/**
 	 * The "500" message
 	 * @var string|ValueInterface
@@ -44,6 +43,7 @@ class ExceptionRouter implements HttpKernelInterface {
 	 * @Important
 	 * @param HttpKernelInterface $router The default router (the router we will catch exceptions from).
 	 * @param LoggerInterface $log Logger to log errors.
+	 * @param bool $debugMode Whether we should print debug backtrace or not
 	 */
 	public function __construct(HttpKernelInterface $router, Http500HandlerInterface $errorController, LoggerInterface $log = null){
 		$this->router = $router;
@@ -92,8 +92,6 @@ class ExceptionRouter implements HttpKernelInterface {
 			error_log($e->getMessage()." - ".$e->getTraceAsString());
 		}
 	
-		$debug = $this->debugMode;
-		
 		ob_start();
 		$this->errorController->serverError($e);
 		$html = ob_get_clean();

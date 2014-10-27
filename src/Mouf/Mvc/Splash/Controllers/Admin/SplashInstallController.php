@@ -168,87 +168,69 @@ class SplashInstallController extends Controller {
 			return;
 		}
 		
-		if (!$this->moufManager->instanceExists("splash")) {
-			$splashInstance = $this->moufManager->createInstance("Mouf\\Mvc\\Splash\\Splash");
-			$splashInstance->setName("splash");
-			
-			$configManager = $this->moufManager->getConfigManager();
-			$constants = $configManager->getMergedConstants();
-			
-			if (!isset($constants['DEBUG_MODE'])) {
-				$configManager->registerConstant("DEBUG_MODE", "bool", true, "When the application is in debug mode, stacktraces are outputed directly to the user. Otherwise, they are hidden.");
-			}
-			$definedConstants = $configManager->getDefinedConstants();
-			if (!isset($definedConstants['DEBUG_MODE'])) {
-				$definedConstants['DEBUG_MODE'] = true;
-			}
-			$configManager->setDefinedConstants($definedConstants);
+		
+		// These instances are expected to exist when the installer is run.
+		$bootstrapTemplate = $moufManager->getInstanceDescriptor('bootstrapTemplate');
+		$block_content = $moufManager->getInstanceDescriptor('block.content');
+		
+		// Let's create the instances.
+		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $moufManager);
+		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
+		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
+		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
+		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
+		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $moufManager);
+		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $moufManager);
+		
+		// Let's bind instances together.
+		if (!$splash->getConstructorArgumentProperty('router')->isValueSet()) {
+			$splash->getConstructorArgumentProperty('router')->setValue($exceptionRouter);
+		}
+		if (!$exceptionRouter->getConstructorArgumentProperty('router')->isValueSet()) {
+			$exceptionRouter->getConstructorArgumentProperty('router')->setValue($splashDefaultRouter);
+		}
+		if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
+			$exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
+		}
+		if (!$splashDefaultRouter->getConstructorArgumentProperty('fallBackRouter')->isValueSet()) {
+			$splashDefaultRouter->getConstructorArgumentProperty('fallBackRouter')->setValue($notFoundRouter);
+		}
+		if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
+			$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
+		}
+		if (!$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->isValueSet()) {
+			$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->setValue($httpErrorsController);
+		}
+		if (!$httpErrorsController->getPublicFieldProperty('template')->isValueSet()) {
+			$httpErrorsController->getPublicFieldProperty('template')->setValue($bootstrapTemplate);
+		}
+		if (!$httpErrorsController->getPublicFieldProperty('contentBlock')->isValueSet()) {
+			$httpErrorsController->getPublicFieldProperty('contentBlock')->setValue($block_content);
+		}
+		if (!$httpErrorsController->getPublicFieldProperty('debugMode')->isValueSet()) {
+			$httpErrorsController->getPublicFieldProperty('debugMode')->setValue('DEBUG');
+		$httpErrorsController->getPublicFieldProperty('debugMode')->setOrigin("config");
+		}
+		if (!$splashCacheApc->getPublicFieldProperty('prefix')->isValueSet()) {
+			$splashCacheApc->getPublicFieldProperty('prefix')->setValue('SECRET');
+		$splashCacheApc->getPublicFieldProperty('prefix')->setOrigin("config");
+		}
+		if (!$splashCacheApc->getPublicFieldProperty('fallback')->isValueSet()) {
+			$splashCacheApc->getPublicFieldProperty('fallback')->setValue($splashCacheFile);
+		}
+		if (!$splashCacheFile->getPublicFieldProperty('prefix')->isValueSet()) {
+			$splashCacheFile->getPublicFieldProperty('prefix')->setValue('SECRET');
+		$splashCacheFile->getPublicFieldProperty('prefix')->setOrigin("config");
+		}
+		if (!$splashCacheFile->getPublicFieldProperty('cacheDirectory')->isValueSet()) {
+			$splashCacheFile->getPublicFieldProperty('cacheDirectory')->setValue('splashCache/');
+		}
+		
+		// Let's rewrite the MoufComponents.php file to save the component
+		$moufManager->rewriteMouf();
 
-			$splashInstance->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
-				
-			//
-			// TODOOOOOOOOOOOOOOOOOOOOO: bind au ErrorLogLogger
-		} else {
-			$splashInstance = $this->moufManager->getInstanceDescriptor("splash");
-		}
-		
-		// Let's create the errors controller.
-		$httpErrorsController = InstallUtils::getOrCreateInstance("httpErrorsController", "Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController", $this->moufManager);
-		if ($httpErrorsController->getProperty("template")->getValue() == null) {
-			if ($this->moufManager->instanceExists("bootstrapTemplate")) {
-				$httpErrorsController->getProperty("template")->setValue($this->moufManager->getInstanceDescriptor("bootstrapTemplate"));
-			}
-		}
-		if ($httpErrorsController->getProperty("contentBlock")->getValue() == null) {
-			if ($this->moufManager->instanceExists("block.content")) {
-				$httpErrorsController->getProperty("contentBlock")->setValue($this->moufManager->getInstanceDescriptor("block.content"));
-			}
-		}
-		if ($httpErrorsController->getProperty("debugMode")->getValue() == null) {
-			$httpErrorsController->getProperty("debugMode")->setValue("DEBUG_MODE")->setOrigin("config");
-		}
-		
-		/*if ($splashInstance->getProperty("http404Handler")->getValue() == null) {
-			$splashInstance->getProperty("http404Handler")->setValue($httpErrorsController);
-		}
-		
-		if ($splashInstance->getProperty("http500Handler")->getValue() == null) {
-			$splashInstance->getProperty("http500Handler")->setValue($httpErrorsController);
-		}*/
-		
-		$configManager = $this->moufManager->getConfigManager();
-		$constants = $configManager->getMergedConstants();
-		
-		/*if ($splashInstance->getProperty("cacheService")->getValue() == null) {*/
-			if (!$this->moufManager->instanceExists("splashCacheApc")) {
-				$splashCacheApc = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\ApcCache");
-				$splashCacheApc->setName("splashCacheApc");
 
-				if (!$this->moufManager->instanceExists("splashCacheFile")) {
-					$splashCacheFile = $this->moufManager->createInstance("Mouf\\Utils\\Cache\\FileCache");
-					$splashCacheFile->setName("splashCacheFile");
-					$splashCacheFile->getProperty("cacheDirectory")->setValue("splashCache/");
-				} else {
-					$splashCacheFile = $this->moufManager->getInstanceDescriptor("splashCacheApc");
-				}
-				
-				if (isset($constants['SECRET'])) {
-					$splashCacheFile->getProperty('prefix')->setValue('SECRET')->setOrigin('config');
-				}
-				
-				$splashCacheApc->getProperty("fallback")->setValue($splashCacheFile);
-			
-			} else {
-				$splashCacheApc = $this->moufManager->getInstanceDescriptor("splashCacheApc");
-			}
-			
-			if (isset($constants['SECRET'])) {
-				$splashCacheApc->getProperty('prefix')->setValue('SECRET')->setOrigin('config');
-			}
-		
-		/*	$splashInstance->getProperty("cacheService")->setValue($splashCacheApc);
-		}*/
-				
+
 		if (!$this->moufManager->instanceExists("rootController")) {
 			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);
 
