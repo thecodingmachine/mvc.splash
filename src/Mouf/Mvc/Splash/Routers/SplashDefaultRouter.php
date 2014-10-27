@@ -9,6 +9,7 @@ use Mouf\MoufManager;
 use Mouf\Mvc\Splash\Store\SplashUrlNode;
 use Psr\Log\LoggerInterface;
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
+use Mouf\Mvc\Splash\Services\SplashRequestContext;
 
 class SplashDefaultRouter implements HttpKernelInterface {
 	
