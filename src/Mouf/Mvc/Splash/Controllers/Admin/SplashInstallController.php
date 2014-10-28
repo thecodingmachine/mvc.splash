@@ -170,17 +170,17 @@ class SplashInstallController extends Controller {
 		
 		
 		// These instances are expected to exist when the installer is run.
-		$bootstrapTemplate = $moufManager->getInstanceDescriptor('bootstrapTemplate');
-		$block_content = $moufManager->getInstanceDescriptor('block.content');
+		$bootstrapTemplate = $this->moufManager->getInstanceDescriptor('bootstrapTemplate');
+		$block_content = $this->moufManager->getInstanceDescriptor('block.content');
 		
 		// Let's create the instances.
-		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $moufManager);
-		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
-		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
-		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
-		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
-		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $moufManager);
-		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $moufManager);
+		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $this->moufManager);
+		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $this->moufManager);
+		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $this->moufManager);
+		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $this->moufManager);
+		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $this->moufManager);
+		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $this->moufManager);
+		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $this->moufManager);
 		
 		// Let's bind instances together.
 		if (!$splash->getConstructorArgumentProperty('router')->isValueSet()) {
@@ -227,7 +227,7 @@ class SplashInstallController extends Controller {
 		}
 		
 		// Let's rewrite the MoufComponents.php file to save the component
-		$moufManager->rewriteMouf();
+		$this->moufManager->rewriteMouf();
 
 
 

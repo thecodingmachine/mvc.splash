@@ -2,25 +2,16 @@
 namespace Mouf\Mvc\Splash;
 
 use Mouf\Mvc\Splash\Utils\SplashException;
-
 use Mouf\Validator\MoufValidatorResult;
-
 use Mouf\Validator\MoufStaticValidatorInterface;
-
 use Mouf\Utils\Cache\CacheInterface;
-
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
-
 use Mouf\Mvc\Splash\Utils\ExceptionUtils;
-
 use Mouf\Mvc\Splash\Controllers\Controller;
-
 use Mouf\Mvc\Splash\Controllers\Http404HandlerInterface;
 use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 use Mouf\Mvc\Splash\Services\SplashUtils;
-
 use Mouf\Mvc\Splash\Services\SplashRequestContext;
-
 use Mouf\Mvc\Splash\Store\SplashUrlNode;
 use Mouf\Utils\Log\LogInterface;
 use Psr\Log\LoggerInterface;
@@ -59,18 +50,21 @@ class Splash implements MoufStaticValidatorInterface {
 	 * Route the user to the right controller according to the URL.
 	 * 
 	 * @param string $splashUrlPrefix The beginning of the URL before Splash is activated. This is basically the webapp directory name.
+	 * 
 	 * @throws Exception
 	 */
 	public function route($splashUrlPrefix) {
 		$request = Request::createFromGlobals();
-		$this->router->handle($request);
+		$response = $this->router->handle($request);
+		
+		$response->send();
 	}
 	
 	/**
+	 * Check if an instance named 'splash' actually exists
 	 * @return \Mouf\Validator\MoufValidatorResult
 	 */
 	public static function validateClass() {
-	
 		$instanceExists = MoufManager::getMoufManager()->instanceExists('splash');
 	
 		if ($instanceExists) {
@@ -80,5 +74,3 @@ class Splash implements MoufStaticValidatorInterface {
 		}
 	}		
 }
-
-?>

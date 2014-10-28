@@ -58,7 +58,7 @@ class NotFoundRouter implements HttpKernelInterface {
 	 */
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
 		if ($this->log) {
-			$this->log->info("4040 - Page not found on URL: ".$request->getRequestUri());
+			$this->log->info("404 - Page not found on URL: ".$request->getRequestUri());
 		}
 		$message = ValueUtils::val($this->message); 
 		ob_start();

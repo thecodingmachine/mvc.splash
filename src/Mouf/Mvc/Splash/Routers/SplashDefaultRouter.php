@@ -28,6 +28,8 @@ class SplashDefaultRouter implements HttpKernelInterface {
 	private $cacheService;
 
 	/**
+	 * The router that will handle the request if this one fails to find a matching route
+	 * 
 	 * @var HttpKernelInterface
 	 */
 	private $fallBackRouter;
@@ -102,50 +104,6 @@ class SplashDefaultRouter implements HttpKernelInterface {
 			return $this->fallBackRouter->handle($request, $type, $catch);
 		}
 			
-		// Check if there is a limit of input number in php
-		// Throw exception if the limit is reached
-		if(ini_get('max_input_vars') || ini_get('suhosin.get.max_vars')) {
-			$maxGet = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.get.max_vars'));
-			if($maxGet !== null) {
-				$this->count = 0;
-				array_walk_recursive($_GET, array($this, 'countRecursive'));
-				if($this->count == $maxGet) {
-					throw new SplashException('Max input vars reaches for get parameters ('.$maxGet.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.get.max_vars.');
-				}
-			}
-		}
-		if(ini_get('max_input_vars') || ini_get('suhosin.post.max_vars')) {
-			$maxPost = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.post.max_vars'));
-			if($maxPost !== null) {
-				$this->count = 0;
-				array_walk_recursive($_POST, array($this, 'countRecursive'));
-				if($this->count == $maxPost) {
-					throw new SplashException('Max input vars reaches for post parameters ('.$maxPost.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.post.max_vars.');
-				}
-			}
-		}
-		if(ini_get('max_input_vars') || ini_get('suhosin.request.max_vars')) {
-			$maxRequest = $this->getMinInConfiguration(ini_get('max_input_vars'), ini_get('suhosin.request.max_vars'));
-			if($maxRequest !== null) {
-				$this->count = 0;
-				array_walk_recursive($_REQUEST, array($this, 'countRecursive'));
-				if($this->count == $maxRequest) {
-					throw new SplashException('Max input vars reaches for request parameters ('.$maxRequest.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.request.max_vars.');
-				}
-			}
-		}
-		if(isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post' && empty($_POST) && empty($_FILES)){
-			$maxPostSize = self::iniGetBytes('post_max_size');
-			if ($_SERVER['CONTENT_LENGTH'] > $maxPostSize) {
-				throw new SplashException(
-						sprintf('Max post size exceeded! Got %s bytes, but limit is %s bytes. Edit post_max_size setting in your php.ini.',
-								$_SERVER['CONTENT_LENGTH'],
-								$maxPostSize
-						)
-				);
-			}
-		}
-			
 		$controller = MoufManager::getMoufManager()->getInstance($splashRoute->controllerInstanceName);
 		$action = $splashRoute->methodName;
 		
@@ -153,15 +111,11 @@ class SplashDefaultRouter implements HttpKernelInterface {
 			
 	
 		if ($this->log != null) {
-			if ($this->log instanceof LogInterface) {
-				$this->log->trace("Routing user with URL ".$_SERVER['REDIRECT_URL']." to controller ".get_class($controller)." and action ".$action);
-			} else {
-				$this->log->info("Routing user with URL {url} to controller {controller} and action {action}", array(
-						'url' => $_SERVER['REDIRECT_URL'],
-						'controller' => get_class($controller),
-						'action' => $action
-				));
-			}
+			$this->log->info("Routing user with URL {url} to controller {controller} and action {action}", array(
+				'url' => $_SERVER['REDIRECT_URL'],
+				'controller' => get_class($controller),
+				'action' => $action
+			));
 		}
 	
 		if ($controller instanceof WebServiceInterface) {
@@ -197,9 +151,6 @@ class SplashDefaultRouter implements HttpKernelInterface {
 				$filters[$i]->beforeAction();
 			}
 				
-			// Ok, now, let's store the parameters.
-			//call_user_func_array(array($this,$method), AdminBag::getInstance()->argsArray);
-			
 			ob_start();
 			$result = call_user_func_array(array($controller,$action), $args);
 			$html = ob_get_clean();
@@ -272,57 +223,4 @@ class SplashDefaultRouter implements HttpKernelInterface {
 		$this->cacheService->purge("splashUrlNodes");
 	}
 	
-	/**
-	 * Get the min in 2 values if there exist
-	 * @param int $val1
-	 * @param int $val2
-	 * @return int|NULL
-	 */
-	private function getMinInConfiguration($val1, $val2) {
-		if($val1 && $val2)
-			return min(array($val1, $val2));
-		if($val1)
-			return $val1;
-		if($val2)
-			return $val2;
-		return null;
-	}
-	
-	/**
-	 * Count number of element in array
-	 * @param mixed $item
-	 * @param mixed $key
-	 */
-	private function countRecursive($item, $key) {
-		$this->count ++;
-	}
-	
-	/**
-	 * Returns the number of bytes from php.ini parameter
-	 *
-	 * @param $val
-	 * @return int|string
-	 */
-	private static function iniGetBytes($val)
-	{
-		$val = trim(ini_get($val));
-		if ($val != '') {
-			$last = strtolower(
-					$val{strlen($val) - 1}
-			);
-		} else {
-			$last = '';
-		}
-		switch ($last) {
-			// The 'G' modifier is available since PHP 5.1.0
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
-	
-		return $val;
-	}
 }

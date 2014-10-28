@@ -64,20 +64,25 @@ class ExceptionRouter implements HttpKernelInterface {
 	 *
 	 * @return Response A Response instance
 	 *
-	 * @throws \Exception When an Exception occurs during processing
+	 * @throws \Exception When an Exception occurs during processing (and $catch is set to false)
 	 */
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true){
 		if ($catch){
 			try {
 				return $this->router->handle($request, $type, false);
 			} catch (\Exception $e) {
-				$this->handleException($e);
+				return $this->handleException($e);
 			}
 		}else{
 			return $this->router->handle($request, $type);
 		}
 	}
 	
+	/**
+	 * Actually handle the exception depending
+	 * @param \Exception $e
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	private function handleException(\Exception $e) {
 		if ($this->log != null) {
 			if ($this->log instanceof LogInterface) {
@@ -96,11 +101,10 @@ class ExceptionRouter implements HttpKernelInterface {
 		$this->errorController->serverError($e);
 		$html = ob_get_clean();
 		return new Response($html, 500);
-		
 	}
 	
 	/**
-	 * The "404" message
+	 * The "500" message
 	 * @param string|ValueInterface $message
 	 */
 	public function setMessage($message){
