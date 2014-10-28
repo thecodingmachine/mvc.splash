@@ -2,7 +2,7 @@ Settings and error handling
 ---------------------------
 
 You can configure Splash using the "splash" instance. Here is what the "splash" instance looks by default:
-![Splash instance](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/splash_instance.png)
+![Splash instance](https://raw.githubusercontent.com/thecodingmachine/mvc.splash/4.3/doc/images/splash_instance.png)
 
 The Splash class requires 2 properties to be filled:
  - *log*: This is the logger used by Splash.
