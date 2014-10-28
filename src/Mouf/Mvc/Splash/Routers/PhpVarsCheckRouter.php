@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author Kevin Nguyen
  */
-class ExceptionRouter implements HttpKernelInterface {
+class PhpVarsCheckRouter implements HttpKernelInterface {
 
 	/**
 	 * The logger used by Splash
@@ -73,6 +73,9 @@ class ExceptionRouter implements HttpKernelInterface {
 				$this->count = 0;
 				array_walk_recursive($_GET, array($this, 'countRecursive'));
 				if($this->count == $maxGet) {
+					if ($this->log != null){
+						$this->log->error('Max input vars reaches for get parameters ({maxGet}). Check your variable max_input_vars in php.ini or suhosin module suhosin.get.max_vars.', ["maxGet" => $maxGet]);
+					}
 					throw new SplashException('Max input vars reaches for get parameters ('.$maxGet.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.get.max_vars.');
 				}
 			}
@@ -83,6 +86,9 @@ class ExceptionRouter implements HttpKernelInterface {
 				$this->count = 0;
 				array_walk_recursive($_POST, array($this, 'countRecursive'));
 				if($this->count == $maxPost) {
+					if ($this->log != null){
+						$this->log->error('Max input vars reaches for post parameters ({maxPost}). Check your variable max_input_vars in php.ini or suhosin module suhosin.post.max_vars.', ["maxPost" => $maxPost]);
+					}
 					throw new SplashException('Max input vars reaches for post parameters ('.$maxPost.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.post.max_vars.');
 				}
 			}
@@ -93,6 +99,9 @@ class ExceptionRouter implements HttpKernelInterface {
 				$this->count = 0;
 				array_walk_recursive($_REQUEST, array($this, 'countRecursive'));
 				if($this->count == $maxRequest) {
+					if ($this->log != null){
+						$this->log->error('Max input vars reaches for request parameters ({maxRequest}). Check your variable max_input_vars in php.ini or suhosin module suhosin.request.max_vars.', ["maxRequest" => $maxRequest]);
+					}
 					throw new SplashException('Max input vars reaches for request parameters ('.$maxRequest.'). Check your variable max_input_vars in php.ini or suhosin module suhosin.request.max_vars.');
 				}
 			}
@@ -100,6 +109,9 @@ class ExceptionRouter implements HttpKernelInterface {
 		if(isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post' && empty($_POST) && empty($_FILES)){
 			$maxPostSize = self::iniGetBytes('post_max_size');
 			if ($_SERVER['CONTENT_LENGTH'] > $maxPostSize) {
+				if ($this->log != null){
+					$this->log->error('Max post size exceeded! Got {length} bytes, but limit is {maxPostSize} bytes. Edit post_max_size setting in your php.ini.', ["length" => $_SERVER['CONTENT_LENGTH'], "maxPostSize" => $maxPostSize]);
+				}
 				throw new SplashException(
 						sprintf('Max post size exceeded! Got %s bytes, but limit is %s bytes. Edit post_max_size setting in your php.ini.',
 								$_SERVER['CONTENT_LENGTH'],

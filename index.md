@@ -24,6 +24,6 @@ Advanced topics
 ---------------
 
 - The [managing URL parameters page](doc/url_parameters.md) explains how to map parameters from the request to parameters of the action.
-- The [settings and error handling guide](doc/settings_and_error_handling.md) explains how to customize Splash behaviour and HTTP 404/500 error messages.
 - The [views section](doc/views.md) explains how Splash does (not) handle the views.
+- The [route handling page](doc/url_routing.md) explains how Splash will route a request, and especially HTTP 404/500 error messages.
 - The [filters guide](doc/filters.md) explains how to use and write filters in your actions.
