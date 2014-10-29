@@ -6,6 +6,7 @@ use Mouf\Mvc\Splash\Controllers\Http500HandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
+use Mouf\Mvc\Splash\Services\SplashUtils;
 
 /**
  * This router returns transforms exceptions into HTTP 500 pages, based on the configured error controller.
@@ -97,10 +98,9 @@ class ExceptionRouter implements HttpKernelInterface {
 			error_log($e->getMessage()." - ".$e->getTraceAsString());
 		}
 	
-		ob_start();
-		$this->errorController->serverError($e);
-		$html = ob_get_clean();
-		return new Response($html, 500);
+		$response = SplashUtils::buildControllerResponse($this->errorController->serverError($e));
+
+		return $response;
 	}
 	
 	/**

@@ -10,6 +10,7 @@ use Mouf\Mvc\Splash\Store\SplashUrlNode;
 use Psr\Log\LoggerInterface;
 use Mouf\Mvc\Splash\Controllers\WebServiceInterface;
 use Mouf\Mvc\Splash\Services\SplashRequestContext;
+use Mouf\Mvc\Splash\Services\SplashUtils;
 
 class SplashDefaultRouter implements HttpKernelInterface {
 	
@@ -121,10 +122,8 @@ class SplashDefaultRouter implements HttpKernelInterface {
 		if ($controller instanceof WebServiceInterface) {
 			// FIXME: handle correctly webservices (or remove this exception and handle
 			// webservice the way we handle controllers
-			ob_start();
-			$this->handleWebservice($controller);
-			$html = ob_get_clean();
-			return new Response($html);
+			$response = SplashUtils::buildControllerResponse($this->handleWebservice($controller));
+			return $response;
 		} else {
 			// Let's pass everything to the controller:
 			$args = array();
@@ -151,16 +150,14 @@ class SplashDefaultRouter implements HttpKernelInterface {
 				$filters[$i]->beforeAction();
 			}
 				
-			ob_start();
-			$result = call_user_func_array(array($controller,$action), $args);
-			$html = ob_get_clean();
+			$response = SplashUtils::buildControllerResponse(call_user_func_array(array($controller,$action), $args));
 			
 				
 			foreach ($filters as $filter) {
 				$filter->afterAction();
 			}
 			
-			return new Response($html);
+			return $response;
 		}
 	}
 	

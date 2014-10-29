@@ -8,6 +8,7 @@ use Mouf\Utils\Value\ValueUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Mouf\Mvc\Splash\Services\SplashUtils;
 
 /**
  * This router always returns a 404 page, based on the configured page not found controller.
@@ -61,10 +62,10 @@ class NotFoundRouter implements HttpKernelInterface {
 			$this->log->info("404 - Page not found on URL: ".$request->getRequestUri());
 		}
 		$message = ValueUtils::val($this->message); 
-		ob_start();
-		$this->pageNotFoundController->pageNotFound($message);
-		$html = ob_get_clean();
-		return new Response($html);
+
+		$response = SplashUtils::buildControllerResponse($this->pageNotFoundController->pageNotFound($message));
+		
+		return $response;
 	}
 		
 	/**
