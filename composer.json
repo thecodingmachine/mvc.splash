@@ -25,7 +25,7 @@
 		"mouf/html.template.bootstrap" : ">=2.1, <4.0",
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/utils.cache.no-cache" : "2.0.*",
-		"mouf/mvc.splash-common" : "4.3.*",
+		"mouf/mvc.splash-common" : "~4.3",
 		"mouf/utils.constants.secret" : "~1.0",
 		"psr/log" : "~1.0"
 	},
