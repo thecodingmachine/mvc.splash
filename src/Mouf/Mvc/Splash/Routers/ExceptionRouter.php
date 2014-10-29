@@ -98,7 +98,11 @@ class ExceptionRouter implements HttpKernelInterface {
 			error_log($e->getMessage()." - ".$e->getTraceAsString());
 		}
 	
-		$response = SplashUtils::buildControllerResponse($this->errorController->serverError($e));
+		$response = SplashUtils::buildControllerResponse(
+			function () use ($e) {
+				$this->errorController->serverError($e);
+			}
+		);
 
 		return $response;
 	}

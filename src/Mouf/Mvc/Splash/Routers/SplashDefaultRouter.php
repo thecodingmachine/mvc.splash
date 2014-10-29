@@ -122,7 +122,11 @@ class SplashDefaultRouter implements HttpKernelInterface {
 		if ($controller instanceof WebServiceInterface) {
 			// FIXME: handle correctly webservices (or remove this exception and handle
 			// webservice the way we handle controllers
-			$response = SplashUtils::buildControllerResponse($this->handleWebservice($controller));
+			$response = SplashUtils::buildControllerResponse(
+				function() use ($controller){
+					$this->handleWebservice($controller);
+				}
+			);
 			return $response;
 		} else {
 			// Let's pass everything to the controller:
@@ -150,8 +154,11 @@ class SplashDefaultRouter implements HttpKernelInterface {
 				$filters[$i]->beforeAction();
 			}
 				
-			$response = SplashUtils::buildControllerResponse(call_user_func_array(array($controller,$action), $args));
-			
+			$response = SplashUtils::buildControllerResponse(
+				function() use ($controller, $action, $args){
+					call_user_func_array(array($controller,$action), $args);
+				}
+			);
 				
 			foreach ($filters as $filter) {
 				$filter->afterAction();

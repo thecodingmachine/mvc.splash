@@ -63,7 +63,11 @@ class NotFoundRouter implements HttpKernelInterface {
 		}
 		$message = ValueUtils::val($this->message); 
 
-		$response = SplashUtils::buildControllerResponse($this->pageNotFoundController->pageNotFound($message));
+		$response = SplashUtils::buildControllerResponse(
+			function() use ($message) {
+				$this->pageNotFoundController->pageNotFound($message);
+			}
+		);
 		
 		return $response;
 	}
