@@ -273,7 +273,7 @@ class SplashInstallController extends Controller {
 		$this->exludeExtentions = $moufManager->getVariable("splashexludeextentions");
 		$this->exludeFolders = $moufManager->getVariable("splashexludefolders");
 		if (empty($this->exludeExtentions)){
-			$this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css", "woff", "ttf", "svg", "eot");
+			$this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css", "woff", "ttf", "svg", "eot", "map");
 		}
 		if (empty($this->exludeFolders)){
 			$this->exludeFolders = array("vendor");
