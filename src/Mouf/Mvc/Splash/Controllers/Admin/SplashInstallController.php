@@ -16,7 +16,6 @@ use Mouf\Mvc\Splash\Controllers\Controller;
 /**
  * The controller used in the Splash install process.
  * 
- * @Component
  */
 class SplashInstallController extends Controller {
 	
