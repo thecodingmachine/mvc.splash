@@ -71,8 +71,8 @@
 					"title" : "Writing your own filters",
 					"url" : "doc/filters.md"
 				}, {
-					"title" : "Settings and error handling",
-					"url" : "doc/settings_and_error_handling.md"
+					"title" : "Advanced: configuring routing",
+					"url" : "doc/url_routing.md"
 				}
 			],
 			"require-admin" : [
