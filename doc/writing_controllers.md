@@ -145,4 +145,41 @@ class UserController extends Controller {
 Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.
 So for instance, if you access http://[server]/[appname]/user/42/view, the $id parameter will be filled with "42". 
 
+Returning / outputing values
+----------------------------
+
+As you probably already guessed, you can simply "echo" things and they will show up in your browser.
+But you can also return a [Symfony 2 Response object](http://symfony.com/fr/doc/current/components/http_foundation/introduction.html#reponse)
+
+Therefore, you can write things like:
+
+```php
+<?php
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class MyController extends Controller {
+	
+	/**
+	 * Returning a Response object
+	 *
+	 * @URL /myurl1
+	 */
+	public function test1() {
+		 return new Response('Hello World', 200, array('content-type' => 'text/html'));
+	}
+	
+	/**
+	 * Returning a JSON response
+	 *
+	 * @URL /myjsonurl
+	 */
+	public function testJson() {
+		 return new JsonResponse({ "status" => "ok", "message" => "Hello world!" });
+	}
+}
+?>
+```
+
+
 [Wanna learn more? Have a look at the advanced tutorial](writing_controllers_manually.md)
