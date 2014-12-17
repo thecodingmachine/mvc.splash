@@ -172,6 +172,8 @@ class SplashInstallController extends Controller {
 		$bootstrapTemplate = $this->moufManager->getInstanceDescriptor('bootstrapTemplate');
 		$block_content = $this->moufManager->getInstanceDescriptor('block.content');
 		
+		$moufManager = $this->moufManager;
+		
 		// Let's create the instances.
 		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $moufManager);
 		$whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Whoops\\StackPhp\\WhoopsMiddleWare', $moufManager);
