@@ -16,7 +16,7 @@ Splash's default router stack implementation
 -------------------
 Here is the Splash instance view after installation :
 
-![Default splash instance view](doc/images/splash_instance.png "Default splash instance view")
+![Default splash instance view](images/splash_instance.png "Default splash instance view")
 
 If you look closer at the stack, here is what you will find out :
 
