@@ -173,20 +173,33 @@ class SplashInstallController extends Controller {
 		$block_content = $this->moufManager->getInstanceDescriptor('block.content');
 		
 		// Let's create the instances.
-		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $this->moufManager);
-		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $this->moufManager);
-		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $this->moufManager);
-		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $this->moufManager);
-		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $this->moufManager);
-		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $this->moufManager);
-		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $this->moufManager);
+		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $moufManager);
+		$whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Whoops\\StackPhp\\WhoopsMiddleWare', $moufManager);
+		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
+		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
+		$phpVarsCheckRouter = InstallUtils::getOrCreateInstance('phpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
+		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
+		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
+		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $moufManager);
+		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $moufManager);
 		
 		// Let's bind instances together.
 		if (!$splash->getConstructorArgumentProperty('router')->isValueSet()) {
-			$splash->getConstructorArgumentProperty('router')->setValue($exceptionRouter);
+			$splash->getConstructorArgumentProperty('router')->setValue($whoopsMiddleware);
+		}
+		if (!$whoopsMiddleware->getConstructorArgumentProperty('router')->isValueSet()) {
+			$whoopsMiddleware->getConstructorArgumentProperty('router')->setValue($exceptionRouter);
+		}
+		if (!$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->isValueSet()) {
+			$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->setValue('DEBUG');
+		$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->setOrigin("config");
+		}
+		if (!$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->isValueSet()) {
+			$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setValue('DEBUG');
+		$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setOrigin("config");
 		}
 		if (!$exceptionRouter->getConstructorArgumentProperty('router')->isValueSet()) {
-			$exceptionRouter->getConstructorArgumentProperty('router')->setValue($splashDefaultRouter);
+			$exceptionRouter->getConstructorArgumentProperty('router')->setValue($phpVarsCheckRouter);
 		}
 		if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
 			$exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
@@ -196,6 +209,9 @@ class SplashInstallController extends Controller {
 		}
 		if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
 			$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
+		}
+		if (!$phpVarsCheckRouter->getConstructorArgumentProperty('fallBackRouter')->isValueSet()) {
+			$phpVarsCheckRouter->getConstructorArgumentProperty('fallBackRouter')->setValue($splashDefaultRouter);
 		}
 		if (!$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->isValueSet()) {
 			$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->setValue($httpErrorsController);
@@ -224,7 +240,7 @@ class SplashInstallController extends Controller {
 		if (!$splashCacheFile->getPublicFieldProperty('cacheDirectory')->isValueSet()) {
 			$splashCacheFile->getPublicFieldProperty('cacheDirectory')->setValue('splashCache/');
 		}
-		
+
 		// Let's rewrite the MoufComponents.php file to save the component
 		$this->moufManager->rewriteMouf();
 
