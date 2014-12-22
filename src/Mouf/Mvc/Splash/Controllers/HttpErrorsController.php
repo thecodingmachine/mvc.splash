@@ -6,6 +6,7 @@ use Mouf\Html\HtmlElement\Scopable;
 use Mouf\Html\HtmlElement\HtmlBlock;
 
 use Mouf\Html\Template\TemplateInterface;
+use Mouf\Html\HtmlElement\HtmlElementInterface;
 
 /**
  * This class provides the default Splash behaviour when a HTTP 404 and HTTP 500 error is triggered.
@@ -16,6 +17,7 @@ use Mouf\Html\Template\TemplateInterface;
  * @Component
  */
 class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInterface, Scopable {
+	// TODO: remove the public modifier from these properties.
 	/**
 	 * The template used by Splash for displaying error pages (HTTP 404 and 500)
 	 *
@@ -42,8 +44,30 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 */
 	public $debugMode = true;
 	
+	/**
+	 * Content block displayed in case of a 404 error.
+	 * If not set, a default block will be used instead.
+	 * 
+	 * @var HtmlElementInterface
+	 */
+	protected $contentFor404;
+	
+	/**
+	 * Content block displayed in case of a 500 error.
+	 * If not set, a default block will be used instead.
+	 *
+	 * @var HtmlElementInterface
+	 */
+	protected $contentFor500;
+	
 	protected $message;
 	protected $exception;
+	
+	public function __construct(TemplateInterface $template = null, HtmlBlock $contentBlock = null, $debugMode = true) {
+		$this->template = $template;
+		$this->contentBlock = $contentBlock;
+		$this->debugMode = $debugMode;
+	}
 	
 	/**
 	 * (non-PHPdoc)
@@ -52,7 +76,11 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	public function pageNotFound($message) {
 		header("HTTP/1.0 404 Not Found");
 		$this->message = $message;
-		$this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
+		if ($this->contentFor404) {
+			$this->contentBlock = $this->contentFor404;
+		} else {
+			$this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
+		}
 		$this->template->toHtml();
 	}
 	
@@ -63,7 +91,11 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	public function serverError(\Exception $exception) {
 		header("HTTP/1.0 500 Server error");
 		$this->exception = $exception;
-		$this->contentBlock->addFile(__DIR__."/../../../../views/500.php", $this);
+		if ($this->contentFor500) {
+			$this->contentBlock = $this->contentFor500;
+		} else {
+			$this->contentBlock->addFile(__DIR__."/../../../../views/500.php", $this);
+		}
 		$this->template->toHtml();
 	}
 	
@@ -74,6 +106,28 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 */
 	public function loadFile($file) {
 		include $file;
+	}
+	
+	/**
+	 * Content block displayed in case of a 404 error.
+	 * If not set, a default block will be used instead.
+	 * 
+	 * @param HtmlElementInterface $contentFor404        	
+	 */
+	public function setContentFor404(HtmlElementInterface $contentFor404) {
+		$this->contentFor404 = $contentFor404;
+		return $this;
+	}
+	
+	/**
+	 * Content block displayed in case of a 500 error.
+	 * If not set, a default block will be used instead.
+	 * 
+	 * @param HtmlElementInterface $contentFor500        	
+	 */
+	public function setContentFor500(HtmlElementInterface $contentFor500) {
+		$this->contentFor500 = $contentFor500;
+		return $this;
 	}
 }
 
