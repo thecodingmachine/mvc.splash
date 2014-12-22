@@ -181,5 +181,33 @@ class MyController extends Controller {
 ?>
 ```
 
+Typically, in Mouf, you will want to output a template object. You can easily output templates (or any object
+implementing the [`HtmlElementInterface`](http://mouf-php.com/packages/mouf/html.htmlelement/README.md) using the `HtmlResponse` object:
+
+```php
+<?php
+use Mouf\Mvc\Splash\HtmlResponse;
+
+class MyController extends Controller {
+    /**
+     * @var HtmlElementInterface
+     */
+    private $template;
+	
+	...
+	
+	/**
+	 * Returning a Response object
+	 *
+	 * @URL /test_template
+	 */
+	public function test1() {
+	    // do stuff
+		return new HtmlResponse($this->template);
+	}
+}
+?>
+```
+
 
 [Wanna learn more? Have a look at the advanced tutorial](writing_controllers_manually.md)

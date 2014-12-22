@@ -73,6 +73,7 @@ Using Splash, this annotation means a lot more because Splash will throw an Excp
 For example, if you use the annotation <code>@param int $userId</code>, and the variable is in fact a string ('toto' for instance), an exception will be raised and an HTTP 500 page displayed.
 
 Allowed parameter types are:
+
  - string
  - int
  - float
@@ -81,6 +82,33 @@ Allowed parameter types are:
 
 *Note:* with the current version, if a parameter is not valid, an error screen is displayed. You cannot catch this error to provide custom behaviour in the current version.
 However, you can overide the way HTTP 500 errors are displayed (see the "Settings and error handling" part of this documentation).
+
+
+Injection Symfony 2 HttpFoundation Request object as a parameter
+----------------------------------------------------------------
+
+Splash 5+ has native support for Symfony 2's HttpFoundation [`Request`](http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html).
+
+This means that Splash will automatically inject a `Request` object into your action if your action expects a `Request` object 
+(just like the way it works in Symfony 2):
+
+```php
+use Symfony\Component\HttpFoundation\Request;
+...
+
+/**
+ * My action with the request object filled
+ *
+ * @URL /test
+ * @param Request $request
+ */
+public function my_action(Request $request) {
+	$param = $request->get('param');
+	...
+} 
+```
+
+Note: you should use the `Request` object instead of accessing directly `$_FILES`, `$_SERVER`, `$_COOKIES`, or HTTP headers.
 
 <!--
 <h3>Validators</h3>
