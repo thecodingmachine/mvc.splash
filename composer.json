@@ -33,6 +33,9 @@
 	"provide" : {
 		"mouf/mvc.splash-implementation" : "6.0.*"
 	},
+    "conflict" : {
+	    "mouf/mouf" : "<2.1"
+	},
 	"autoload" : {
 		"psr-0" : {
 			"Mouf\\Mvc\\Splash" : "src/"
