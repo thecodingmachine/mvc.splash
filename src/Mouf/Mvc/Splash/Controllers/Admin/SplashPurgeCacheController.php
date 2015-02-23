@@ -44,8 +44,7 @@ class SplashPurgeCacheController extends Controller {
 			$moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
 		
-		// TODO: call the proxy for this method
-		$splashProxy = new InstanceProxy('splash', $selfedit == "true");
+		$splashProxy = new InstanceProxy('splashDefaultRouter', $selfedit == "true");
 		$splashProxy->purgeUrlsCache();
 		
 		$this->content->addFile(__DIR__."/../../../../../views/admin/purgedCache.php", $this);
