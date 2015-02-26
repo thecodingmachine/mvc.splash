@@ -77,7 +77,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 		header("HTTP/1.0 404 Not Found");
 		$this->message = $message;
 		if ($this->contentFor404) {
-			$this->contentBlock = $this->contentFor404;
+			$this->contentBlock->addHtmlElement($this->contentFor404);
 		} else {
 			$this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
 		}
