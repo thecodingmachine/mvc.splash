@@ -3,11 +3,13 @@ namespace Mouf\Mvc\Splash\Controllers\Admin;
 
 use Mouf\Actions\InstallUtils;
 
+use Mouf\Composer\ClassNameMapper;
 use Mouf\MoufUtils;
 
 use Mouf\Html\HtmlElement\HtmlBlock;
 
 use Mouf\Html\Template\TemplateInterface;
+use Mouf\Mvc\Splash\Services\SplashCreateControllerService;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
 use Mouf\Mvc\Splash\Controllers\Controller;
@@ -104,17 +106,19 @@ class SplashInstallController extends Controller {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
 		
-		$autoloadNamespaces = MoufUtils::getAutoloadNamespaces();
-		if ($autoloadNamespaces) {
-			$rootNamespace = $autoloadNamespaces[0]['namespace'].'\\';
-			$this->sourceDirectory = $autoloadNamespaces[0]['directory'];
+		$classNameMapper = ClassNameMapper::createFromComposerFile(__DIR__.'/../../../../../../../../../composer.json');
+        $namespaces = $classNameMapper->getManagedNamespaces();
+		if ($namespaces) {
+			$rootNamespace = $namespaces[0];
 		} else {
-                        set_user_message('<strong>Warning</strong> : Mouf could not find a PSR 0 autoloader configured in your composer.json file. Therefore, unless you are using your own autoloader, it is likely that mouf will be unable to find the Splash Controllers. 
-                            <br/>You should : <ol>
-                            <li><a href="http://getcomposer.org/doc/04-schema.md#psr-0" target="_blank">Configure PSR 0 in your composer.json</a></li>
-                            <li>Regenerate your composer autoloader : <pre>php composer.phar dumpautoload</pre></li>
-                            <li>Refresh this page</li>
-</ol>');
+            set_user_message('<strong>Warning</strong> : Mouf could not find a PSR-0 or PSR-4 autoloader configured
+                in your composer.json file. Therefore, unless you are using your own autoloader, it is likely that mouf will be unable to find the Splash Controllers.
+                <br/>You should :
+                <ol>
+                    <li><a href="http://getcomposer.org/doc/04-schema.md#psr-0" target="_blank">Configure PSR-4 in your composer.json</a></li>
+                    <li>Regenerate your composer autoloader : <pre>php composer.phar dumpautoload</pre></li>
+                    <li>Refresh this page</li>
+                </ol>');
 			$rootNamespace = '';
 		}
 		
@@ -135,12 +139,11 @@ class SplashInstallController extends Controller {
 	 * This action generates the TDBM instance, then the DAOs and Beans. 
 	 * 
 	 * @Action
-	 * @param string $sourcedirectory
 	 * @param string $controllernamespace
 	 * @param string $viewdirectory
 	 * @param string $selfedit
 	 */
-	public function generate($sourcedirectory, $controllernamespace, $viewdirectory, $selfedit="false") {
+	public function generate($controllernamespace, $viewdirectory, $selfedit="false") {
 		$this->selfedit = $selfedit;		
 		
 		if ($selfedit == "true") {
@@ -148,15 +151,12 @@ class SplashInstallController extends Controller {
 		} else {
 			$this->moufManager = MoufManager::getMoufManagerHiddenInstance();
 		}
-		
-		$sourcedirectory = trim($sourcedirectory, "/\\");
-		$sourcedirectory .= "/";
+
 		$controllernamespace = trim($controllernamespace, "/\\");
 		$controllernamespace .= "\\";
 		$viewdirectory = trim($viewdirectory, "/\\");
 		$viewdirectory .= "/";
-		
-		$this->moufManager->setVariable("splashDefaultSourceDirectory", $sourcedirectory);
+
 		$this->moufManager->setVariable("splashDefaultControllersNamespace", $controllernamespace);
 		$this->moufManager->setVariable("splashDefaultViewsDirectory", $viewdirectory);
 		
@@ -249,13 +249,30 @@ class SplashInstallController extends Controller {
 
 
 		if (!$this->moufManager->instanceExists("rootController")) {
-			$this->splashGenerateService->generateRootController($sourcedirectory, $controllernamespace, $viewdirectory);
+            $splashGenerateService = new SplashCreateControllerService();
+            $splashGenerateService->generate($this->moufManager, "RootController", "rootController",
+                $controllernamespace, false, true, false,
+                array(
+                    array(
+                        'url' => '/',
+                        'method' => 'index',
+                        'view' => 'twig',
+                        'twigFile' => 'views/root/index.twig',
+                        'anyMethod' => 'true',
+                        'getMethod' => 'false',
+                        'postMethod' => 'false',
+                        'putMethod' => 'false',
+                        'deleteMethod' => 'false',
+                    )
+                )
+                );
 
-			$this->moufManager->declareComponent("rootController", $controllernamespace."RootController");
-			$this->moufManager->bindComponent("rootController", "template", "bootstrapTemplate");
-			$this->moufManager->bindComponent("rootController", "content", "block.content");
-				
-			// TODO: bind au ErrorLogLogger?
+            // Let's overwrite the generated Twig file.
+            file_put_contents(ROOT_PATH.'../../../'.$viewdirectory.'root/index.twig', '
+<h1>Hello {{message}}!</h1>
+<h2>Welcome to Splash</h2>
+<p>This file is your welcome page. It is generated by the '.$controllernamespace.'RootController class and the '.$viewdirectory.'root/index.php file. Please feel free to customize it.</p>');
+
 		}
 		
 		
