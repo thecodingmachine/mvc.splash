@@ -55,6 +55,14 @@ class Splash implements MoufStaticValidatorInterface {
 	 */
 	public function route($splashUrlPrefix) {
 		$request = Request::createFromGlobals();
+
+        //json_decode postdata if content_type is json (application/json, ...)
+        if (0 === strpos($request->getContentType(), 'json')) {
+            $postdata = file_get_contents("php://input");
+            $postdata = json_decode($postdata, true);
+            $request->request = new ParameterBag($postdata);
+        }
+
 		$response = $this->router->handle($request);
 		
 		$response->send();
