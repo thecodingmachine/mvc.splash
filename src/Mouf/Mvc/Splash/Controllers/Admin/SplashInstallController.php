@@ -175,7 +175,7 @@ class SplashInstallController extends Controller {
 		$moufManager = $this->moufManager;
 		
 		// Let's create the instances.
-		$splash = InstallUtils::getOrCreateInstance('splash', 'Mouf\\Mvc\\Splash\\Splash', $moufManager);
+		$splash = InstallUtils::getOrCreateInstance('splashMiddleware', 'Mouf\\Mvc\\Splash\\SplashMiddleware', $moufManager);
 		$whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Whoops\\StackPhp\\WhoopsMiddleWare', $moufManager);
 		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
 		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
