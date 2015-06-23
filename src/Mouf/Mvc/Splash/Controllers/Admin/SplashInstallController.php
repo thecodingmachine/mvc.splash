@@ -166,79 +166,78 @@ class SplashInstallController extends Controller {
 			$this->displayErrorMsg("The install process assumes there is a template whose instance name is 'bootstrapTemplate'. Could not find the 'bootstrapTemplate' instance.");
 			return;
 		}
-		
-		
-		// These instances are expected to exist when the installer is run.
-		$bootstrapTemplate = $this->moufManager->getInstanceDescriptor('bootstrapTemplate');
-		$block_content = $this->moufManager->getInstanceDescriptor('block.content');
-		
+
 		$moufManager = $this->moufManager;
-		
+
+		// These instances are expected to exist when the installer is run.
+		$psr_errorLogLogger = $moufManager->getInstanceDescriptor('psr.errorLogLogger');
+		$bootstrapTemplate = $moufManager->getInstanceDescriptor('bootstrapTemplate');
+		$block_content = $moufManager->getInstanceDescriptor('block.content');
+
 		// Let's create the instances.
-		$splash = InstallUtils::getOrCreateInstance('splashMiddleware', 'Mouf\\Mvc\\Splash\\SplashMiddleware', $moufManager);
-		$whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Whoops\\StackPhp\\WhoopsMiddleWare', $moufManager);
+		$splashMiddleware = InstallUtils::getOrCreateInstance('splashMiddleware', 'Mouf\\Mvc\\Splash\\SplashMiddleware', $moufManager);
 		$exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
-		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
-		$phpVarsCheckRouter = InstallUtils::getOrCreateInstance('phpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
-		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
 		$httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
+		$whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Franzl\\Middleware\\Whoops\\Middleware', $moufManager);
+		$phpVarsCheckRouter = InstallUtils::getOrCreateInstance('phpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
+		$splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
+		$notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
 		$splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $moufManager);
 		$splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $moufManager);
-		
+		$anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
+		$anonymousErrorRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
+		$anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+		$anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+		$anonymousRouter3 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+
 		// Let's bind instances together.
-		if (!$splash->getConstructorArgumentProperty('router')->isValueSet()) {
-			$splash->getConstructorArgumentProperty('router')->setValue($whoopsMiddleware);
-		}
-		if (!$whoopsMiddleware->getConstructorArgumentProperty('router')->isValueSet()) {
-			$whoopsMiddleware->getConstructorArgumentProperty('router')->setValue($exceptionRouter);
-		}
-		if (!$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->isValueSet()) {
-			$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->setValue('DEBUG');
-		$whoopsMiddleware->getConstructorArgumentProperty('catchExceptions')->setOrigin("config");
-		}
-		if (!$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->isValueSet()) {
-			$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setValue('DEBUG');
-		$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setOrigin("config");
+		if (!$splashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
+			$splashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousErrorRouter, 1 => $anonymousErrorRouter2, 2 => $anonymousRouter, 3 => $anonymousRouter2, 4 => $anonymousRouter3, ));
 		}
 		if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
 			$exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
 		}
-		if (!$splashDefaultRouter->getConstructorArgumentProperty('fallBackRouter')->isValueSet()) {
-			$splashDefaultRouter->getConstructorArgumentProperty('fallBackRouter')->setValue($notFoundRouter);
+		if (!$exceptionRouter->getConstructorArgumentProperty('log')->isValueSet()) {
+			$exceptionRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
+		}
+		if (!$httpErrorsController->getConstructorArgumentProperty('template')->isValueSet()) {
+			$httpErrorsController->getConstructorArgumentProperty('template')->setValue($bootstrapTemplate);
+		}
+		if (!$httpErrorsController->getConstructorArgumentProperty('contentBlock')->isValueSet()) {
+			$httpErrorsController->getConstructorArgumentProperty('contentBlock')->setValue($block_content);
+		}
+		if (!$httpErrorsController->getConstructorArgumentProperty('debugMode')->isValueSet()) {
+			$httpErrorsController->getConstructorArgumentProperty('debugMode')->setValue('DEBUG');
+			$httpErrorsController->getConstructorArgumentProperty('debugMode')->setOrigin("config");
+		}
+		if (!$phpVarsCheckRouter->getConstructorArgumentProperty('log')->isValueSet()) {
+			$phpVarsCheckRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
 		}
 		if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
 			$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
 		}
-		if (!$phpVarsCheckRouter->getConstructorArgumentProperty('fallBackRouter')->isValueSet()) {
-			$phpVarsCheckRouter->getConstructorArgumentProperty('fallBackRouter')->setValue($splashDefaultRouter);
-		}
 		if (!$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->isValueSet()) {
 			$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->setValue($httpErrorsController);
 		}
-		if (!$httpErrorsController->getPublicFieldProperty('template')->isValueSet()) {
-			$httpErrorsController->getPublicFieldProperty('template')->setValue($bootstrapTemplate);
-		}
-		if (!$httpErrorsController->getPublicFieldProperty('contentBlock')->isValueSet()) {
-			$httpErrorsController->getPublicFieldProperty('contentBlock')->setValue($block_content);
-		}
-		if (!$httpErrorsController->getPublicFieldProperty('debugMode')->isValueSet()) {
-			$httpErrorsController->getPublicFieldProperty('debugMode')->setValue('DEBUG');
-		$httpErrorsController->getPublicFieldProperty('debugMode')->setOrigin("config");
-		}
 		if (!$splashCacheApc->getPublicFieldProperty('prefix')->isValueSet()) {
 			$splashCacheApc->getPublicFieldProperty('prefix')->setValue('SECRET');
-		$splashCacheApc->getPublicFieldProperty('prefix')->setOrigin("config");
+			$splashCacheApc->getPublicFieldProperty('prefix')->setOrigin("config");
 		}
 		if (!$splashCacheApc->getPublicFieldProperty('fallback')->isValueSet()) {
 			$splashCacheApc->getPublicFieldProperty('fallback')->setValue($splashCacheFile);
 		}
 		if (!$splashCacheFile->getPublicFieldProperty('prefix')->isValueSet()) {
 			$splashCacheFile->getPublicFieldProperty('prefix')->setValue('SECRET');
-		$splashCacheFile->getPublicFieldProperty('prefix')->setOrigin("config");
+			$splashCacheFile->getPublicFieldProperty('prefix')->setOrigin("config");
 		}
 		if (!$splashCacheFile->getPublicFieldProperty('cacheDirectory')->isValueSet()) {
 			$splashCacheFile->getPublicFieldProperty('cacheDirectory')->setValue('splashCache/');
 		}
+		$anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue($exceptionRouter);
+		$anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($whoopsMiddleware);
+		$anonymousRouter->getConstructorArgumentProperty('middleware')->setValue($phpVarsCheckRouter);
+		$anonymousRouter2->getConstructorArgumentProperty('middleware')->setValue($splashDefaultRouter);
+		$anonymousRouter3->getConstructorArgumentProperty('middleware')->setValue($notFoundRouter);
 
 		// Let's rewrite the MoufComponents.php file to save the component
 		$this->moufManager->rewriteMouf();
