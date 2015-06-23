@@ -7,6 +7,7 @@ use Mouf\Html\HtmlElement\HtmlBlock;
 
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Html\HtmlElement\HtmlElementInterface;
+use Mouf\Mvc\Splash\HtmlResponse;
 
 /**
  * This class provides the default Splash behaviour when a HTTP 404 and HTTP 500 error is triggered.
@@ -25,7 +26,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @Compulsory
 	 * @var TemplateInterface
 	 */
-	public $template;
+	private $template;
 	
 	/**
 	 * The content block the template will be written into.
@@ -34,7 +35,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @Compulsory
 	 * @var HtmlBlock
 	 */
-	public $contentBlock;
+    private $contentBlock;
 	
 	/**
 	 * Whether we should display exception stacktrace or not in HTTP 500.
@@ -42,7 +43,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @Property
 	 * @var bool
 	 */
-	public $debugMode = true;
+    private $debugMode = true;
 	
 	/**
 	 * Content block displayed in case of a 404 error.
@@ -74,14 +75,14 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @see Mouf\Mvc\Splash\Controllers.Http404HandlerInterface::pageNotFound()
 	 */
 	public function pageNotFound($message) {
-		header("HTTP/1.0 404 Not Found");
 		$this->message = $message;
 		if ($this->contentFor404) {
 			$this->contentBlock->addHtmlElement($this->contentFor404);
 		} else {
 			$this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
 		}
-		$this->template->toHtml();
+
+        return HtmlResponse::create($this->template, 404);
 	}
 	
 	/**
@@ -89,14 +90,14 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 	 * @see Mouf\Mvc\Splash\Controllers.Http500HandlerInterface::serverError()
 	 */
 	public function serverError(\Exception $exception) {
-		header("HTTP/1.0 500 Server error");
 		$this->exception = $exception;
 		if ($this->contentFor500) {
 			$this->contentBlock = $this->contentFor500;
 		} else {
 			$this->contentBlock->addFile(__DIR__."/../../../../views/500.php", $this);
 		}
-		$this->template->toHtml();
+
+        return HtmlResponse::create($this->template, 500);
 	}
 	
 	/**
