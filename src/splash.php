@@ -3,16 +3,16 @@
 // (only if we are not in admin mode)
 /*require_once dirname(__FILE__).'/../../../../mouf/MoufManager.php';
 if (!MoufManager::hasHiddenInstance()) {
-	require_once dirname(__FILE__).'/../../../../Mouf.php';
+    require_once dirname(__FILE__).'/../../../../Mouf.php';
 }*/
 use Mouf\MoufManager;
 use Zend\Diactoros\Server;
 use Mouf\Mvc\Splash\Splash;
 
 if (isset($_SERVER['BASE'])) {
-	define('ROOT_URL', $_SERVER['BASE']."/");
+    define('ROOT_URL', $_SERVER['BASE']."/");
 } else {
-	define('ROOT_URL', "/");
+    define('ROOT_URL', "/");
 }
 
 //require_once __DIR__.'/../../../autoload.php';
@@ -21,9 +21,7 @@ require_once __DIR__.'/../../../../mouf/Mouf.php';
 $splash = MoufManager::getMoufManager()->getInstance('splashMiddleware');
 
 /** @var $splash Splash */
-
 $server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-
 
 // json_decode postdata if content_type is json (application/json, ...)
 /*if ($request->getContentType() === 'json') {

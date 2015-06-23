@@ -1,6 +1,5 @@
 <?php
 use Mouf\MoufUtils;
-
 use Mouf\MoufManager;
 
 $moufManager = MoufManager::getMoufManager();
@@ -25,6 +24,3 @@ MoufUtils::registerMainMenu('mvcMainMenu', 'MVC', null, 'mainMenu', 100);
 MoufUtils::registerMenuItem('mvcSplashSubMenu', 'Splash MVC', null, 'mvcMainMenu', 45);
 MoufUtils::registerMenuItem('mvcSplashPurgeCacheItem', 'Purge URLs cache', 'splashpurgecache/', 'mvcSplashSubMenu', 0);
 MoufUtils::registerMenuItem('mvcSplashAdminApacheConfig2Item', 'Configure Apache redirection', 'splashApacheConfig/', 'mvcSplashSubMenu', 45);
-
-
-?>

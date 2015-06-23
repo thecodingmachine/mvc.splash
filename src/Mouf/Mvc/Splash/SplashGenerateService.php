@@ -1,34 +1,33 @@
 <?php
 namespace Mouf\Mvc\Splash;
 
-use Mouf\Composer\ClassNameMapper;
-use Mouf\Mvc\Splash\Utils\SplashException;
 
 /**
  * This class is in charge of all tasks that generate files:
  *  - .htaccess generation
  *  - controllers generation
  *  ...
- *  
+ *
  * @author David Négrier <david@mouf-php.com>
  */
-class SplashGenerateService {
-	/**
-	 * Writes the .htaccess file
-	 * 
-	 * @param array<string> $exludeExtentions
-	 * @param array<string> $exludeFolders
-	 */
-	public function writeHtAccess($exludeExtentions, $exludeFolders) {
+class SplashGenerateService
+{
+    /**
+     * Writes the .htaccess file
+     *
+     * @param array<string> $exludeExtentions
+     * @param array<string> $exludeFolders
+     */
+    public function writeHtAccess($exludeExtentions, $exludeFolders)
+    {
+        $modelsDirName = dirname(__FILE__);
+        $splashDir = dirname($modelsDirName);
+        $splashVersion = basename($splashDir);
 
-		$modelsDirName = dirname(__FILE__);
-		$splashDir = dirname($modelsDirName);
-		$splashVersion = basename($splashDir);
-		
-		$strExtentions = implode('|', $exludeExtentions);
-		$strFolders = '^' . implode('|^', $exludeFolders);
-		
-		$str = "<IfModule !mod_rewrite.c>
+        $strExtentions = implode('|', $exludeExtentions);
+        $strFolders = '^'.implode('|^', $exludeFolders);
+
+        $str = "<IfModule !mod_rewrite.c>
 	# Use an error page as index file. It makes sure a proper error is displayed if
 	# mod_rewrite is not available. Additionally, this reduces the matching process for the
 	# start page (path \"/\") because otherwise Apache will apply the rewriting rules
@@ -59,9 +58,8 @@ class SplashGenerateService {
     # Rewrite all other queries to the front controller.
     RewriteRule .? %{ENV:BASE}/vendor/mouf/mvc.splash/src/splash.php [L]
 </IfModule>";
-		
-		file_put_contents(ROOT_PATH."../../../.htaccess", $str);
-		chmod(ROOT_PATH."../../../.htaccess", 0664);
-	}
 
+        file_put_contents(ROOT_PATH."../../../.htaccess", $str);
+        chmod(ROOT_PATH."../../../.htaccess", 0664);
+    }
 }
