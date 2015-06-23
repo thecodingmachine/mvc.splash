@@ -24,7 +24,7 @@
 		"mouf/html.template.bootstrap" : ">=2.1, <5.0",
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/utils.cache.no-cache" : "2.0.*",
-		"mouf/mvc.splash-common" : "~5.1",
+		"mouf/mvc.splash-common" : "~7.0",
 		"mouf/utils.constants.secret" : "~1.0",
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
@@ -32,7 +32,7 @@
 		"mouf/whoops-stackphp" : "~1.0"
 	},
 	"provide" : {
-		"mouf/mvc.splash-implementation" : "5.0.*"
+		"mouf/mvc.splash-implementation" : "7.0.*"
 	},
 	"autoload" : {
 		"psr-0" : {
