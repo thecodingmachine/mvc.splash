@@ -29,7 +29,7 @@
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
 		"symfony/http-kernel" : "~2.0",
-		"mouf/whoops-stackphp" : "~1.0"
+		"franzl/whoops-middleware" : "dev-master"
 	},
 	"provide" : {
 		"mouf/mvc.splash-implementation" : "7.0.*"
