@@ -169,6 +169,19 @@ class SplashInstallController extends Controller {
 
 		$moufManager = $this->moufManager;
 
+		// Are we coming from Splash 5? If yes, let's delete all instances and recreate them.
+		if ($moufManager->has('splash')) {
+			$moufManager->removeComponent('splash');
+			$moufManager->removeComponent('exceptionRouter');
+			$moufManager->removeComponent('httpErrorsController');
+			$moufManager->removeComponent('whoopsMiddleware');
+			$moufManager->removeComponent('phpVarsCheckRouter');
+			$moufManager->removeComponent('splashDefaultRouter');
+			$moufManager->removeComponent('notFoundRouter');
+			$moufManager->removeComponent('splashCacheApc');
+			$moufManager->removeComponent('splashCacheFile');
+		}
+
 		// These instances are expected to exist when the installer is run.
 		$psr_errorLogLogger = $moufManager->getInstanceDescriptor('psr.errorLogLogger');
 		$bootstrapTemplate = $moufManager->getInstanceDescriptor('bootstrapTemplate');
@@ -284,16 +297,6 @@ class SplashInstallController extends Controller {
 	 * @param string $selfedit
 	 */
 	public function writeHtAccess($selfedit="false") {
-		/*$uri = $_SERVER["REQUEST_URI"];
-		
-		$installPos = strpos($uri, "/vendor/mouf/mouf/splashinstall/writeHtAccess");
-		if ($installPos !== FALSE) {
-			$uri = substr($uri, 0, $installPos);
-		}
-		if (empty($uri)) {
-			$uri = "/";
-		}*/
-		
 		if ($selfedit == "true") {
 			$moufManager = MoufManager::getMoufManager();
 		} else {

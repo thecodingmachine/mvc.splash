@@ -47,12 +47,12 @@
 					"scope" : "global",
 					"description" : "Create RootController and root view.",
 					"type" : "url",
-					"url" : "splashinstall/"
+					"url" : "splash7install/"
 				}, {
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
-					"url" : "splashinstall/writeHtAccess"
+					"url" : "splash7install/writeHtAccess"
 				}
 			],
 			"logo" : "logo.png",
