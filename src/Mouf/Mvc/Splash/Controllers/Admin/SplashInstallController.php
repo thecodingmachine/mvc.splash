@@ -200,9 +200,6 @@ class SplashInstallController extends Controller {
 			$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setValue('DEBUG');
 		$whoopsMiddleware->getConstructorArgumentProperty('catchErrors')->setOrigin("config");
 		}
-		if (!$exceptionRouter->getConstructorArgumentProperty('router')->isValueSet()) {
-			$exceptionRouter->getConstructorArgumentProperty('router')->setValue($phpVarsCheckRouter);
-		}
 		if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
 			$exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
 		}
