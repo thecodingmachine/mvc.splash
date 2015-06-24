@@ -11,8 +11,7 @@ In order to upgrade from Splash 5 to Splash 7, you need to perform the following
 - Click on the **Reinstall** button for both tasks.
 - In your controllers, stop using the `Request` and `Response` classes and start using PSR-7's `ServerRequestInterface` and `ResponseInterface`
 
-You are done. Enjoy [the new features](http://mouf-php.com/stackphp-support-added-to-splash)!
-
+You are done. Enjoy the new features!
 
 Hey! What about Splash 6?
 Mmmm... there was never a stable Splash 6. Splash 6 is a release targeting Mouf 2.1 that is not released as we write these lines.
