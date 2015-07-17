@@ -196,6 +196,7 @@ class SplashInstallController extends Controller
         $notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
         $splashCacheApc = InstallUtils::getOrCreateInstance('splashCacheApc', 'Mouf\\Utils\\Cache\\ApcCache', $moufManager);
         $splashCacheFile = InstallUtils::getOrCreateInstance('splashCacheFile', 'Mouf\\Utils\\Cache\\FileCache', $moufManager);
+        $moufExplorerUrlProvider = InstallUtils::getOrCreateInstance('moufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);
         $anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
         $anonymousErrorRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
         $anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
@@ -224,6 +225,10 @@ class SplashInstallController extends Controller
         }
         if (!$phpVarsCheckRouter->getConstructorArgumentProperty('log')->isValueSet()) {
             $phpVarsCheckRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
+        }
+        // Let's bind instances together.
+        if (!$splashDefaultRouter->getConstructorArgumentProperty('routeProviders')->isValueSet()) {
+            $splashDefaultRouter->getConstructorArgumentProperty('routeProviders')->setValue(array(0 => $moufExplorerUrlProvider, ));
         }
         if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
             $splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
