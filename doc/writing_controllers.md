@@ -149,14 +149,14 @@ Returning / outputing values
 ----------------------------
 
 As you probably already guessed, you can simply "echo" things and they will show up in your browser.
-But you can also return a [Symfony 2 Response object](http://symfony.com/fr/doc/current/components/http_foundation/introduction.html#reponse)
+But you can also return a [Zend-Diactoros Response object](https://github.com/zendframework/zend-diactoros)
 
 Therefore, you can write things like:
 
 ```php
 <?php
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\JsonResponse;
 
 class MyController extends Controller {
 	
