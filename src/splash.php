@@ -24,7 +24,6 @@ $splash = MoufManager::getMoufManager()->getInstance('splashMiddleware');
 if (strpos($_SERVER["CONTENT_TYPE"], 'json')) {
     $postdata = file_get_contents("php://input");
     $postdata = json_decode($postdata, true);
-    $_POST = $postdata;
 } else {
 	$postdata = $_POST;
 }
