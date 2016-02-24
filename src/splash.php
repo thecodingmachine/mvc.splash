@@ -25,9 +25,11 @@ if (strpos($_SERVER["CONTENT_TYPE"], 'json')) {
     $postdata = file_get_contents("php://input");
     $postdata = json_decode($postdata, true);
     $_POST = $postdata;
+} else {
+	$postdata = $_POST;
 }
 /** @var $splash Splash */
-$server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+$server = Server::createServer($splash, $_SERVER, $_GET, $postdata, $_COOKIE, $_FILES);
 
 // json_decode postdata if content_type is json (application/json, ...)
 /*if ($request->getContentType() === 'json') {
