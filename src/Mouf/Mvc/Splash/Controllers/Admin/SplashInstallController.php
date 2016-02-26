@@ -184,6 +184,10 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('splashCacheApc');
             $moufManager->removeComponent('splashCacheFile');
         }
+        if ($moufManager->has('whoopsMiddleware')) {
+            // For migration purpose
+            $moufManager->removeComponent('whoopsMiddleware');
+        }
 
         // These instances are expected to exist when the installer is run.
         $psr_errorLogLogger = $moufManager->getInstanceDescriptor('psr.errorLogLogger');
