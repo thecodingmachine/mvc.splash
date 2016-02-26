@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash;
 
 /**
@@ -14,6 +15,7 @@ class SplashAction
      *
      * @Property
      * @Compulsory
+     *
      * @var Controller
      */
     public $controller;
@@ -21,6 +23,7 @@ class SplashAction
      * The name of the action to be called.
      *
      * @Property
+     *
      * @var string
      */
     public $actionName;

@@ -9,7 +9,7 @@ use Mouf\Mvc\Splash\Utils\ExceptionUtils;
 <div>An error occured in the application. Please try again, or contact an administrator.</div>
 <?php
 if ($this->debugMode) {
-    echo "<div>".nl2br($this->exception->getMessage())."</div>";
+    echo '<div>'.nl2br($this->exception->getMessage()).'</div>';
 
-    echo "<div>".ExceptionUtils::getHtmlForException($this->exception)."</div>";
+    echo '<div>'.ExceptionUtils::getHtmlForException($this->exception).'</div>';
 } ?>

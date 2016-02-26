@@ -23,6 +23,6 @@ Folders rewrite exclusions
 <textarea rows="5" name="textFolders"><?php echo plainstring_to_htmlprotected(implode("\r\n", $this->exludeFolders)) ?></textarea>
 
 </div>
-<input type="hidden" name="selfedit" value="<?php echo plainstring_to_htmlprotected(isset($_REQUEST["selfedit"]) ? $_REQUEST["selfedit"] : "false") ?>" />
+<input type="hidden" name="selfedit" value="<?php echo plainstring_to_htmlprotected(isset($_REQUEST['selfedit']) ? $_REQUEST['selfedit'] : 'false') ?>" />
 <button class="btn btn-danger">Write file</button>
 </form>

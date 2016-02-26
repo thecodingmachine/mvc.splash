@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
 use Mouf\MoufManager;
@@ -14,18 +15,17 @@ use Mouf\Mvc\Splash\Controllers\Controller;
  */
 class SplashAdminApacheConfigureController extends Controller
 {
-
     /**
      * The template used by the Splash page.
      *
      * @Property
      * @Compulsory
+     *
      * @var TemplateInterface
      */
     public $template;
 
     /**
-     *
      * @var HtmlBlock
      */
     public $content;
@@ -35,6 +35,7 @@ class SplashAdminApacheConfigureController extends Controller
      *
      * @Property
      * @Compulsory
+     *
      * @var SplashGenerateService
      */
     public $splashGenerateService;
@@ -46,21 +47,21 @@ class SplashAdminApacheConfigureController extends Controller
      */
     public function defaultAction($selfedit = 'false')
     {
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $moufManager = MoufManager::getMoufManager();
         } else {
             $moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $this->exludeExtentions = $moufManager->getVariable("splashexludeextentions");
-        $this->exludeFolders = $moufManager->getVariable("splashexludefolders");
+        $this->exludeExtentions = $moufManager->getVariable('splashexludeextentions');
+        $this->exludeFolders = $moufManager->getVariable('splashexludefolders');
         if (empty($this->exludeExtentions)) {
-            $this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css", "woff", "ttf", "svg", "eot", "txt");
+            $this->exludeExtentions = array('js', 'ico', 'gif', 'jpg', 'png', 'css', 'woff', 'ttf', 'svg', 'eot', 'txt');
         }
         if (empty($this->exludeFolders)) {
-            $this->exludeFolders = array("vendor");
+            $this->exludeFolders = array('vendor');
         }
-        $this->content->addFile(__DIR__."/../../../../../views/admin/splashAdminApache.php", $this);
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/splashAdminApache.php', $this);
         $this->template->toHtml();
     }
 
@@ -76,14 +77,14 @@ class SplashAdminApacheConfigureController extends Controller
         $exludeExtentions = explode("\r\n", $textExtentions);
         $exludeFolders = explode("\r\n", $textFolders);
 
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $moufManager = MoufManager::getMoufManager();
         } else {
             $moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $moufManager->setVariable("splashexludeextentions", $exludeExtentions);
-        $moufManager->setVariable("splashexludefolders", $exludeFolders);
+        $moufManager->setVariable('splashexludeextentions', $exludeExtentions);
+        $moufManager->setVariable('splashexludefolders', $exludeFolders);
         $moufManager->rewriteMouf();
 
         /*$installPos = strpos($uri, "/vendor/mouf/mouf/splashApacheConfig/write");
@@ -96,6 +97,6 @@ class SplashAdminApacheConfigureController extends Controller
 
         $this->splashGenerateService->writeHtAccess(/*$uri,*/ $exludeExtentions, $exludeFolders);
 
-        header("Location: ".MOUF_URL."?selfedit=".$selfedit);
+        header('Location: '.MOUF_URL.'?selfedit='.$selfedit);
     }
 }

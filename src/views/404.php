@@ -3,6 +3,6 @@
 <div>The page you requested does not exist.</div>
 <?php
 if ($this->message) {
-    echo "<div>".$this->message."</div>";
+    echo '<div>'.$this->message.'</div>';
 }
 ?>

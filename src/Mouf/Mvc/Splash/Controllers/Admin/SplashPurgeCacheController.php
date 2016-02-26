@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
 use Mouf\InstanceProxy;
@@ -13,18 +14,17 @@ use Mouf\Mvc\Splash\Controllers\Controller;
  */
 class SplashPurgeCacheController extends Controller
 {
-
     /**
      * The template used by the Splash page.
      *
      * @Property
      * @Compulsory
+     *
      * @var TemplateInterface
      */
     public $template;
 
     /**
-     *
      * @var HtmlBlock
      */
     public $content;
@@ -36,16 +36,16 @@ class SplashPurgeCacheController extends Controller
      */
     public function defaultAction($selfedit = 'false')
     {
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $moufManager = MoufManager::getMoufManager();
         } else {
             $moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $splashProxy = new InstanceProxy('splashDefaultRouter', $selfedit == "true");
+        $splashProxy = new InstanceProxy('splashDefaultRouter', $selfedit == 'true');
         $splashProxy->purgeUrlsCache();
 
-        $this->content->addFile(__DIR__."/../../../../../views/admin/purgedCache.php", $this);
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/purgedCache.php', $this);
         $this->template->toHtml();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash;
 
 use Mouf\Validator\MoufValidatorResult;
@@ -8,7 +9,8 @@ use Mouf\MoufManager;
 class SplashMiddlewareValidator implements MoufStaticValidatorInterface
 {
     /**
-     * Check if an instance named 'splashMiddleware' actually exists
+     * Check if an instance named 'splashMiddleware' actually exists.
+     *
      * @return \Mouf\Validator\MoufValidatorResult
      */
     public static function validateClass()

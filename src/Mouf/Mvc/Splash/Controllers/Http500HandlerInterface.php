@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash\Controllers;
 
 /**
@@ -10,7 +11,6 @@ namespace Mouf\Mvc\Splash\Controllers;
  */
 interface Http500HandlerInterface
 {
-
     /**
      * This function is called when a HTTP 404 error is triggered by the user.
      *

@@ -1,6 +1,6 @@
 <?php
-namespace Mouf\Mvc\Splash;
 
+namespace Mouf\Mvc\Splash;
 
 /**
  * This class is in charge of all tasks that generate files:
@@ -13,7 +13,7 @@ namespace Mouf\Mvc\Splash;
 class SplashGenerateService
 {
     /**
-     * Writes the .htaccess file
+     * Writes the .htaccess file.
      *
      * @param array<string> $exludeExtentions
      * @param array<string> $exludeFolders
@@ -59,7 +59,7 @@ class SplashGenerateService
     RewriteRule .? %{ENV:BASE}/vendor/mouf/mvc.splash/src/splash.php [L]
 </IfModule>";
 
-        file_put_contents(ROOT_PATH."../../../.htaccess", $str);
-        chmod(ROOT_PATH."../../../.htaccess", 0664);
+        file_put_contents(ROOT_PATH.'../../../.htaccess', $str);
+        chmod(ROOT_PATH.'../../../.htaccess', 0664);
     }
 }

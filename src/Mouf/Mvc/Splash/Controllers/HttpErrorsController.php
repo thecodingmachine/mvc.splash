@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash\Controllers;
 
 use Mouf\Html\HtmlElement\Scopable;
@@ -19,10 +20,11 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 {
     // TODO: remove the public modifier from these properties.
     /**
-     * The template used by Splash for displaying error pages (HTTP 404 and 500)
+     * The template used by Splash for displaying error pages (HTTP 404 and 500).
      *
      * @Property
      * @Compulsory
+     *
      * @var TemplateInterface
      */
     private $template;
@@ -32,6 +34,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
      *
      * @Property
      * @Compulsory
+     *
      * @var HtmlBlock
      */
     private $contentBlock;
@@ -40,6 +43,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
      * Whether we should display exception stacktrace or not in HTTP 500.
      *
      * @Property
+     *
      * @var bool
      */
     private $debugMode = true;
@@ -71,7 +75,8 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Mouf\Mvc\Splash\Controllers.Http404HandlerInterface::pageNotFound()
      */
     public function pageNotFound($message)
@@ -80,14 +85,15 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
         if ($this->contentFor404) {
             $this->contentBlock->addHtmlElement($this->contentFor404);
         } else {
-            $this->contentBlock->addFile(__DIR__."/../../../../views/404.php", $this);
+            $this->contentBlock->addFile(__DIR__.'/../../../../views/404.php', $this);
         }
 
         return HtmlResponse::create($this->template, 404);
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Mouf\Mvc\Splash\Controllers.Http500HandlerInterface::serverError()
      */
     public function serverError(\Exception $exception)
@@ -96,7 +102,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
         if ($this->contentFor500) {
             $this->contentBlock = $this->contentFor500;
         } else {
-            $this->contentBlock->addFile(__DIR__."/../../../../views/500.php", $this);
+            $this->contentBlock->addFile(__DIR__.'/../../../../views/500.php', $this);
         }
 
         return HtmlResponse::create($this->template, 500);

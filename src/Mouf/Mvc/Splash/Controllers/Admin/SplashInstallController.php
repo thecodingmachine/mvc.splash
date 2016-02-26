@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
 use Mouf\Actions\InstallUtils;
@@ -12,15 +13,13 @@ use Mouf\Mvc\Splash\Controllers\Controller;
 
 /**
  * The controller used in the Splash install process.
- *
  */
 class SplashInstallController extends Controller
 {
-
     public $selfedit;
 
     /**
-     * The active MoufManager to be edited/viewed
+     * The active MoufManager to be edited/viewed.
      *
      * @var MoufManager
      */
@@ -31,6 +30,7 @@ class SplashInstallController extends Controller
      *
      * @Property
      * @Compulsory
+     *
      * @var SplashGenerateService
      */
     public $splashGenerateService;
@@ -40,12 +40,12 @@ class SplashInstallController extends Controller
      *
      * @Property
      * @Compulsory
+     *
      * @var TemplateInterface
      */
     public $template;
 
     /**
-     *
      * @var HtmlBlock
      */
     public $content;
@@ -55,19 +55,20 @@ class SplashInstallController extends Controller
      *
      * @Action
      * @Logged
+     *
      * @param string $selfedit If true, the name of the component must be a component from the Mouf framework itself (internal use only)
      */
-    public function defaultAction($selfedit = "false")
+    public function defaultAction($selfedit = 'false')
     {
         $this->selfedit = $selfedit;
 
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $this->moufManager = MoufManager::getMoufManager();
         } else {
             $this->moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $this->content->addFile(__DIR__."/../../../../../views/admin/installStep1.php", $this);
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/installStep1.php', $this);
         $this->template->toHtml();
     }
 
@@ -76,11 +77,12 @@ class SplashInstallController extends Controller
      *
      * @Action
      * @Logged
+     *
      * @param string $selfedit If true, the name of the component must be a component from the Mouf framework itself (internal use only)
      */
-    public function skip($selfedit = "false")
+    public function skip($selfedit = 'false')
     {
-        InstallUtils::continueInstall($selfedit == "true");
+        InstallUtils::continueInstall($selfedit == 'true');
     }
 
     protected $sourceDirectory;
@@ -92,13 +94,14 @@ class SplashInstallController extends Controller
      *
      * @Action
      * @Logged
+     *
      * @param string $selfedit If true, the name of the component must be a component from the Mouf framework itself (internal use only)
      */
-    public function configure($selfedit = "false")
+    public function configure($selfedit = 'false')
     {
         $this->selfedit = $selfedit;
 
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $this->moufManager = MoufManager::getMoufManager();
         } else {
             $this->moufManager = MoufManager::getMoufManagerHiddenInstance();
@@ -120,16 +123,16 @@ class SplashInstallController extends Controller
             $rootNamespace = '';
         }
 
-        $this->controllerNamespace = $this->moufManager->getVariable("splashDefaultControllersNamespace");
+        $this->controllerNamespace = $this->moufManager->getVariable('splashDefaultControllersNamespace');
         if ($this->controllerNamespace == null) {
-            $this->controllerNamespace = $rootNamespace."Controllers";
+            $this->controllerNamespace = $rootNamespace.'Controllers';
         }
-        $this->viewDirectory = $this->moufManager->getVariable("splashDefaultViewsDirectory");
+        $this->viewDirectory = $this->moufManager->getVariable('splashDefaultViewsDirectory');
         if ($this->viewDirectory == null) {
-            $this->viewDirectory = "views/";
+            $this->viewDirectory = 'views/';
         }
 
-        $this->content->addFile(__DIR__."/../../../../../views/admin/installStep2.php", $this);
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/installStep2.php', $this);
         $this->template->toHtml();
     }
 
@@ -137,30 +140,31 @@ class SplashInstallController extends Controller
      * This action generates the TDBM instance, then the DAOs and Beans.
      *
      * @Action
+     *
      * @param string $controllernamespace
      * @param string $viewdirectory
      * @param string $selfedit
      */
-    public function generate($controllernamespace, $viewdirectory, $selfedit = "false")
+    public function generate($controllernamespace, $viewdirectory, $selfedit = 'false')
     {
         $this->selfedit = $selfedit;
 
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $this->moufManager = MoufManager::getMoufManager();
         } else {
             $this->moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $controllernamespace = trim($controllernamespace, "/\\");
-        $controllernamespace .= "\\";
-        $viewdirectory = trim($viewdirectory, "/\\");
-        $viewdirectory .= "/";
+        $controllernamespace = trim($controllernamespace, '/\\');
+        $controllernamespace .= '\\';
+        $viewdirectory = trim($viewdirectory, '/\\');
+        $viewdirectory .= '/';
 
-        $this->moufManager->setVariable("splashDefaultControllersNamespace", $controllernamespace);
-        $this->moufManager->setVariable("splashDefaultViewsDirectory", $viewdirectory);
+        $this->moufManager->setVariable('splashDefaultControllersNamespace', $controllernamespace);
+        $this->moufManager->setVariable('splashDefaultViewsDirectory', $viewdirectory);
 
         // Let's start by performing basic checks about the instances we assume to exist.
-        if (!$this->moufManager->instanceExists("bootstrapTemplate")) {
+        if (!$this->moufManager->instanceExists('bootstrapTemplate')) {
             $this->displayErrorMsg("The install process assumes there is a template whose instance name is 'bootstrapTemplate'. Could not find the 'bootstrapTemplate' instance.");
 
             return;
@@ -205,10 +209,9 @@ class SplashInstallController extends Controller
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
 
-
         // Let's bind instances together.
         //if (!$splashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
-            $splashMiddleware->getConstructorArgumentProperty('routers')->setValue([ $anonymousRouter, $anonymousRouter2, $anonymousRouter3, $anonymousErrorRouter, $anonymousErrorRouter2]);
+            $splashMiddleware->getConstructorArgumentProperty('routers')->setValue([$anonymousRouter, $anonymousRouter2, $anonymousRouter3, $anonymousErrorRouter, $anonymousErrorRouter2]);
         //}
         if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
             $exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
@@ -224,14 +227,14 @@ class SplashInstallController extends Controller
         }
         if (!$httpErrorsController->getConstructorArgumentProperty('debugMode')->isValueSet()) {
             $httpErrorsController->getConstructorArgumentProperty('debugMode')->setValue('DEBUG');
-            $httpErrorsController->getConstructorArgumentProperty('debugMode')->setOrigin("config");
+            $httpErrorsController->getConstructorArgumentProperty('debugMode')->setOrigin('config');
         }
         if (!$phpVarsCheckRouter->getConstructorArgumentProperty('log')->isValueSet()) {
             $phpVarsCheckRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
         }
         // Let's bind instances together.
         if (!$splashDefaultRouter->getConstructorArgumentProperty('routeProviders')->isValueSet()) {
-            $splashDefaultRouter->getConstructorArgumentProperty('routeProviders')->setValue(array(0 => $moufExplorerUrlProvider, ));
+            $splashDefaultRouter->getConstructorArgumentProperty('routeProviders')->setValue(array(0 => $moufExplorerUrlProvider));
         }
         if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
             $splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
@@ -248,14 +251,14 @@ class SplashInstallController extends Controller
         }
         if (!$splashCacheApc->getPublicFieldProperty('prefix')->isValueSet()) {
             $splashCacheApc->getPublicFieldProperty('prefix')->setValue('SECRET');
-            $splashCacheApc->getPublicFieldProperty('prefix')->setOrigin("config");
+            $splashCacheApc->getPublicFieldProperty('prefix')->setOrigin('config');
         }
         if (!$splashCacheApc->getPublicFieldProperty('fallback')->isValueSet()) {
             $splashCacheApc->getPublicFieldProperty('fallback')->setValue($splashCacheFile);
         }
         if (!$splashCacheFile->getPublicFieldProperty('prefix')->isValueSet()) {
             $splashCacheFile->getPublicFieldProperty('prefix')->setValue('SECRET');
-            $splashCacheFile->getPublicFieldProperty('prefix')->setOrigin("config");
+            $splashCacheFile->getPublicFieldProperty('prefix')->setOrigin('config');
         }
         if (!$splashCacheFile->getPublicFieldProperty('cacheDirectory')->isValueSet()) {
             $splashCacheFile->getPublicFieldProperty('cacheDirectory')->setValue('splashCache/');
@@ -264,19 +267,19 @@ class SplashInstallController extends Controller
         $anonymousRouter2->getConstructorArgumentProperty('middleware')->setValue($splashDefaultRouter);
         $anonymousRouter3->getConstructorArgumentProperty('middleware')->setValue($notFoundRouter);
         $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'whoopsMiddleware\');');
-        $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setOrigin("php");
+        $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setOrigin('php');
         $anonymousErrorRouter->getConstructorArgumentProperty('enableCondition')->setValue($anonymousToCondition);
         $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
         $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
-        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin("config");
+        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin('config');
         $anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($exceptionRouter);
 
         // Let's rewrite the MoufComponents.php file to save the component
         $this->moufManager->rewriteMouf();
 
-        if (!$this->moufManager->instanceExists("rootController")) {
+        if (!$this->moufManager->instanceExists('rootController')) {
             $splashGenerateService = new SplashCreateControllerService();
-            $splashGenerateService->generate($this->moufManager, "RootController", "rootController",
+            $splashGenerateService->generate($this->moufManager, 'RootController', 'rootController',
                 $controllernamespace, false, true, false,
                 array(
                     array(
@@ -302,35 +305,36 @@ class SplashInstallController extends Controller
 
         $this->moufManager->rewriteMouf();
 
-        InstallUtils::continueInstall($selfedit == "true");
+        InstallUtils::continueInstall($selfedit == 'true');
     }
 
     /**
-     * Write .htaccess
+     * Write .htaccess.
      *
      * @Action
+     *
      * @param string $selfedit
      */
-    public function writeHtAccess($selfedit = "false")
+    public function writeHtAccess($selfedit = 'false')
     {
-        if ($selfedit == "true") {
+        if ($selfedit == 'true') {
             $moufManager = MoufManager::getMoufManager();
         } else {
             $moufManager = MoufManager::getMoufManagerHiddenInstance();
         }
 
-        $this->exludeExtentions = $moufManager->getVariable("splashexludeextentions");
-        $this->exludeFolders = $moufManager->getVariable("splashexludefolders");
+        $this->exludeExtentions = $moufManager->getVariable('splashexludeextentions');
+        $this->exludeFolders = $moufManager->getVariable('splashexludefolders');
         if (empty($this->exludeExtentions)) {
-            $this->exludeExtentions = array("js", "ico", "gif", "jpg", "png", "css", "woff", "ttf", "svg", "eot", "map");
+            $this->exludeExtentions = array('js', 'ico', 'gif', 'jpg', 'png', 'css', 'woff', 'ttf', 'svg', 'eot', 'map');
         }
         if (empty($this->exludeFolders)) {
-            $this->exludeFolders = array("vendor");
+            $this->exludeFolders = array('vendor');
         }
 
         $this->splashGenerateService->writeHtAccess($this->exludeExtentions, $this->exludeFolders);
 
-        InstallUtils::continueInstall($selfedit == "true");
+        InstallUtils::continueInstall($selfedit == 'true');
     }
 
     protected $errorMsg;
@@ -338,7 +342,7 @@ class SplashInstallController extends Controller
     private function displayErrorMsg($msg)
     {
         $this->errorMsg = $msg;
-        $this->content->addFile(dirname(__FILE__)."/../../../../../views/admin/installError.php", $this);
+        $this->content->addFile(dirname(__FILE__).'/../../../../../views/admin/installError.php', $this);
         $this->template->toHtml();
     }
 }
