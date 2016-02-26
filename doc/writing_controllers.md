@@ -78,6 +78,7 @@ Splash makes that very easy to handle. You can just add a @Get or @Post annotati
 namespace Test\Controllers;
 
 use Mouf\Mvc\Splash\Controllers\Controller;
+use Zend\Diactoros\Response\HtmlResponse;
 
 /**
  * This is a sample user controller.
@@ -93,7 +94,7 @@ class UserController extends Controller {
 	 * @param string $id
 	 */
 	public function viewUser($id) {
-		 echo "Here, we might put the form for user ".htmlentities($id);
+		 return new HtmlResponse("Here, we might put the form for user ".htmlentities($id));
 	}
 
 	/**
@@ -106,7 +107,7 @@ class UserController extends Controller {
 	 * @param string $email
 	 */
 	public function editUser($id, $name, $email) {
-		 echo "Here, we might put the code to change the user object.";
+		 return new HtmlResponse("Here, we might put the code to change the user object.");
 	}
 
 }
@@ -155,7 +156,7 @@ Therefore, you can write things like:
 
 ```php
 <?php
-use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 
 class MyController extends Controller {
@@ -166,7 +167,7 @@ class MyController extends Controller {
 	 * @URL /myurl1
 	 */
 	public function test1() {
-		 return new Response('Hello World', 200, array('content-type' => 'text/html'));
+		 return new HtmlResponse('Hello World', 200, array('content-type' => 'text/html'));
 	}
 	
 	/**
@@ -206,8 +207,39 @@ class MyController extends Controller {
 		return new HtmlResponse($this->template);
 	}
 }
-?>
 ```
 
+Uploading files
+---------------
+
+Uploaded files are also directly available from the signature of the method:
+
+**HTML:**
+```html
+<input type="file" name="avatar" />
+```
+
+**PHP**:
+```php
+<?php
+use Psr\Http\Message\UploadedFileInterface;
+
+class MyController extends Controller {
+	
+	...
+	
+	/**
+	 * Uploads a file
+	 *
+	 * @URL /upload
+	 */
+	public function uploadLogo(UploadedFileInterface $logo) {
+		$logo->moveTo(__DIR__.'/uploads/logo.png');
+		...
+	}
+}
+```
+
+The `$logo` object injected implements the [PSR-7 `UploadedFileInterface`](http://www.php-fig.org/psr/psr-7/#3-6-psr-http-message-uploadedfileinterface)
 
 [Wanna learn more? Have a look at the advanced tutorial](writing_controllers_manually.md)
