@@ -190,7 +190,7 @@ class SplashInstallController extends Controller
         $splashMiddleware = InstallUtils::getOrCreateInstance('splashMiddleware', 'Mouf\\Mvc\\Splash\\SplashMiddleware', $moufManager);
         $exceptionRouter = InstallUtils::getOrCreateInstance('exceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
         $httpErrorsController = InstallUtils::getOrCreateInstance('httpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
-        $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Franzl\\Middleware\\Whoops\\Middleware', $moufManager);
+        $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Franzl\\Middleware\\Whoops\\ErrorMiddleware', $moufManager);
         $phpVarsCheckRouter = InstallUtils::getOrCreateInstance('phpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
         $splashDefaultRouter = InstallUtils::getOrCreateInstance('splashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
         $notFoundRouter = InstallUtils::getOrCreateInstance('notFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
@@ -202,11 +202,14 @@ class SplashInstallController extends Controller
         $anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter3 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+        $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
+        $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
+
 
         // Let's bind instances together.
-        if (!$splashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
-            $splashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousErrorRouter, 1 => $anonymousErrorRouter2, 2 => $anonymousRouter, 3 => $anonymousRouter2, 4 => $anonymousRouter3));
-        }
+        //if (!$splashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
+            $splashMiddleware->getConstructorArgumentProperty('routers')->setValue([ $anonymousRouter, $anonymousRouter2, $anonymousRouter3, $anonymousErrorRouter, $anonymousErrorRouter2]);
+        //}
         if (!$exceptionRouter->getConstructorArgumentProperty('errorController')->isValueSet()) {
             $exceptionRouter->getConstructorArgumentProperty('errorController')->setValue($httpErrorsController);
         }
@@ -233,6 +236,13 @@ class SplashInstallController extends Controller
         if (!$splashDefaultRouter->getConstructorArgumentProperty('cacheService')->isValueSet()) {
             $splashDefaultRouter->getConstructorArgumentProperty('cacheService')->setValue($splashCacheApc);
         }
+        if (!$splashDefaultRouter->getConstructorArgumentProperty('mode')->isValueSet()) {
+            $splashDefaultRouter->getConstructorArgumentProperty('mode')->setValue('strict');
+        }
+        if (!$splashDefaultRouter->getConstructorArgumentProperty('debug')->isValueSet()) {
+            $splashDefaultRouter->getConstructorArgumentProperty('debug')->setValue('DEBUG');
+            $splashDefaultRouter->getConstructorArgumentProperty('debug')->setOrigin('config');
+        }
         if (!$notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->isValueSet()) {
             $notFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->setValue($httpErrorsController);
         }
@@ -250,11 +260,16 @@ class SplashInstallController extends Controller
         if (!$splashCacheFile->getPublicFieldProperty('cacheDirectory')->isValueSet()) {
             $splashCacheFile->getPublicFieldProperty('cacheDirectory')->setValue('splashCache/');
         }
-        $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue($exceptionRouter);
-        $anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($whoopsMiddleware);
         $anonymousRouter->getConstructorArgumentProperty('middleware')->setValue($phpVarsCheckRouter);
         $anonymousRouter2->getConstructorArgumentProperty('middleware')->setValue($splashDefaultRouter);
         $anonymousRouter3->getConstructorArgumentProperty('middleware')->setValue($notFoundRouter);
+        $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'whoopsMiddleware\');');
+        $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setOrigin("php");
+        $anonymousErrorRouter->getConstructorArgumentProperty('enableCondition')->setValue($anonymousToCondition);
+        $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
+        $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
+        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin("config");
+        $anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($exceptionRouter);
 
         // Let's rewrite the MoufComponents.php file to save the component
         $this->moufManager->rewriteMouf();
