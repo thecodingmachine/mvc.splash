@@ -81,13 +81,13 @@ Allowed parameter types are:
  - array
 
 *Note:* with the current version, if a parameter is not valid, an error screen is displayed. You cannot catch this error to provide custom behaviour in the current version.
-However, you can overide the way HTTP 500 errors are displayed (see the "Settings and error handling" part of this documentation).
+However, you can override the way HTTP 500 errors are displayed (see the "Settings and error handling" part of this documentation).
 
 
 Injection PSR-7 Request object as a parameter
-----------------------------------------------------------------
+---------------------------------------------
 
-Splash 7+ has native support for PSR-7 RequestInterface and for ServerRequestInterface objects. The choosen implementation of these interface is the `ServerRequest` of Zend-Diactoros (https://github.com/zendframework/zend-diactoros/blob/master/doc/book/api.md#serverrequest-message)
+Splash 7+ has native support for PSR-7 RequestInterface and for ServerRequestInterface objects. The chosen implementation of these interface is the `ServerRequest` of Zend-Diactoros (https://github.com/zendframework/zend-diactoros/blob/master/doc/book/api.md#serverrequest-message)
 
 This means that Splash will automatically inject a `ServerRequest` object into your action if your action expects a `RequestInterface` or a `ServerRequestInterface`  object:
 

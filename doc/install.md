@@ -24,19 +24,21 @@ A minimal *composer.json* file might look like this:
 	{
 	    "require": {
 	        "mouf/mouf": "~2.0",
-	        "mouf/mvc.splash": "~4.0"
+	        "mouf/mvc.splash": "~7.0"
 	    },
 	    "autoload": {
 	        "psr-0": {
 	            "Test": "src/"
 	        }
 	    },
-	    "minimum-stability": "dev"
+	    "minimum-stability": "dev",
+	    "prefer-stable": true
 	}
 
-As explained above, Splash is a package of the Mouf framework. Mouf allows you (amoung other things) to visualy "build" your project's dependencies and instances.
+As explained above, Splash is a package of the Mouf framework. Mouf allows you (among other things) to visually "build" your project's dependencies and instances.
 
 To install the dependency, run
+
 	php composer.phar install
 
 This *composer.json* file assumes that you will put your code in the "src" directory, and that you will use the "Test" namespace and respect the PSR-0 naming scheme.
@@ -46,27 +48,28 @@ If you do not understand what "namespace" or "PSR-0" means, *stop right now*, an
 At this point, the Splash packages should be downloaded and installed (and Mouf should be set up). Start the Mouf admin interface at http://localhost/{yourproject}/vendor/mouf/mouf
 There is an install process to run, so just run it.
 
-![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash.png)
-![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash_2.png)
+![Splash install screenshot](images/install_splash.png)
+![Splash install screenshot](images/install_splash_2.png)
 
 The Splash install process will:
+
  - Create a "splash" instance of the "Splash" class. The "splash" instance contains the global configuration for Splash (default error handler for 404/500 errors, etc...).
  - Create an Apache .htaccess file that will route the requests to Splash
  - Create a default RootController class to handle the requests to the root of your web application
  - Create a default HTML view for the RootController
 
 The install process does its best to use your namespace for the RootController, and it asks you where the files should go:
-![Splash install screenshot](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/install_splash_3.png)
+![Splash install screenshot](images/install_splash_3.png)
 
 
-Configure apache redirection
+Configure Apache redirection
 ----------------------------
 
-When Splash is installed, a MVC menu appears in Mouf.<br/>
+When Splash is installed, a MVC menu appears in Mouf.
 
-![Splash menu](https://raw.github.com/thecodingmachine/mvc.splash/4.0/doc/images/splash_menu.png)
+![Splash menu](images/splash_menu.png)
 
-The *Configure Apache redirection" menu helps you configuring what files should be handled by Splash and what files should be ignored.
+The *Configure Apache redirection* menu helps you configuring what files should be handled by Splash and what files should be ignored.
 By default, resource files (images, js, css...) are ignored. 
 
 Purging the cache

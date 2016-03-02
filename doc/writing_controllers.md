@@ -113,11 +113,11 @@ class UserController extends Controller {
 }
 ```
 
-In the exemple above (a sample controller to view/modify users), the "/user" URL is bound to 2 different methods
+In the example above (a sample controller to view/modify users), the "/user" URL is bound to 2 different methods
 based in the HTTP method used to access this URL.
 
-Parameterized URLs
-------------------
+Parametrized URLs
+-----------------
 
 You can put parameters in the URLs and fetch them very easily:
 
@@ -137,7 +137,7 @@ class UserController extends Controller {
 	 * @param string $id
 	 */
 	public function viewUser($id) {
-		 echo "Here, we might put the form for user ".htmlentities($id);
+		 return new HtmlResponse("Here, we might put the form for user ".htmlentities($id));
 	}
 }
 ?>
@@ -146,8 +146,8 @@ class UserController extends Controller {
 Do you see the @URL annotation? The {id} part is a placeholder that will be replaced by any value found in the URL.
 So for instance, if you access http://[server]/[appname]/user/42/view, the $id parameter will be filled with "42". 
 
-Returning / outputing values
-----------------------------
+Returning / outputting values
+-----------------------------
 
 As you probably already guessed, you can simply "echo" things and they will show up in your browser.
 But you can also return a [Zend-Diactoros Response object](https://github.com/zendframework/zend-diactoros)
