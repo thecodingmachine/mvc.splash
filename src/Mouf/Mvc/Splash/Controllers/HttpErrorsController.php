@@ -7,6 +7,8 @@ use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\Html\Template\TemplateInterface;
 use Mouf\Html\HtmlElement\HtmlElementInterface;
 use Mouf\Mvc\Splash\HtmlResponse;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * This class provides the default Splash behaviour when a HTTP 404 and HTTP 500 error is triggered.
@@ -96,9 +98,15 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
      *
      * @see Mouf\Mvc\Splash\Controllers.Http500HandlerInterface::serverError()
      */
-    public function serverError(\Exception $exception)
+    public function serverError(\Exception $exception, ServerRequestInterface $request)
     {
         $this->exception = $exception;
+
+        $acceptType = $request->getHeader('Accept');
+        if (is_array($acceptType) && count($acceptType) > 0 && strpos($acceptType[0], "json") !== false ){
+            return new JsonResponse(["error" => ["message" => $exception->getMessage(), "type" => "Exception", "trace" => $this->debugMode ? $exception->getTraceAsString() : ""]]);
+        }
+
         if ($this->contentFor500) {
             $this->contentBlock = $this->contentFor500;
         } else {
@@ -107,6 +115,8 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 
         return HtmlResponse::create($this->template, 500);
     }
+
+
 
     /**
      * Inludes the file (useful to load a view inside the Controllers scope).
