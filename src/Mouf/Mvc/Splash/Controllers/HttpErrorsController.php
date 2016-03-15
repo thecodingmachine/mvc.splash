@@ -104,7 +104,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
 
         $acceptType = $request->getHeader('Accept');
         if (is_array($acceptType) && count($acceptType) > 0 && strpos($acceptType[0], "json") !== false ){
-            return new JsonResponse(["error" => ["message" => $exception->getMessage(), "type" => "Exception", "trace" => DEBUG ? $exception->getTraceAsString() : ""]]);
+            return new JsonResponse(["error" => ["message" => $exception->getMessage(), "type" => "Exception", "trace" => $this->debugMode ? $exception->getTraceAsString() : ""]]);
         }
 
         if ($this->contentFor500) {
