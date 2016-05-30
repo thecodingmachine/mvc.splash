@@ -108,7 +108,7 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
         }
 
         if ($this->contentFor500) {
-            $this->contentBlock = $this->contentFor500;
+            $this->contentBlock->addHtmlElement($this->contentFor500);
         } else {
             $this->contentBlock->addFile(__DIR__.'/../../../../views/500.php', $this);
         }
