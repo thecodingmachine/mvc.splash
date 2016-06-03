@@ -27,7 +27,8 @@
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
 		"franzl/whoops-middleware" : "~0.3",
-		"mouf/utils.value.common-value": "~1.0"
+		"mouf/utils.value.common-value": "~1.0",
+		"mouf/utils.common.doctrine-annotations-wrapper": "~1.2"
 	},
 	"autoload" : {
 		"psr-0" : {
