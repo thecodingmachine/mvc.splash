@@ -346,7 +346,7 @@ class SplashInstallController extends Controller
     private function displayErrorMsg($msg)
     {
         $this->errorMsg = $msg;
-        $this->content->addFile(dirname(__FILE__).'/../../../../../views/admin/installError.php', $this);
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/installError.php', $this);
         $this->template->toHtml();
     }
 }
