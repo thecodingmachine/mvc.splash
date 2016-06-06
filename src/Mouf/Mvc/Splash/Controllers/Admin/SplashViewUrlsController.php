@@ -2,17 +2,16 @@
 
 namespace Mouf\Mvc\Splash\Controllers\Admin;
 
-use Mouf\InstanceProxy;
-use Mouf\Html\HtmlElement\HtmlBlock;
+use Mouf\ClassProxy;
 use Mouf\Mvc\Splash\Controllers\Controller;
-use Mouf\Mvc\Splash\Routers\SplashDefaultRouter;
+use Mouf\Mvc\Splash\Services\SplashUrlsExporter;
 
 /**
- * The controller that will purge the URLs cache.
+ * The controller that will display all the URLs managed by Splash.
  *
  * @Component
  */
-class SplashPurgeCacheController extends Controller
+class SplashViewUrlsController extends Controller
 {
     /**
      * The template used by the Splash page.
@@ -29,6 +28,9 @@ class SplashPurgeCacheController extends Controller
      */
     public $content;
 
+    protected $splashUrlsList;
+    protected $selfedit;
+
     /**
      * Displays the config page.
      *
@@ -36,10 +38,12 @@ class SplashPurgeCacheController extends Controller
      */
     public function defaultAction($selfedit = 'false')
     {
-        $splashProxy = new InstanceProxy(SplashDefaultRouter::class, $selfedit == 'true');
-        $splashProxy->purgeUrlsCache();
+        $this->selfedit = $selfedit;
 
-        $this->content->addFile(__DIR__.'/../../../../../views/admin/purgedCache.php', $this);
+        $exporter = new ClassProxy(SplashUrlsExporter::class);
+        $this->splashUrlsList = $exporter->exportRoutes();
+
+        $this->content->addFile(__DIR__.'/../../../../../views/admin/splashUrlsList.php', $this);
         $this->template->toHtml();
     }
 }

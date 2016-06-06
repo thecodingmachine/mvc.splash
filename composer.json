@@ -49,7 +49,7 @@
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
-					"url" : "splash7install/writeHtAccess"
+					"url" : "splash8install/writeHtAccess"
 				}
 			],
 			"logo" : "logo.png",

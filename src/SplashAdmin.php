@@ -3,6 +3,8 @@
 use Mouf\MoufUtils;
 use Mouf\MoufManager;
 
+require_once 'Mouf/Mvc/Splash/Controllers/Admin/SplashViewUrlsController.php';
+
 $moufManager = MoufManager::getMoufManager();
 
 $moufManager->declareComponent('splashGenerateService', 'Mouf\\Mvc\\Splash\\SplashGenerateService', true);
@@ -21,7 +23,12 @@ $moufManager->declareComponent('splashpurgecache', 'Mouf\\Mvc\\Splash\\Controlle
 $moufManager->bindComponent('splashpurgecache', 'template', 'moufTemplate');
 $moufManager->bindComponents('splashpurgecache', 'content', 'block.content');
 
+$moufManager->declareComponent('splashViewUrls', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashViewUrlsController', true);
+$moufManager->bindComponent('splashViewUrls', 'template', 'moufTemplate');
+$moufManager->bindComponents('splashViewUrls', 'content', 'block.content');
+
 MoufUtils::registerMainMenu('mvcMainMenu', 'MVC', null, 'mainMenu', 100);
 MoufUtils::registerMenuItem('mvcSplashSubMenu', 'Splash MVC', null, 'mvcMainMenu', 45);
 MoufUtils::registerMenuItem('mvcSplashPurgeCacheItem', 'Purge URLs cache', 'splashpurgecache/', 'mvcSplashSubMenu', 0);
 MoufUtils::registerMenuItem('mvcSplashAdminApacheConfig2Item', 'Configure Apache redirection', 'splashApacheConfig/', 'mvcSplashSubMenu', 45);
+MoufUtils::registerMenuItem('mvcSplashAdminUrlsListMenuItem', 'View URLs', 'splashViewUrls/', 'mvcSplashSubMenu', 10);

@@ -14,7 +14,7 @@ if (isset($_SERVER['BASE'])) {
 
 require_once __DIR__.'/../../../../mouf/Mouf.php';
 
-$splash = MoufManager::getMoufManager()->getInstance('splashMiddleware');
+$splash = MoufManager::getMoufManager()->getInstance(\Mouf\Mvc\Splash\SplashMiddleware::class);
 
 // Decode json parameters for POST request
 if (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'json')) {
