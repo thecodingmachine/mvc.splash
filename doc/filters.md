@@ -4,16 +4,22 @@ Filters
 Using filters
 -------------
 
-Splash supports the notion of _"Filter"_. A filter is a piece of code that can run before or after an action.
+Splash supports the notion of _"Filter"_. A filter is a piece of code that can wrap an action.
+
 There could be many reason why you want to run a filter:
+
  - Check that a user is logged before starting an action
  - Check that the action is performed on an SSL channel
+ - Provide caching
  - Initialize some frameworks, ...
 
+In Splash, filters are **annotations**.
+
 Below are sample filters:
+
 ```php
 /**
- * @URL /test
+ * @URL("/test")
  * @Logged
  * @RequireHttps("yes")
  */
@@ -21,6 +27,7 @@ function deleteUser($password) { ... }
 ```
 
 This sample provides 2 filters:
+
  - *@Logged* is used by Splash to check that the user is logged. If not, the user is sent to the login page.
  - *@RequireHttps* is used by Splash to make sure the action is run on an HTTPS channel. If not, an error message is displayed.
 
@@ -35,7 +42,8 @@ Please note the <b>@RequireHttps</b> annotation accepts one parameter. This para
 - By passing @RequireHttps("redirect"), the call is redirected to HTTPS. This does only work with GET requests.
 
 
-There is a third default filter worth mentionning:
+There is a third default filter worth mentioning:
+
 The *@RedirectToHttp* filter will bring the user back to HTTP if the user is in HTTPS. The port can be specified in parameter if needed. The filter
 works only with GET requests. If another type of request is performed (POST), an exception will be thrown.
 
@@ -47,7 +55,38 @@ Each filter is represented by a class.
 
 To create a filter:
 
- - The filters must extends the Mouf\Mvc\Splash\Filters\AbstractFilter class
- - The namespace of the filter must be Mouf\Annotations
- - The name of the class is the name of the annotations + "Annotation". For instance, a @Profile filter would be implemented using the Mouf\Annotations\ProfileAnnotation class.
+ - The filters must be a valid [Doctrine annotation](http://doctrine-orm.readthedocs.io/projects/doctrine-common/en/latest/reference/annotations.html).
+ - The filter must implement a `__invoke` method whose signature is:
  
+    ```php
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next, ContainerInterface $container);
+    ```
+
+Note that a filter is very similar to a PSR-7 middleware, except the `__invoke` method is additionally passed a container (useful to bind the annotation to a given service).
+
+Here is the typical filter layout:
+
+```php
+/**
+ * A filter is an annotation, therefore, it MUST have the @Annotation annotation.
+ *
+ * @Annotation
+ */
+class SampleFilter
+{
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next, ContainerInterface $container)
+    {
+        // Do some stuff before the action is called
+        // ...
+        
+        // Then call the action:
+        $response = $next($request, $response);
+        
+        // Then do some stuff after the action is called
+        // ...
+        
+        // Finally, return the response
+        return $response;
+    }
+}
+```
