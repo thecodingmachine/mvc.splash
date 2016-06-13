@@ -55,29 +55,6 @@
 				}
 			],
 			"logo" : "logo.png",
-			"doc" : [{
-					"title" : "Installing Splash",
-					"url" : "doc/install.md"
-				}, {
-					"title" : "Writing controllers",
-					"url" : "doc/writing_controllers.md"
-				}, {
-					"title" : "Writing controllers, manually",
-					"url" : "doc/writing_controllers_manually.md"
-				}, {
-					"title" : "Managing URL parameters",
-					"url" : "doc/url_parameters.md"
-				}, {
-					"title" : "Writing your own filters",
-					"url" : "doc/filters.md"
-				}, {
-					"title" : "Advanced: configuring routing",
-					"url" : "doc/url_routing.md"
-				}, {
-					"title" : "Migrating from Splash 4",
-					"url" : "doc/migrating.md"
-				}
-			],
 			"require-admin" : [
 				"src/SplashAdmin.php",
 				"src/Mouf/Mvc/Splash/SplashGenerateService.php",
