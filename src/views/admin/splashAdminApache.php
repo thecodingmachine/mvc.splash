@@ -3,10 +3,10 @@
 <p>This page helps you create the <code>.htaccess</code> file that is used by Splash to manage the redirection of web pages.</p>
 <br/>
 <p>
-By default, some file extetions are excluded by the rewrite rule : "js", "ico", "gif", "jpg", "png", "css". The "mouf" and "plugins" folders are also excluded. However, you are free to configure those exclusions as you want: just write each extention or folder name that you want to exclude in the textareas below (one line for each extention/folder):
+By default, some file extensions are excluded by the rewrite rule : "js", "ico", "gif", "jpg", "png", "css". The "vendor" folder is also excluded. However, you are free to configure those exclusions as you want: just write each extension or folder name that you want to exclude in the textareas below (one line for each extension/folder):
 </p>
 <br/>
-<div class="warn"><strong>WARNING</strong> : the <code>.htaccess</code> file is handling all the redirections on your site, so please be very carefull when editing this file!</div>
+<div class="warn"><strong>WARNING</strong> : the <code>.htaccess</code> file is handling all the redirects on your site, so please be very careful when editing this file!</div>
 <br/>
 <form action="write" method="post">
 <div>
