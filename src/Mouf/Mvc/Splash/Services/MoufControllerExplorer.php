@@ -31,7 +31,13 @@ class MoufControllerExplorer implements ControllerDetector
                 try {
                     $isController[$className] = $controllerAnalyzer->isController($className);
                 } catch (AnnotationException $e) {
-                    // Unknown annotation? Let's bypass the controller altogether.
+                    // Unknown annotation?
+                    // Is there a slight chance this class might be a controller? Let's apply heuristics here.
+                    if ($this->shouldBeController($className)) {
+                        throw $e;
+                    }
+
+                    // Let's bypass the controller altogether.
                     $isController[$className] = false;
                 }
             }
@@ -42,6 +48,31 @@ class MoufControllerExplorer implements ControllerDetector
         }
 
         return $controllers;
+    }
+
+    /**
+     * If we arrive in this method, annotations have failed to parse.
+     * Let's try to see (heuristically) if this class has a good chance to be a controller or not.
+     * If it has, let's display a big error message.
+     *
+     * @param string $className
+     * @return bool
+     */
+    private function shouldBeController($className) : bool
+    {
+        if (strpos($className, 'Controller') !== false) {
+            return true;
+        }
+
+        $reflectionClass = new \ReflectionClass($className);
+        $file = $reflectionClass->getFileName();
+
+        $content = file_get_contents($file);
+
+        if (strpos($content, '@URL') !== false) {
+            return true;
+        }
+        return false;
     }
 
     /**
