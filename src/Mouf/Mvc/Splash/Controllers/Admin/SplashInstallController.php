@@ -223,6 +223,7 @@ class SplashInstallController extends Controller
         $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\SplashRequestParameterFetcher', 'Mouf\\Mvc\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
         $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', 'Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', $moufManager);
         $Mouf_Mvc_Splash_Services_MoufControllerExplorer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', 'Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', $moufManager);
+        $Psr7Middlewares_Middleware_Payload = InstallUtils::getOrCreateInstance('Psr7Middlewares\\Middleware\\Payload', 'Psr7Middlewares\\Middleware\\Payload', $moufManager);
         $splashCachePool = InstallUtils::getOrCreateInstance('splashCachePool', null, $moufManager);
         $splashCachePool->setCode('$drivers = [
     new Stash\\Driver\\Ephemeral()
@@ -242,6 +243,7 @@ $compositeDriver = new Stash\\Driver\\Composite([\'drivers\'=>$drivers]);
 
 return new Stash\\Pool($compositeDriver);');
         $anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+        $anonymousRouter1 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter3 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
@@ -251,7 +253,7 @@ return new Stash\\Pool($compositeDriver);');
 
 // Let's bind instances together.
         if (!$Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
-            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousRouter, 1 => $anonymousRouter2, 2 => $anonymousRouter3, 3 => $anonymousErrorRouter, 4 => $anonymousErrorRouter2));
+            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousRouter, 1 => $anonymousRouter1, 2 => $anonymousRouter2, 3 => $anonymousRouter3, 4 => $anonymousErrorRouter, 5 => $anonymousErrorRouter2));
         }
         if (!$Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->isValueSet()) {
             $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->setValue($bootstrapTemplate);
@@ -328,6 +330,8 @@ return new Stash\\Pool($compositeDriver);');
             $Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('annotationReader')->setValue($annotationReader);
         }
         $anonymousRouter->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter);
+        $anonymousRouter1->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'Psr7Middlewares\\\\Middleware\\\\Payload\');');
+        $anonymousRouter1->getConstructorArgumentProperty('middleware')->setOrigin("php");
         $anonymousRouter2->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_SplashDefaultRouter);
         $anonymousRouter3->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_NotFoundRouter);
         $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'whoopsMiddleware\');');

@@ -4,6 +4,7 @@ namespace Mouf\Mvc\Splash\Services;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Mouf\MoufManager;
+use Mouf\Mvc\Splash\Utils\SplashException;
 
 /**
  * This class scans the Mouf container in order to find all instances that point to classes containing a @URL or @Action annotation.
@@ -27,6 +28,10 @@ class MoufControllerExplorer implements ControllerDetector
         $controllers = [];
 
         foreach ($instanceNames as $instanceName => $className) {
+            if ($className === null) {
+                continue;
+            }
+            
             if (!isset($isController[$className])) {
                 try {
                     $isController[$className] = $controllerAnalyzer->isController($className);

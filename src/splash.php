@@ -16,14 +16,7 @@ require_once __DIR__.'/../../../../mouf/Mouf.php';
 
 $splash = MoufManager::getMoufManager()->getInstance(\Mouf\Mvc\Splash\SplashMiddleware::class);
 
-// Decode json parameters for POST request
-if (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'json')) {
-    $postdata = file_get_contents('php://input');
-    $postdata = json_decode($postdata, true);
-} else {
-    $postdata = $_POST;
-}
 /* @var $splash Splash */
-$server = Server::createServer($splash, $_SERVER, $_GET, $postdata, $_COOKIE, $_FILES);
+$server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
 $server->listen();
