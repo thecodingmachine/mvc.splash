@@ -5,6 +5,7 @@
 use Mouf\MoufManager;
 use Zend\Diactoros\Server;
 use Mouf\Mvc\Splash\Splash;
+use Zend\Stratigility\NoopFinalHandler;
 
 if (isset($_SERVER['BASE'])) {
     define('ROOT_URL', $_SERVER['BASE'].'/');
@@ -19,4 +20,4 @@ $splash = MoufManager::getMoufManager()->getInstance(\Mouf\Mvc\Splash\SplashMidd
 /* @var $splash Splash */
 $server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
-$server->listen();
+$server->listen(new NoopFinalHandler());
