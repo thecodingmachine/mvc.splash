@@ -15,8 +15,8 @@ interface Http500HandlerInterface
     /**
      * This function is called when a HTTP 404 error is triggered by the user.
      *
-     * @param \Exception $exception
+     * @param \Throwable $throwable
      * @param ServerRequestInterface $request
      */
-    public function serverError(\Exception $exception, ServerRequestInterface $request);
+    public function serverError($throwable, ServerRequestInterface $request);
 }

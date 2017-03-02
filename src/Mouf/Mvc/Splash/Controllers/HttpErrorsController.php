@@ -98,13 +98,13 @@ class HttpErrorsController implements Http404HandlerInterface, Http500HandlerInt
      *
      * @see Mouf\Mvc\Splash\Controllers.Http500HandlerInterface::serverError()
      */
-    public function serverError(\Exception $exception, ServerRequestInterface $request)
+    public function serverError($throwable, ServerRequestInterface $request)
     {
-        $this->exception = $exception;
+        $this->exception = $throwable;
 
         $acceptType = $request->getHeader('Accept');
         if (is_array($acceptType) && count($acceptType) > 0 && strpos($acceptType[0], "json") !== false ){
-            return new JsonResponse(["error" => ["message" => $exception->getMessage(), "type" => "Exception", "trace" => $this->debugMode ? $exception->getTraceAsString() : ""]]);
+            return new JsonResponse(["error" => ["message" => $throwable->getMessage(), "type" => "Exception", "trace" => $this->debugMode ? $throwable->getTraceAsString() : ""]]);
         }
 
         if ($this->contentFor500) {
