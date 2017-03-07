@@ -145,7 +145,17 @@ class SplashInstallController extends Controller
     {
         // The ErrorRouter class has been removed. Let's check if we use it. If yes, we must migrate.
         $allInstances = $moufManager->getInstancesList();
-        return array_search('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter', $allInstances);
+        return array_search('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter', $allInstances, true) !== false;
+    }
+
+    private function removeErrorRouters(MoufManager $moufManager)
+    {
+        $allInstances = $moufManager->getInstancesList();
+        foreach ($allInstances as $instanceName => $className) {
+            if ($className === 'Mouf\\Mvc\\Splash\\Routers\\ErrorRouter') {
+                $moufManager->removeComponent($instanceName);
+            }
+        }
     }
 
     /**
@@ -214,6 +224,7 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('exceptionRouter');
             $moufManager->removeComponent('httpErrorsController');
             $moufManager->removeComponent('whoopsMiddleware');
+            $this->removeErrorRouters($moufManager);
         }
         if ($moufManager->has('whoopsMiddleware')) {
             // For migration purpose
