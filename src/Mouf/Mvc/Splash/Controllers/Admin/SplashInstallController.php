@@ -137,6 +137,18 @@ class SplashInstallController extends Controller
     }
 
     /**
+     * Are we coming from Splash 8.0 or 8.1?
+     *
+     * @return bool
+     */
+    private function isMigratingFromSplash80(MoufManager $moufManager) : bool
+    {
+        // The ErrorRouter class has been removed. Let's check if we use it. If yes, we must migrate.
+        $allInstances = $moufManager->getInstancesList();
+        return array_search('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter', $allInstances);
+    }
+
+    /**
      * This action generates the TDBM instance, then the DAOs and Beans.
      *
      * @Action
@@ -197,6 +209,12 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('splashCacheFile');
             $moufManager->removeComponent('moufExplorerUrlProvider');
         }
+        if ($this->isMigratingFromSplash80($moufManager)) {
+            $moufManager->removeComponent('splashMiddleware');
+            $moufManager->removeComponent('exceptionRouter');
+            $moufManager->removeComponent('httpErrorsController');
+            $moufManager->removeComponent('whoopsMiddleware');
+        }
         if ($moufManager->has('whoopsMiddleware')) {
             // For migration purpose
             $moufManager->removeComponent('whoopsMiddleware');
@@ -209,7 +227,7 @@ class SplashInstallController extends Controller
         $annotationReader = $moufManager->getInstanceDescriptor('annotationReader');
 
         // Let's create the instances.
-        $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Franzl\\Middleware\\Whoops\\ErrorMiddleware', $moufManager);
+        $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Middlewares\\Whoops', $moufManager);
         $Mouf_Mvc_Splash_SplashMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\SplashMiddleware', 'Mouf\\Mvc\\Splash\\SplashMiddleware', $moufManager);
         $Mouf_Mvc_Splash_Controllers_HttpErrorsController = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
         $Mouf_Mvc_Splash_Routers_NotFoundRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
@@ -246,14 +264,14 @@ return new Stash\\Pool($compositeDriver);');
         $anonymousRouter1 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter3 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
-        $anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
+        $anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
-        $anonymousErrorRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter');
+        $anonymousErrorRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
 
 // Let's bind instances together.
         if (!$Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
-            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousRouter, 1 => $anonymousRouter1, 2 => $anonymousRouter2, 3 => $anonymousRouter3, 4 => $anonymousErrorRouter, 5 => $anonymousErrorRouter2));
+            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousErrorRouter2, 1 => $anonymousErrorRouter, 2 => $anonymousRouter, 3 => $anonymousRouter1, 4 => $anonymousRouter2, 5 => $anonymousRouter3));
         }
         if (!$Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->isValueSet()) {
             $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->setValue($bootstrapTemplate);
