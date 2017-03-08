@@ -27,7 +27,7 @@
 		"mouf/utils.constants.secret" : "~1.0",
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
-		"franzl/whoops-middleware" : "~0.3",
+		"middlewares/whoops" : "^0.3",
 		"mouf/utils.value.common-value": "~1.0",
 		"mouf/utils.common.doctrine-annotations-wrapper": "~1.2",
 		"mouf/utils.cache.psr6-ui": "~1.0",
@@ -47,12 +47,12 @@
 					"scope" : "global",
 					"description" : "Create RootController and root view.",
 					"type" : "url",
-					"url" : "splash8install/"
+					"url" : "splash82install/"
 				}, {
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
-					"url" : "splash8install/writeHtAccess"
+					"url" : "splash82install/writeHtAccess"
 				}
 			],
 			"logo" : "logo.png",
