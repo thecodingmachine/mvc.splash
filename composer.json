@@ -48,7 +48,7 @@
 					"scope" : "global",
 					"description" : "Create RootController and root view.",
 					"type" : "url",
-					"url" : "splash82install/"
+					"url" : "splash83install/"
 				}, {
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
