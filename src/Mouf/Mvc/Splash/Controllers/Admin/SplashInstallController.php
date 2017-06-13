@@ -10,6 +10,7 @@ use Mouf\Mvc\Splash\Services\SplashCreateControllerService;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
 use Mouf\Mvc\Splash\Controllers\Controller;
+use TheCodingMachine\Middlewares\CsrfHeaderCheckMiddleware;
 
 /**
  * The controller used in the Splash install process.
@@ -148,6 +149,11 @@ class SplashInstallController extends Controller
         return array_search('Mouf\\Mvc\\Splash\\Routers\\ErrorRouter', $allInstances, true) !== false;
     }
 
+    private function isMigratingFromSplash82(MoufManager $moufManager) : bool
+    {
+        return !$moufManager->has(CsrfHeaderCheckMiddleware::class);
+    }
+
     private function removeErrorRouters(MoufManager $moufManager)
     {
         $allInstances = $moufManager->getInstancesList();
@@ -226,6 +232,9 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('whoopsMiddleware');
             $this->removeErrorRouters($moufManager);
         }
+        if ($this->isMigratingFromSplash82($moufManager)) {
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\SplashMiddleware');
+        }
         if ($moufManager->has('whoopsMiddleware')) {
             // For migration purpose
             $moufManager->removeComponent('whoopsMiddleware');
@@ -253,6 +262,13 @@ class SplashInstallController extends Controller
         $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', 'Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', $moufManager);
         $Mouf_Mvc_Splash_Services_MoufControllerExplorer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', 'Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', $moufManager);
         $Psr7Middlewares_Middleware_Payload = InstallUtils::getOrCreateInstance('Psr7Middlewares\\Middleware\\Payload', 'Psr7Middlewares\\Middleware\\Payload', $moufManager);
+        if ($moufManager->has(CsrfHeaderCheckMiddleware::class)) {
+            $CsrfHeaderCheckMiddleware  = $moufManager->getInstanceDescriptor(CsrfHeaderCheckMiddleware::class);
+        } else {
+            $CsrfHeaderCheckMiddleware  = $moufManager->createInstanceByCode();
+            $CsrfHeaderCheckMiddleware->setName(CsrfHeaderCheckMiddleware::class);
+            $CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');
+        }
         $splashCachePool = InstallUtils::getOrCreateInstance('splashCachePool', null, $moufManager);
         $splashCachePool->setCode('$drivers = [
     new Stash\\Driver\\Ephemeral()
@@ -275,14 +291,17 @@ return new Stash\\Pool($compositeDriver);');
         $anonymousRouter1 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter3 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
+        $anonymousRouter4 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousErrorRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
+        $anonymousToCondition2 = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
+        $anonymousVariable2 = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
         $anonymousErrorRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
 
 // Let's bind instances together.
         if (!$Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->isValueSet()) {
-            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousErrorRouter2, 1 => $anonymousErrorRouter, 2 => $anonymousRouter, 3 => $anonymousRouter1, 4 => $anonymousRouter2, 5 => $anonymousRouter3));
+            $Mouf_Mvc_Splash_SplashMiddleware->getConstructorArgumentProperty('routers')->setValue(array(0 => $anonymousErrorRouter2, 1 => $anonymousErrorRouter, 2 => $anonymousRouter, 3 => $anonymousRouter4, 4 => $anonymousRouter1, 5 => $anonymousRouter2, 6 => $anonymousRouter3));
         }
         if (!$Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->isValueSet()) {
             $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->setValue($bootstrapTemplate);
@@ -363,12 +382,18 @@ return new Stash\\Pool($compositeDriver);');
         $anonymousRouter1->getConstructorArgumentProperty('middleware')->setOrigin("php");
         $anonymousRouter2->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_SplashDefaultRouter);
         $anonymousRouter3->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_NotFoundRouter);
+        $anonymousRouter4->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'TheCodingMachine\\\\Middlewares\\\\CsrfHeaderCheckMiddleware\');');
+        $anonymousRouter4->getConstructorArgumentProperty('middleware')->setOrigin("php");
+        $anonymousRouter4->getConstructorArgumentProperty('enableCondition')->setValue($anonymousToCondition2);
         $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setValue('return $container->get(\'whoopsMiddleware\');');
         $anonymousErrorRouter->getConstructorArgumentProperty('middleware')->setOrigin('php');
         $anonymousErrorRouter->getConstructorArgumentProperty('enableCondition')->setValue($anonymousToCondition);
         $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
+        $anonymousToCondition2->getConstructorArgumentProperty('value')->setValue($anonymousVariable2);
         $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
         $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin('config');
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setOrigin('config');
         $anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_ExceptionRouter);
 
         // Let's rewrite the MoufComponents.php file to save the component
@@ -398,6 +423,25 @@ return new Stash\\Pool($compositeDriver);');
 <h1>Hello {{message}}!</h1>
 <h2>Welcome to Splash</h2>
 <p>This file is your welcome page. It is generated by the '.$controllernamespace.'RootController class and the '.$viewdirectory.'root/index.php file. Please feel free to customize it.</p>');
+        }
+
+        $configManager = $moufManager->getConfigManager();
+        $constants = $configManager->getMergedConstants();
+
+        if (!isset($constants['ENABLE_CSRF_PROTECTION'])) {
+            $configManager->registerConstant("ENABLE_CSRF_PROTECTION", "bool", true, "Set to true to enable the CSRF protection middleware. This will prevent any POST request from being performed from outside a web-page of your application. If you are working on an API to be used by third party servers, you might want to disable CSRF protection. For specific cases, please consider editing the 'TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware' instance instead.");
+
+            $configPhpConstants = $configManager->getDefinedConstants();
+            $configPhpConstants['ENABLE_CSRF_PROTECTION'] = true;
+            $configManager->setDefinedConstants($configPhpConstants);
+        }
+
+        if (!isset($constants['CSRF_ALLOWED_DOMAIN_NAMES'])) {
+            $configManager->registerConstant("CSRF_ALLOWED_DOMAIN_NAMES", "string", "", "A comma separated list of domain names for your application. The CSRF middleware can normally detect this automatically unless your application runs behind a proxy. In this case, you can use this config constant to enter the list of domain names from which a POST query is allowed to originate.");
+
+            $configPhpConstants = $configManager->getDefinedConstants();
+            $configPhpConstants['CSRF_ALLOWED_DOMAIN_NAMES'] = '';
+            $configManager->setDefinedConstants($configPhpConstants);
         }
 
         $this->moufManager->rewriteMouf();
