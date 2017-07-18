@@ -288,11 +288,6 @@ $drivers[] = new Stash\\Driver\\FileSystem([
 $compositeDriver = new Stash\\Driver\\Composite([\'drivers\'=>$drivers]);
 
 return new Stash\\Pool($compositeDriver);');
-        $server = InstallUtils::getOrCreateInstance(Server::class, null, $moufManager);
-        $server->setCode('
-$splash = $container->get(\Mouf\Mvc\Splash\SplashMiddleware::class);
-$server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-return $server;');
         $anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter1 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
@@ -401,6 +396,29 @@ return $server;');
         $anonymousVariable2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
         $anonymousVariable2->getConstructorArgumentProperty('value')->setOrigin('config');
         $anonymousErrorRouter2->getConstructorArgumentProperty('middleware')->setValue($Mouf_Mvc_Splash_Routers_ExceptionRouter);
+
+        //SERVER - SapiStreamEmitter
+        $Zend_Diactoros_Server = InstallUtils::getOrCreateInstance('Zend\\Diactoros\\Server', 'Zend\\Diactoros\\Server', $moufManager);
+        $anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\Diactoros\\Response\\SapiStreamEmitter');
+
+        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->isValueSet()) {
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->setValue('return $container->get(\\Mouf\\Mvc\\Splash\\SplashMiddleware::class);');
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->setOrigin("php");
+        }
+        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('request')->isValueSet()) {
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('request')->setValue('return \\Zend\\Diactoros\\ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);');
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('request')->setOrigin("php");
+        }
+        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('response')->isValueSet()) {
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('response')->setValue('return new \\Zend\\Diactoros\\Response();');
+            $Zend_Diactoros_Server->getConstructorArgumentProperty('response')->setOrigin("php");
+        }
+        if (!$Zend_Diactoros_Server->getSetterProperty('setEmitter')->isValueSet()) {
+            $Zend_Diactoros_Server->getSetterProperty('setEmitter')->setValue($anonymousSapiStreamEmitter);
+        }
+
+
+
 
         // Let's rewrite the MoufComponents.php file to save the component
         $this->moufManager->rewriteMouf();
