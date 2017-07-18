@@ -11,6 +11,7 @@ use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
 use Mouf\Mvc\Splash\Controllers\Controller;
 use TheCodingMachine\Middlewares\CsrfHeaderCheckMiddleware;
+use Zend\Diactoros\Server;
 
 /**
  * The controller used in the Splash install process.
@@ -287,6 +288,11 @@ $drivers[] = new Stash\\Driver\\FileSystem([
 $compositeDriver = new Stash\\Driver\\Composite([\'drivers\'=>$drivers]);
 
 return new Stash\\Pool($compositeDriver);');
+        $server = InstallUtils::getOrCreateInstance(Server::class, null, $moufManager);
+        $server->setCode('
+$splash = $container->get(\Mouf\Mvc\Splash\SplashMiddleware::class);
+$server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+return $server;');
         $anonymousRouter = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter1 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
         $anonymousRouter2 = $moufManager->createInstance('Mouf\\Mvc\\Splash\\Routers\\Router');
