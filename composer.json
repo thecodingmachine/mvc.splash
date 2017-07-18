@@ -48,12 +48,12 @@
 					"scope" : "global",
 					"description" : "Create RootController and root view.",
 					"type" : "url",
-					"url" : "splash83install/"
+					"url" : "splash831install/"
 				}, {
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
-					"url" : "splash82install/writeHtAccess"
+					"url" : "splash831install/writeHtAccess"
 				}
 			],
 			"logo" : "logo.png",

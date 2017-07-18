@@ -15,9 +15,6 @@ if (isset($_SERVER['BASE'])) {
 
 require_once __DIR__.'/../../../../mouf/Mouf.php';
 
-$splash = MoufManager::getMoufManager()->getInstance(\Mouf\Mvc\Splash\SplashMiddleware::class);
-
-/* @var $splash Splash */
-$server = Server::createServer($splash, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+$server = MoufManager::getMoufManager()->get(Server::class);
 
 $server->listen(new NoopFinalHandler());

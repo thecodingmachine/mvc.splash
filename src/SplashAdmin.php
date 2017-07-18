@@ -14,10 +14,10 @@ $moufManager->bindComponent('splashApacheConfig', 'template', 'moufTemplate');
 $moufManager->bindComponents('splashApacheConfig', 'content', 'block.content');
 $moufManager->bindComponent('splashApacheConfig', 'splashGenerateService', 'splashGenerateService');
 
-$moufManager->declareComponent('splash83install', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashInstallController', true);
-$moufManager->bindComponent('splash83install', 'template', 'moufInstallTemplate');
-$moufManager->bindComponents('splash83install', 'content', 'block.content');
-$moufManager->bindComponent('splash83install', 'splashGenerateService', 'splashGenerateService');
+$moufManager->declareComponent('splash831install', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashInstallController', true);
+$moufManager->bindComponent('splash831install', 'template', 'moufInstallTemplate');
+$moufManager->bindComponents('splash831install', 'content', 'block.content');
+$moufManager->bindComponent('splash831install', 'splashGenerateService', 'splashGenerateService');
 
 $moufManager->declareComponent('splashpurgecache', 'Mouf\\Mvc\\Splash\\Controllers\\Admin\\SplashPurgeCacheController', true);
 $moufManager->bindComponent('splashpurgecache', 'template', 'moufTemplate');
