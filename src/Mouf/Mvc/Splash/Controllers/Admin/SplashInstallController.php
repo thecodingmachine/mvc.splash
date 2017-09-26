@@ -400,8 +400,7 @@ return new Stash\\Pool($compositeDriver);');
         //SERVER - SapiStreamEmitter
         $Zend_Diactoros_Server = InstallUtils::getOrCreateInstance('Zend\\Diactoros\\Server', 'Zend\\Diactoros\\Server', $moufManager);
 
-        //Reactivate when https://github.com/zendframework/zend-diactoros/pull/233 is merged
-        //$anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\Diactoros\\Response\\SapiStreamEmitter');
+        $anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\Diactoros\\Response\\SapiStreamEmitter');
 
         if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->isValueSet()) {
             $Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->setValue('return $container->get(\\Mouf\\Mvc\\Splash\\SplashMiddleware::class);');
