@@ -15,7 +15,7 @@ class SplashMiddlewareValidator implements MoufStaticValidatorInterface
      */
     public static function validateClass()
     {
-        $instanceExists = MoufManager::getMoufManager()->instanceExists('Mouf\\Mvc\\Splash\\SplashMiddleware');
+        $instanceExists = MoufManager::getMoufManager()->instanceExists('Mouf\\Mvc\\Splash\\MiddlewarePipe');
 
         if ($instanceExists) {
             return new MoufValidatorResult(MoufValidatorResult::SUCCESS, "'Mouf\\Mvc\\Splash\\SplashMiddleware' instance found");
