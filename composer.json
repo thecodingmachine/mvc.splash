@@ -23,7 +23,7 @@
 		"mouf/html.template.bootstrap" : ">=2.1, <5.0",
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/mvc.splash-ui" : "~9.0",
-		"mouf/mvc.splash-common" : "~9.0",
+		"thecodingmachine/splash-router" : "^9.0",
 		"mouf/utils.constants.secret" : "~1.0",
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
