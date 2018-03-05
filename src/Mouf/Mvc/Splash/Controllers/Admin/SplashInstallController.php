@@ -284,17 +284,17 @@ return new Stash\\Pool($compositeDriver);');
         //Middleware pipe creation
 
         $Mouf_Mvc_Splash_MiddlewarePipe = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MiddlewarePipe', 'Mouf\\Mvc\\Splash\\MiddlewarePipe', $moufManager);
-        $Mouf_Mvc_Splash_WhoopsConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\WhoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
-        $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\CsrfHeaderConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $Middlewares_JsonPayload = InstallUtils::getOrCreateInstance('Middlewares\\JsonPayload', 'Middlewares\\JsonPayload', $moufManager);
         $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware = InstallUtils::getOrCreateInstance('TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware', NULL, $moufManager);
         $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
+
+        $Mouf_Mvc_Splash_WhoopsConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\WhoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
+        $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\CsrfHeaderConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
+        $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
+        $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
         $anonymousToCondition2 = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
+        $anonymousVariable2 = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
 
-
-        if (!$Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->isValueSet()) {
-            $Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->setValue(array(0 => $Mouf_Mvc_Splash_Routers_ExceptionRouter, 1 => $Mouf_Mvc_Splash_WhoopsConditionMiddleware, 2 => $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter, 3 => $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware, 4 => $Middlewares_JsonPayload, 5 => $Mouf_Mvc_Splash_Routers_SplashDefaultRouter, 6 => $Mouf_Mvc_Splash_Routers_NotFoundRouter, ));
-        }
         if (!$Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('condition')->isValueSet()) {
             $Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('condition')->setValue($anonymousToCondition);
         }
@@ -307,10 +307,17 @@ return new Stash\\Pool($compositeDriver);');
         if (!$Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->isValueSet()) {
             $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->setValue($TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware);
         }
-        $anonymousToCondition->getConstructorArgumentProperty('value')->setValue('DEBUG');
-        $anonymousToCondition->getConstructorArgumentProperty('value')->setOrigin("config");
-        $anonymousToCondition2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
-        $anonymousToCondition2->getConstructorArgumentProperty('value')->setOrigin("config");
+        $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
+        $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
+        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin("config");
+        $anonymousToCondition2->getConstructorArgumentProperty('value')->setValue($anonymousVariable2);
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setOrigin("config");
+
+
+        if (!$Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->isValueSet()) {
+            $Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->setValue(array(0 => $Mouf_Mvc_Splash_Routers_ExceptionRouter, 1 => $Mouf_Mvc_Splash_WhoopsConditionMiddleware, 2 => $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter, 3 => $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware, 4 => $Middlewares_JsonPayload, 5 => $Mouf_Mvc_Splash_Routers_SplashDefaultRouter, 6 => $Mouf_Mvc_Splash_Routers_NotFoundRouter, ));
+        }
 
 
 
