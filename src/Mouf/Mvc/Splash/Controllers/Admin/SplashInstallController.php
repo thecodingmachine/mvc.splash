@@ -9,10 +9,8 @@ use Mouf\Html\Template\TemplateInterface;
 use Mouf\Mvc\Splash\Services\SplashCreateControllerService;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
-use Mouf\Mvc\Splash\Controllers\Controller;
 use TheCodingMachine\Middlewares\CsrfHeaderCheckMiddleware;
-use Zend\Diactoros\Server;
-use Mouf\Mvc\Splash\ConditionMiddleware;
+use TheCodingMachine\Splash\Controllers\Controller;
 
 /**
  * The controller used in the Splash install process.
@@ -156,6 +154,12 @@ class SplashInstallController extends Controller
         return !$moufManager->has(CsrfHeaderCheckMiddleware::class);
     }
 
+    private function isMigratingFromSplash83(MoufManager $moufManager) : bool
+    {
+        $allInstances = $moufManager->getInstancesList();
+        return array_search('Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $allInstances, true) !== false;
+    }
+
     private function removeErrorRouters(MoufManager $moufManager)
     {
         $allInstances = $moufManager->getInstancesList();
@@ -237,6 +241,15 @@ class SplashInstallController extends Controller
         if ($this->isMigratingFromSplash82($moufManager)) {
             $moufManager->removeComponent('Mouf\\Mvc\\Splash\\MiddlewarePipe');
         }
+        if ($this->isMigratingFromSplash83($moufManager)) {
+            //todo: implement
+            $moufManager->removeComponent('splashDefaultRouter');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\MiddlewarePipe');
+            $moufManager->removeComponent('exceptionRouter');
+            $moufManager->removeComponent('httpErrorsController');
+            $moufManager->removeComponent('whoopsMiddleware');
+            $moufManager->removeComponent('phpVarsCheckRouter');
+        }
         if ($moufManager->has('whoopsMiddleware')) {
             // For migration purpose
             $moufManager->removeComponent('whoopsMiddleware');
@@ -254,7 +267,7 @@ class SplashInstallController extends Controller
         $Mouf_Mvc_Splash_Routers_NotFoundRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
         $Mouf_Mvc_Splash_Routers_ExceptionRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
         $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
-        $Mouf_Mvc_Splash_Routers_SplashDefaultRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', 'Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter', $moufManager);
+        $Mouf_Mvc_Splash_Routers_SplashDefaultRouter = InstallUtils::getOrCreateInstance('TheCodingMachine\\SplashRouter', 'TheCodingMachine\\Splash\\Routers\\SplashRouter', $moufManager);
         $Mouf_Mvc_Splash_Services_ParameterFetcherRegistry = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\ParameterFetcherRegistry', 'Mouf\\Mvc\\Splash\\Services\\ParameterFetcherRegistry', $moufManager);
         $Mouf_Mvc_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\SplashRequestFetcher', 'Mouf\\Mvc\\Splash\\Services\\SplashRequestFetcher', $moufManager);
         $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);

@@ -3,7 +3,7 @@
 namespace Mouf\Mvc\Splash\Services;
 
 use Mouf\MoufManager;
-use Mouf\Mvc\Splash\Routers\SplashDefaultRouter;
+use TheCodingMachine\Splash\Routers\SplashRouter;
 
 /**
  * Exports the list of Splash URLs in a PHP array (to be displayed by the SplashViewUrlsController).
@@ -13,8 +13,8 @@ class SplashUrlsExporter
     public static function exportRoutes() : array
     {
         $moufManager = MoufManager::getMoufManager();
-        $splashDefaultRouter = $moufManager->get(SplashDefaultRouter::class);
-        $routes = $splashDefaultRouter->getSplashActionsList();
+        $splashRouter = $moufManager->get(SplashRouter::class);
+        $routes = $splashRouter->getSplashActionsList();
 
         return array_map(function (SplashRoute $route) {
             return [
