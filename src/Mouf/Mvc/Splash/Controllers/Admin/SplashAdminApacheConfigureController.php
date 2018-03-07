@@ -6,7 +6,7 @@ use Mouf\MoufManager;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\Html\Template\TemplateInterface;
-use TheCodingMachine\Splash\Controllers\Controller;
+use Mouf\Mvc\Splash\Controllers\Controller;
 
 /**
  * The controller that will write the .htaccess file.
