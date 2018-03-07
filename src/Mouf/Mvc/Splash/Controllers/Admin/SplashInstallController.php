@@ -6,7 +6,7 @@ use Mouf\Actions\InstallUtils;
 use Mouf\Composer\ClassNameMapper;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\Html\Template\TemplateInterface;
-use Mouf\Mvc\Splash\Services\SplashCreateControllerService;
+use TheCodingMachine\Splash\Services\SplashCreateControllerService;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
 use TheCodingMachine\Middlewares\CsrfHeaderCheckMiddleware;
@@ -269,11 +269,11 @@ class SplashInstallController extends Controller
         $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
         $Mouf_Mvc_Splash_Routers_SplashDefaultRouter = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Routers\\SplashRouter', 'TheCodingMachine\\Splash\\Routers\\SplashRouter', $moufManager);
         $Mouf_Mvc_Splash_Services_ParameterFetcherRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', 'TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', $moufManager);
-        $Mouf_Mvc_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\SplashRequestFetcher', 'Mouf\\Mvc\\Splash\\Services\\SplashRequestFetcher', $moufManager);
-        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);
-        $Mouf_Mvc_Splash_Services_ControllerRegistry = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\ControllerRegistry', 'Mouf\\Mvc\\Splash\\Services\\ControllerRegistry', $moufManager);
-        $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\SplashRequestParameterFetcher', 'Mouf\\Mvc\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
-        $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', 'Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer', $moufManager);
+        $Mouf_Mvc_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', $moufManager);
+        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\MoufExplorerUrlProvider', 'TheCodingMachine\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);
+        $Mouf_Mvc_Splash_Services_ControllerRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerRegistry', 'TheCodingMachine\\Splash\\Services\\ControllerRegistry', $moufManager);
+        $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
+        $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', 'TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', $moufManager);
         $Mouf_Mvc_Splash_Services_MoufControllerExplorer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', 'Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', $moufManager);
         $splashCachePool = InstallUtils::getOrCreateInstance('splashCachePool', null, $moufManager);
         $splashCachePool->setCode('$drivers = [
