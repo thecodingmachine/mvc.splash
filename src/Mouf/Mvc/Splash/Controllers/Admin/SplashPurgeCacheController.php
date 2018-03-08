@@ -5,7 +5,7 @@ namespace Mouf\Mvc\Splash\Controllers\Admin;
 use Mouf\InstanceProxy;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\Mvc\Splash\Controllers\Controller;
-use Mouf\Mvc\Splash\Routers\SplashDefaultRouter;
+use TheCodingMachine\Splash\Routers\SplashRouter;
 
 /**
  * The controller that will purge the URLs cache.
@@ -36,7 +36,7 @@ class SplashPurgeCacheController extends Controller
      */
     public function defaultAction($selfedit = 'false')
     {
-        $splashProxy = new InstanceProxy(SplashDefaultRouter::class, $selfedit == 'true');
+        $splashProxy = new InstanceProxy(SplashRouter::class, $selfedit == 'true');
         $splashProxy->purgeUrlsCache();
 
         $this->content->addFile(__DIR__.'/../../../../../views/admin/purgedCache.php', $this);
