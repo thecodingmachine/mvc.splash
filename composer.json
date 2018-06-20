@@ -30,7 +30,7 @@
 		"middlewares/whoops" : "^0.3",
 		"mouf/utils.value.common-value": "~1.0",
 		"mouf/utils.common.doctrine-annotations-wrapper": "~1.2",
-		"mouf/utils.cache.psr6-ui": "~1.0",
+		"mouf/utils.cache.purge-ui": "~1.0",
         "oscarotero/psr7-middlewares": "^3.16.1",
 		"thecodingmachine/csrf-header-check-middleware": "^1.0"
 	},
