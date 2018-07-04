@@ -20,7 +20,7 @@
 		"mouf/mouf" : ">=2.0.2, <3.0",
 		"tedivm/stash": "0.14.*",
 		"php" : ">=7.0",
-		"mouf/html.template.bootstrap" : ">=2.1, <5.0",
+		"mouf/html.template.bootstrap" : "~5.0",
 		"mouf/mouf-validators-interface" : "~2.0",
 		"mouf/mvc.splash-ui" : "~8.2",
 		"mouf/mvc.splash-common" : "~8.3",
