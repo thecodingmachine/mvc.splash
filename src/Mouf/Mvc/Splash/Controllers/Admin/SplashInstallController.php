@@ -255,6 +255,8 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('whoopsMiddleware');
         }
 
+
+
         // These instances are expected to exist when the installer is run.
         $bootstrapTemplate = $moufManager->getInstanceDescriptor('bootstrapTemplate');
         $block_content = $moufManager->getInstanceDescriptor('block.content');
@@ -262,20 +264,22 @@ class SplashInstallController extends Controller
         $annotationReader = $moufManager->getInstanceDescriptor('annotationReader');
 
         // Let's create the instances.
+        $Zend_HttpHandlerRunner_RequestHandlerRunner = InstallUtils::getOrCreateInstance('Zend\\HttpHandlerRunner\\RequestHandlerRunner', 'Zend\\HttpHandlerRunner\\RequestHandlerRunner', $moufManager);
+        $Mouf_Mvc_Splash_MiddlewarePipe = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MiddlewarePipe', 'Mouf\\Mvc\\Splash\\MiddlewarePipe', $moufManager);
         $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Middlewares\\Whoops', $moufManager);
         $Mouf_Mvc_Splash_Controllers_HttpErrorsController = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
         $Mouf_Mvc_Splash_Routers_NotFoundRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', 'Mouf\\Mvc\\Splash\\Routers\\NotFoundRouter', $moufManager);
         $Mouf_Mvc_Splash_Routers_ExceptionRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', 'Mouf\\Mvc\\Splash\\Routers\\ExceptionRouter', $moufManager);
         $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', 'Mouf\\Mvc\\Splash\\Routers\\PhpVarsCheckRouter', $moufManager);
-        $Mouf_Mvc_Splash_Routers_SplashDefaultRouter = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Routers\\SplashRouter', 'TheCodingMachine\\Splash\\Routers\\SplashRouter', $moufManager);
-        $Mouf_Mvc_Splash_Services_ParameterFetcherRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', 'TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', $moufManager);
-        $Mouf_Mvc_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', $moufManager);
-        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MoufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\MoufExplorerUrlProvider', $moufManager);
-        $Mouf_Mvc_Splash_Services_ControllerRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerRegistry', 'TheCodingMachine\\Splash\\Services\\ControllerRegistry', $moufManager);
-        $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
-        $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', 'TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', $moufManager);
+        $TheCodingMachine_Splash_Routers_SplashRouter = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Routers\\SplashRouter', 'TheCodingMachine\\Splash\\Routers\\SplashRouter', $moufManager);
+        $TheCodingMachine_Splash_Services_ParameterFetcherRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', 'TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', $moufManager);
+        $TheCodingMachine_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', $moufManager);
+        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);
+        $TheCodingMachine_Splash_Services_ControllerRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerRegistry', 'TheCodingMachine\\Splash\\Services\\ControllerRegistry', $moufManager);
+        $TheCodingMachine_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
+        $TheCodingMachine_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', 'TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', $moufManager);
         $Mouf_Mvc_Splash_Services_MoufControllerExplorer = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', 'Mouf\\Mvc\\Splash\\Services\\MoufControllerExplorer', $moufManager);
-        $splashCachePool = InstallUtils::getOrCreateInstance('splashCachePool', null, $moufManager);
+        $splashCachePool = InstallUtils::getOrCreateInstance('splashCachePool', NULL, $moufManager);
         $splashCachePool->setCode('$drivers = [
     new Stash\\Driver\\Ephemeral()
 ];
@@ -292,52 +296,37 @@ $drivers[] = new Stash\\Driver\\FileSystem([
 
 $compositeDriver = new Stash\\Driver\\Composite([\'drivers\'=>$drivers]);
 
-return new Stash\\Pool($compositeDriver);');
-
-        //Middleware pipe creation
-
-        $Mouf_Mvc_Splash_MiddlewarePipe = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MiddlewarePipe', 'Mouf\\Mvc\\Splash\\MiddlewarePipe', $moufManager);
+return new Stash\\Pool($compositeDriver);');$whoopsConditionMiddleware = InstallUtils::getOrCreateInstance('whoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $Middlewares_JsonPayload = InstallUtils::getOrCreateInstance('Middlewares\\JsonPayload', 'Middlewares\\JsonPayload', $moufManager);
-        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware = InstallUtils::getOrCreateInstance('TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware', NULL, $moufManager);
-        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
-
-        $Mouf_Mvc_Splash_WhoopsConditionMiddleware = InstallUtils::getOrCreateInstance('whoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\CsrfHeaderConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
+        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware = InstallUtils::getOrCreateInstance('TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware', NULL, $moufManager);
+        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\HttpHandlerRunner\\Emitter\\SapiStreamEmitter');
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
         $anonymousToCondition2 = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable2 = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
 
-        if (!$Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('condition')->isValueSet()) {
-            $Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('condition')->setValue($anonymousToCondition);
+// Let's bind instances together.
+        if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('handler')->isValueSet()) {
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('handler')->setValue($Mouf_Mvc_Splash_MiddlewarePipe);
         }
-        if (!$Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->isValueSet()) {
-            $Mouf_Mvc_Splash_WhoopsConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->setValue($whoopsMiddleware);
+        if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('emitter')->isValueSet()) {
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('emitter')->setValue($anonymousSapiStreamEmitter);
         }
-        if (!$Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('condition')->isValueSet()) {
-            $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('condition')->setValue($anonymousToCondition2);
+        if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->isValueSet()) {
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->setValue('return [\\Zend\\Diactoros\\ServerRequestFactory::class, \'fromGlobals\'];');
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->setOrigin("php");
         }
-        if (!$Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->isValueSet()) {
-            $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->setValue($TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware);
+        if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->isValueSet()) {
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->setValue('return function (\\Throwable $e) {
+    $generator = new \\Zend\\Stratigility\\Middleware\\ErrorResponseGenerator();
+    return $generator($e, new \\Zend\\Diactoros\\ServerRequest(), new \\Zend\\Diactoros\\Response());
+};');
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->setOrigin("php");
         }
-        $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
-        $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
-        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin("config");
-        $anonymousToCondition2->getConstructorArgumentProperty('value')->setValue($anonymousVariable2);
-        $anonymousVariable2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
-        $anonymousVariable2->getConstructorArgumentProperty('value')->setOrigin("config");
-
-
         if (!$Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->isValueSet()) {
-            $Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->setValue(array(0 => $Mouf_Mvc_Splash_Routers_ExceptionRouter, 1 => $Mouf_Mvc_Splash_WhoopsConditionMiddleware, 2 => $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter, 3 => $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware, 4 => $Middlewares_JsonPayload, 5 => $Mouf_Mvc_Splash_Routers_SplashDefaultRouter, 6 => $Mouf_Mvc_Splash_Routers_NotFoundRouter, ));
+            $Mouf_Mvc_Splash_MiddlewarePipe->getConstructorArgumentProperty('middlewares')->setValue(array(0 => $Mouf_Mvc_Splash_Routers_ExceptionRouter, 1 => $whoopsConditionMiddleware, 2 => $Mouf_Mvc_Splash_Routers_PhpVarsCheckRouter, 3 => $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware, 4 => $Middlewares_JsonPayload, 5 => $TheCodingMachine_Splash_Routers_SplashRouter, 6 => $Mouf_Mvc_Splash_Routers_NotFoundRouter, ));
         }
-
-
-
-        ///End of Middleware Pipe creation
-
-
-
         if (!$Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->isValueSet()) {
             $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('template')->setValue($bootstrapTemplate);
         }
@@ -346,7 +335,7 @@ return new Stash\\Pool($compositeDriver);');
         }
         if (!$Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('debugMode')->isValueSet()) {
             $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('debugMode')->setValue('DEBUG');
-            $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('debugMode')->setOrigin('config');
+            $Mouf_Mvc_Splash_Controllers_HttpErrorsController->getConstructorArgumentProperty('debugMode')->setOrigin("config");
         }
         if (!$Mouf_Mvc_Splash_Routers_NotFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->isValueSet()) {
             $Mouf_Mvc_Splash_Routers_NotFoundRouter->getConstructorArgumentProperty('pageNotFoundController')->setValue($Mouf_Mvc_Splash_Controllers_HttpErrorsController);
@@ -360,82 +349,76 @@ return new Stash\\Pool($compositeDriver);');
         if (!$Mouf_Mvc_Splash_Routers_ExceptionRouter->getConstructorArgumentProperty('log')->isValueSet()) {
             $Mouf_Mvc_Splash_Routers_ExceptionRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('container')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('container')->setValue('return $container;');
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('container')->setOrigin('php');
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('container')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('container')->setValue('return $container;');
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('container')->setOrigin("php");
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('routeProviders')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('routeProviders')->setValue(array(0 => $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider));
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('routeProviders')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('routeProviders')->setValue(array(0 => $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider, ));
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('parameterFetcherRegistry')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('parameterFetcherRegistry')->setValue($Mouf_Mvc_Splash_Services_ParameterFetcherRegistry);
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('parameterFetcherRegistry')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('parameterFetcherRegistry')->setValue($TheCodingMachine_Splash_Services_ParameterFetcherRegistry);
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('cachePool')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('cachePool')->setValue($splashCachePool);
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('cachePool')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('cachePool')->setValue($splashCachePool);
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('log')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('log')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('log')->setValue($psr_errorLogLogger);
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('mode')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('mode')->setValue('strict');
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('mode')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('mode')->setValue('strict');
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('debug')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('debug')->setValue('DEBUG');
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('debug')->setOrigin('config');
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('debug')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('debug')->setValue('DEBUG');
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('debug')->setOrigin("config");
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('rootUrl')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('rootUrl')->setValue('return ROOT_URL;');
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getConstructorArgumentProperty('rootUrl')->setOrigin('php');
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('rootUrl')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('rootUrl')->setValue('return ROOT_URL;');
+            $TheCodingMachine_Splash_Routers_SplashRouter->getConstructorArgumentProperty('rootUrl')->setOrigin("php");
         }
-        if (!$Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getSetterProperty('setHttp400Handler')->isValueSet()) {
-            $Mouf_Mvc_Splash_Routers_SplashDefaultRouter->getSetterProperty('setHttp400Handler')->setValue($Mouf_Mvc_Splash_Controllers_HttpErrorsController);
+        if (!$TheCodingMachine_Splash_Routers_SplashRouter->getSetterProperty('setHttp400Handler')->isValueSet()) {
+            $TheCodingMachine_Splash_Routers_SplashRouter->getSetterProperty('setHttp400Handler')->setValue($Mouf_Mvc_Splash_Controllers_HttpErrorsController);
         }
-        if (!$Mouf_Mvc_Splash_Services_ParameterFetcherRegistry->getConstructorArgumentProperty('parameterFetchers')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ParameterFetcherRegistry->getConstructorArgumentProperty('parameterFetchers')->setValue(array(0 => $Mouf_Mvc_Splash_Services_SplashRequestFetcher, 1 => $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher));
+        if (!$TheCodingMachine_Splash_Services_ParameterFetcherRegistry->getConstructorArgumentProperty('parameterFetchers')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ParameterFetcherRegistry->getConstructorArgumentProperty('parameterFetchers')->setValue(array(0 => $TheCodingMachine_Splash_Services_SplashRequestFetcher, 1 => $TheCodingMachine_Splash_Services_SplashRequestParameterFetcher, ));
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerAnalyzer')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerAnalyzer')->setValue($Mouf_Mvc_Splash_Services_ControllerAnalyzer);
+        if (!$TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerAnalyzer')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerAnalyzer')->setValue($TheCodingMachine_Splash_Services_ControllerAnalyzer);
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllers')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllers')->setValue(array());
+        if (!$TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllers')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllers')->setValue(array());
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerDetector')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerDetector')->setValue($Mouf_Mvc_Splash_Services_MoufControllerExplorer);
+        if (!$TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerDetector')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerRegistry->getConstructorArgumentProperty('controllerDetector')->setValue($Mouf_Mvc_Splash_Services_MoufControllerExplorer);
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->setValue('return $container;');
-            $Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->setOrigin('php');
+        if (!$TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->setValue('return $container;');
+            $TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('container')->setOrigin("php");
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('parameterFetcherRegistry')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('parameterFetcherRegistry')->setValue($Mouf_Mvc_Splash_Services_ParameterFetcherRegistry);
+        if (!$TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('parameterFetcherRegistry')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('parameterFetcherRegistry')->setValue($TheCodingMachine_Splash_Services_ParameterFetcherRegistry);
         }
-        if (!$Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('annotationReader')->isValueSet()) {
-            $Mouf_Mvc_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('annotationReader')->setValue($annotationReader);
+        if (!$TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('annotationReader')->isValueSet()) {
+            $TheCodingMachine_Splash_Services_ControllerAnalyzer->getConstructorArgumentProperty('annotationReader')->setValue($annotationReader);
         }
-
-        //SERVER - SapiStreamEmitter
-        /*$Zend_Diactoros_Server = InstallUtils::getOrCreateInstance('Zend\\Diactoros\\Server', 'Zend\\Diactoros\\Server', $moufManager);
-
-        $anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\Diactoros\\Response\\SapiStreamEmitter');
-
-        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->isValueSet()) {
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->setValue('return $container->get(\\Mouf\\Mvc\\Splash\\SplashMiddleware::class);');
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('callback')->setOrigin("php");
+        if (!$whoopsConditionMiddleware->getConstructorArgumentProperty('condition')->isValueSet()) {
+            $whoopsConditionMiddleware->getConstructorArgumentProperty('condition')->setValue($anonymousToCondition);
         }
-        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('request')->isValueSet()) {
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('request')->setValue('return \\Zend\\Diactoros\\ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);');
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('request')->setOrigin("php");
+        if (!$whoopsConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->isValueSet()) {
+            $whoopsConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->setValue($whoopsMiddleware);
         }
-        if (!$Zend_Diactoros_Server->getConstructorArgumentProperty('response')->isValueSet()) {
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('response')->setValue('return new \\Zend\\Diactoros\\Response();');
-            $Zend_Diactoros_Server->getConstructorArgumentProperty('response')->setOrigin("php");
+        if (!$Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('condition')->isValueSet()) {
+            $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('condition')->setValue($anonymousToCondition2);
         }
-        if (!$Zend_Diactoros_Server->getSetterProperty('setEmitter')->isValueSet()) {
-            $Zend_Diactoros_Server->getSetterProperty('setEmitter')->setValue($anonymousSapiStreamEmitter);
-        }*/
-
-
-
+        if (!$Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->isValueSet()) {
+            $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware->getConstructorArgumentProperty('ifMiddleware')->setValue($TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware);
+        }
+        $anonymousToCondition->getConstructorArgumentProperty('value')->setValue($anonymousVariable);
+        $anonymousVariable->getConstructorArgumentProperty('value')->setValue('DEBUG');
+        $anonymousVariable->getConstructorArgumentProperty('value')->setOrigin("config");
+        $anonymousToCondition2->getConstructorArgumentProperty('value')->setValue($anonymousVariable2);
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setValue('ENABLE_CSRF_PROTECTION');
+        $anonymousVariable2->getConstructorArgumentProperty('value')->setOrigin("config");
 
         // Let's rewrite the MoufComponents.php file to save the component
         $this->moufManager->rewriteMouf();
