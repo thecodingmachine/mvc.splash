@@ -4,7 +4,8 @@ namespace Mouf\Mvc\Splash\Services;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Mouf\MoufManager;
-use Mouf\Mvc\Splash\Utils\SplashException;
+use TheCodingMachine\Splash\Services\ControllerAnalyzer;
+use TheCodingMachine\Splash\Services\ControllerDetector;
 
 /**
  * This class scans the Mouf container in order to find all instances that point to classes containing a @URL or @Action annotation.

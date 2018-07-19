@@ -22,17 +22,18 @@
 		"php" : ">=7.0",
 		"mouf/html.template.bootstrap" : "~5.0",
 		"mouf/mouf-validators-interface" : "~2.0",
-		"mouf/mvc.splash-ui" : "~8.2",
-		"mouf/mvc.splash-common" : "~8.3",
+		"mouf/mvc.splash-ui" : "^10",
+		"thecodingmachine/splash-router" : "^10.0",
 		"mouf/utils.constants.secret" : "~1.0",
 		"mouf/utils.constants.debug" : "~1.0",
 		"psr/log" : "~1.0",
-		"middlewares/whoops" : "^0.3",
+		"middlewares/whoops" : "^1.0",
 		"mouf/utils.value.common-value": "~1.0",
 		"mouf/utils.common.doctrine-annotations-wrapper": "~1.2",
 		"mouf/utils.cache.purge-ui": "~1.0",
-        "oscarotero/psr7-middlewares": "^3.16.1",
-		"thecodingmachine/csrf-header-check-middleware": "^1.0"
+		"middlewares/payload": "1.0",
+		"thecodingmachine/csrf-header-check-middleware": "^2.0",
+		"zendframework/zend-httphandlerrunner": "^1.0.1"
 	},
 	"autoload" : {
 		"psr-0" : {
@@ -48,12 +49,12 @@
 					"scope" : "global",
 					"description" : "Create RootController and root view.",
 					"type" : "url",
-					"url" : "splash831install/"
+					"url" : "splash9install/"
 				}, {
 					"scope" : "global",
 					"description" : "Write .htaccess file.",
 					"type" : "url",
-					"url" : "splash831install/writeHtAccess"
+					"url" : "splash9install/writeHtAccess"
 				}
 			],
 			"logo" : "logo.png",
