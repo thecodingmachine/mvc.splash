@@ -170,6 +170,16 @@ class SplashInstallController extends Controller
         }
     }
 
+    private function removeRouters(MoufManager $moufManager)
+    {
+        $allInstances = $moufManager->getInstancesList();
+        foreach ($allInstances as $instanceName => $className) {
+            if ($className === 'Mouf\\Mvc\\Splash\\Routers\\Router') {
+                $moufManager->removeComponent($instanceName);
+            }
+        }
+    }
+
     /**
      * This action generates the TDBM instance, then the DAOs and Beans.
      *
@@ -242,13 +252,15 @@ class SplashInstallController extends Controller
             $moufManager->removeComponent('Mouf\\Mvc\\Splash\\MiddlewarePipe');
         }
         if ($this->isMigratingFromSplash83($moufManager)) {
-            //todo: implement
-            $moufManager->removeComponent('splashDefaultRouter');
-            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\MiddlewarePipe');
-            $moufManager->removeComponent('exceptionRouter');
-            $moufManager->removeComponent('httpErrorsController');
-            $moufManager->removeComponent('whoopsMiddleware');
-            $moufManager->removeComponent('phpVarsCheckRouter');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Routers\\SplashDefaultRouter');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Services\\ControllerAnalyzer');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Services\\ControllerRegistry');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Services\\ParameterFetcherRegistry');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Services\\SplashRequestFetcher');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\Services\\SplashRequestParameterFetcher');
+            $moufManager->removeComponent('Mouf\\Mvc\\Splash\\SplashMiddleware');
+            $moufManager->removeComponent('Psr7Middlewares\\Middleware\\Payload');
+            $this->removeRouters($moufManager);
         }
         if ($moufManager->has('whoopsMiddleware')) {
             // For migration purpose
