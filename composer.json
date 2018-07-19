@@ -32,7 +32,8 @@
 		"mouf/utils.common.doctrine-annotations-wrapper": "~1.2",
 		"mouf/utils.cache.psr6-ui": "~1.0",
 		"middlewares/payload": "1.0",
-		"thecodingmachine/csrf-header-check-middleware": "^2.0"
+		"thecodingmachine/csrf-header-check-middleware": "^2.0",
+		"zendframework/zend-httphandlerrunner": "^1.0.1"
 	},
 	"autoload" : {
 		"psr-0" : {

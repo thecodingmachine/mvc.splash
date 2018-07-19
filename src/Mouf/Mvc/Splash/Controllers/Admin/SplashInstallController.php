@@ -6,7 +6,7 @@ use Mouf\Actions\InstallUtils;
 use Mouf\Composer\ClassNameMapper;
 use Mouf\Html\HtmlElement\HtmlBlock;
 use Mouf\Html\Template\TemplateInterface;
-use TheCodingMachine\Splash\Services\SplashCreateControllerService;
+use Mouf\Mvc\Splash\Services\SplashCreateControllerService;
 use Mouf\Mvc\Splash\SplashGenerateService;
 use Mouf\MoufManager;
 use TheCodingMachine\Middlewares\CsrfHeaderCheckMiddleware;
@@ -270,7 +270,7 @@ class SplashInstallController extends Controller
         $Mouf_Mvc_Splash_Routers_SplashDefaultRouter = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Routers\\SplashRouter', 'TheCodingMachine\\Splash\\Routers\\SplashRouter', $moufManager);
         $Mouf_Mvc_Splash_Services_ParameterFetcherRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', 'TheCodingMachine\\Splash\\Services\\ParameterFetcherRegistry', $moufManager);
         $Mouf_Mvc_Splash_Services_SplashRequestFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestFetcher', $moufManager);
-        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\MoufExplorerUrlProvider', 'TheCodingMachine\\Splash\\Services\\MoufExplorerUrlProvider', $moufManager);
+        $Mouf_Mvc_Splash_Services_MoufExplorerUrlProvider = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MoufExplorerUrlProvider', 'Mouf\\Mvc\\Splash\\MoufExplorerUrlProvider', $moufManager);
         $Mouf_Mvc_Splash_Services_ControllerRegistry = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerRegistry', 'TheCodingMachine\\Splash\\Services\\ControllerRegistry', $moufManager);
         $Mouf_Mvc_Splash_Services_SplashRequestParameterFetcher = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', 'TheCodingMachine\\Splash\\Services\\SplashRequestParameterFetcher', $moufManager);
         $Mouf_Mvc_Splash_Services_ControllerAnalyzer = InstallUtils::getOrCreateInstance('TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', 'TheCodingMachine\\Splash\\Services\\ControllerAnalyzer', $moufManager);
@@ -301,7 +301,7 @@ return new Stash\\Pool($compositeDriver);');
         $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware = InstallUtils::getOrCreateInstance('TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware', NULL, $moufManager);
         $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
 
-        $Mouf_Mvc_Splash_WhoopsConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\WhoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
+        $Mouf_Mvc_Splash_WhoopsConditionMiddleware = InstallUtils::getOrCreateInstance('whoopsConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\CsrfHeaderConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
@@ -414,7 +414,7 @@ return new Stash\\Pool($compositeDriver);');
         }
 
         //SERVER - SapiStreamEmitter
-        $Zend_Diactoros_Server = InstallUtils::getOrCreateInstance('Zend\\Diactoros\\Server', 'Zend\\Diactoros\\Server', $moufManager);
+        /*$Zend_Diactoros_Server = InstallUtils::getOrCreateInstance('Zend\\Diactoros\\Server', 'Zend\\Diactoros\\Server', $moufManager);
 
         $anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\Diactoros\\Response\\SapiStreamEmitter');
 
@@ -432,7 +432,7 @@ return new Stash\\Pool($compositeDriver);');
         }
         if (!$Zend_Diactoros_Server->getSetterProperty('setEmitter')->isValueSet()) {
             $Zend_Diactoros_Server->getSetterProperty('setEmitter')->setValue($anonymousSapiStreamEmitter);
-        }
+        }*/
 
 
 
