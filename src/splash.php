@@ -3,7 +3,9 @@
 // First thing first, let's include the Mouf configuration:
 // (only if we are not in admin mode)
 use Mouf\MoufManager;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Server;
+use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 if (isset($_SERVER['BASE'])) {
     define('ROOT_URL', $_SERVER['BASE'].'/');
@@ -13,7 +15,7 @@ if (isset($_SERVER['BASE'])) {
 
 require_once __DIR__.'/../../../../mouf/Mouf.php';
 
-$server = MoufManager::getMoufManager()->get(Server::class);
+/** @var RequestHandlerRunner $server */
+$server = MoufManager::getMoufManager()->get(RequestHandlerRunner::class);
 
-//todo: find a replacment for Zend NoopFinalHandler
-$server->listen();
+$server->run();
