@@ -16,7 +16,7 @@ class SplashUrlsExporter
         $splashRouter = $moufManager->get(SplashRouter::class);
         $routes = $splashRouter->getSplashActionsList();
 
-        return array_map(function (SplashRoute $route) {
+        return array_map(function (\TheCodingMachine\Splash\Services\SplashRoute $route) {
             return [
                 'url' => $route->getUrl(),
                 'comment' => $route->getFullComment(),
