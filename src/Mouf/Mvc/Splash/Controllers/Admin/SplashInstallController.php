@@ -460,7 +460,7 @@ return new Stash\\Pool($compositeDriver);');$whoopsConditionMiddleware = Install
         if (!$this->moufManager->instanceExists('rootController')) {
             $splashGenerateService = new SplashCreateControllerService();
             $splashGenerateService->generate($this->moufManager, 'RootController', 'rootController',
-                $controllernamespace, false, true, false,
+                $controllernamespace, true, false,
                 array(
                     array(
                         'url' => '/',
