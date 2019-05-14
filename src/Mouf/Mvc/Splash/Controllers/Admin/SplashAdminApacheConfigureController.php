@@ -70,6 +70,7 @@ class SplashAdminApacheConfigureController extends Controller
      * Writes the .htaccess file.
      *
      * @Action
+     * @Logged
      */
     public function write($selfedit, $textExtentions, $textFolders)
     {
