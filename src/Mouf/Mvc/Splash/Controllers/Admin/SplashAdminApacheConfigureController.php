@@ -44,6 +44,7 @@ class SplashAdminApacheConfigureController extends Controller
      * Displays the config page.
      *
      * @Action
+     * @Logged
      */
     public function defaultAction($selfedit = 'false')
     {
@@ -69,6 +70,7 @@ class SplashAdminApacheConfigureController extends Controller
      * Writes the .htaccess file.
      *
      * @Action
+     * @Logged
      */
     public function write($selfedit, $textExtentions, $textFolders)
     {
