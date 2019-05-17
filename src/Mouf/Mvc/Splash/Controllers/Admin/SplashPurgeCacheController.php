@@ -33,6 +33,7 @@ class SplashPurgeCacheController extends Controller
      * Displays the config page.
      *
      * @Action
+     * @Logged
      */
     public function defaultAction($selfedit = 'false')
     {
