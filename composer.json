@@ -23,7 +23,7 @@
 		"php" : ">=5.3.0",
 		"mouf/html.template.bootstrap" : ">=2.1, <5.0",
 		"mouf/mouf-validators-interface" : "~2.0",
-		"mouf/utils.cache.no-cache" : "2.0.*",
+		"mouf/utils.cache.no-cache" : "~2.0",
 		"mouf/mvc.splash-common" : "~5.1",
 		"mouf/utils.constants.secret" : "~1.0",
 		"mouf/utils.constants.debug" : "~1.0",
