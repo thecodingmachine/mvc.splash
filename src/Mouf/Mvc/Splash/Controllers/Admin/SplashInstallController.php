@@ -298,7 +298,7 @@ class SplashInstallController extends Controller
         $annotationReader = $moufManager->getInstanceDescriptor('annotationReader');
 
         // Let's create the instances.
-        $Zend_HttpHandlerRunner_RequestHandlerRunner = InstallUtils::getOrCreateInstance('Zend\\HttpHandlerRunner\\RequestHandlerRunner', 'Zend\\HttpHandlerRunner\\RequestHandlerRunner', $moufManager);
+        $Zend_HttpHandlerRunner_RequestHandlerRunner = InstallUtils::getOrCreateInstance('Laminas\\HttpHandlerRunner\\RequestHandlerRunner', 'Laminas\\HttpHandlerRunner\\RequestHandlerRunner', $moufManager);
         $Mouf_Mvc_Splash_MiddlewarePipe = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\MiddlewarePipe', 'Mouf\\Mvc\\Splash\\MiddlewarePipe', $moufManager);
         $whoopsMiddleware = InstallUtils::getOrCreateInstance('whoopsMiddleware', 'Middlewares\\Whoops', $moufManager);
         $Mouf_Mvc_Splash_Controllers_HttpErrorsController = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', 'Mouf\\Mvc\\Splash\\Controllers\\HttpErrorsController', $moufManager);
@@ -334,7 +334,7 @@ return new Stash\\Pool($compositeDriver);');$whoopsConditionMiddleware = Install
         $Middlewares_JsonPayload = InstallUtils::getOrCreateInstance('Middlewares\\JsonPayload', 'Middlewares\\JsonPayload', $moufManager);
         $Mouf_Mvc_Splash_CsrfHeaderConditionMiddleware = InstallUtils::getOrCreateInstance('Mouf\\Mvc\\Splash\\CsrfHeaderConditionMiddleware', 'Mouf\\Mvc\\Splash\\ConditionMiddleware', $moufManager);
         $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware = InstallUtils::getOrCreateInstance('TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddleware', NULL, $moufManager);
-        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousSapiStreamEmitter = $moufManager->createInstance('Zend\\HttpHandlerRunner\\Emitter\\SapiStreamEmitter');
+        $TheCodingMachine_Middlewares_CsrfHeaderCheckMiddleware->setCode('return \\TheCodingMachine\\Middlewares\\CsrfHeaderCheckMiddlewareFactory::createDefault(explode(\',\', CSRF_ALLOWED_DOMAIN_NAMES));');$anonymousSapiStreamEmitter = $moufManager->createInstance('Laminas\\HttpHandlerRunner\\Emitter\\SapiStreamEmitter');
         $anonymousToCondition = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
         $anonymousVariable = $moufManager->createInstance('Mouf\\Utils\\Value\\Variable');
         $anonymousToCondition2 = $moufManager->createInstance('Mouf\\Utils\\Common\\Condition\\ToCondition');
@@ -348,13 +348,13 @@ return new Stash\\Pool($compositeDriver);');$whoopsConditionMiddleware = Install
             $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('emitter')->setValue($anonymousSapiStreamEmitter);
         }
         if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->isValueSet()) {
-            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->setValue('return [\\Zend\\Diactoros\\ServerRequestFactory::class, \'fromGlobals\'];');
+            $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->setValue('return [\\Laminas\\Diactoros\\ServerRequestFactory::class, \'fromGlobals\'];');
             $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestFactory')->setOrigin("php");
         }
         if (!$Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->isValueSet()) {
             $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->setValue('return function (\\Throwable $e) {
-    $generator = new \\Zend\\Stratigility\\Middleware\\ErrorResponseGenerator();
-    return $generator($e, new \\Zend\\Diactoros\\ServerRequest(), new \\Zend\\Diactoros\\Response());
+    $generator = new \\Laminas\\Stratigility\\Middleware\\ErrorResponseGenerator();
+    return $generator($e, new \\Laminas\\Diactoros\\ServerRequest(), new \\Laminas\\Diactoros\\Response());
 };');
             $Zend_HttpHandlerRunner_RequestHandlerRunner->getConstructorArgumentProperty('serverRequestErrorResponseGenerator')->setOrigin("php");
         }
