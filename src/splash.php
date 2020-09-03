@@ -4,8 +4,8 @@
 // (only if we are not in admin mode)
 use Mouf\MoufManager;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Server;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
+use Laminas\Diactoros\Server;
+use Laminas\HttpHandlerRunner\RequestHandlerRunner;
 
 if (isset($_SERVER['BASE'])) {
     define('ROOT_URL', $_SERVER['BASE'].'/');
