@@ -18,24 +18,24 @@
     "homepage": "http://mouf-php.com/packages/mouf/mvc.splash/",
     "license": "MIT",
     "require": {
+        "php": "^8.0",
         "mouf/mouf": ">=2.0.2, <3.0",
-        "tedivm/stash": "0.14.*",
-        "php": ">=7.0",
-        "mouf/html.template.bootstrap": "~5.0",
+        "tedivm/stash": "^0.17.6",
+        "mouf/html.template.bootstrap": "^5.2",
         "mouf/mouf-validators-interface": "~2.0",
-        "mouf/mvc.splash-ui": "^10",
+        "mouf/mvc.splash-ui": "^10.0",
         "thecodingmachine/splash-router": "^10.0",
         "mouf/utils.constants.secret": "~1.0",
         "mouf/utils.constants.debug": "~1.0",
         "psr/log": "~1.0",
-        "middlewares/whoops": "^1.0",
+        "middlewares/whoops": "^2.0",
         "mouf/utils.value.common-value": "~1.0",
         "mouf/utils.common.doctrine-annotations-wrapper": "~1.2",
         "mouf/utils.cache.purge-ui": "~1.0",
-        "middlewares/payload": "1.0",
+        "middlewares/payload": "^3.0",
         "thecodingmachine/csrf-header-check-middleware": "^2.0",
         "laminas/laminas-httphandlerrunner": "^1.0.1",
-        "laminas/laminas-dependency-plugin": "^1.0"
+        "laminas/laminas-dependency-plugin": "^2.2"
     },
     "autoload": {
         "psr-0": {
@@ -71,6 +71,13 @@
                 "src/Mouf/Mvc/Splash/Controllers/Admin/SplashAdminApacheConfigureController.php",
                 "src/Mouf/Mvc/Splash/Controllers/Admin/SplashInstallController.php"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true,
+            "mindplay/composer-locator": true,
+            "mouf/mouf-installer": true
         }
     }
 }
